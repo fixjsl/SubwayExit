@@ -21,8 +21,33 @@ public class PlayerAction : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Move()
     {
-        
+
     }
+
+    void Attack()
+    {
+
+    }
+
+    void Gaurd()
+    {
+
+    }
+
+    void Sprint()
+    {
+
+    }
+
+    void Dodge()
+    {
+
+    }
+
+
+
+
+
 }
