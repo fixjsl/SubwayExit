@@ -3,5 +3,5 @@ using UnityEngine;
 public interface StateMachine
 {
     public void stateInit();
-    public void ChangeState(State state1);
+    public void ChangeState<T>() where T : State;
 }

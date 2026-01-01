@@ -1,9 +1,8 @@
-using UnityEditor;
 using UnityEngine;
 
 public abstract class  State : IState
 {
-    PlayerStateMachine player;
+    public PlayerStateMachine player;
 
     protected State(PlayerStateMachine player)
     {
@@ -19,4 +18,9 @@ public abstract class  State : IState
     public abstract void PsycialUpdate();
 
     public abstract void Exit();
+
+    protected void ChangeState<T>() where T : State
+    {
+        player.ChangeState<T>();
+    }
 }

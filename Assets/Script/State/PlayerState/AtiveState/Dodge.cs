@@ -1,20 +1,18 @@
 using UnityEngine;
 
-public class Idle : State
+public class Dodge : State
 {
 
 
 
-    public Idle(PlayerStateMachine stateMachine) : base(stateMachine)
+    public Dodge(PlayerStateMachine stateMachine) : base(stateMachine)
     {
 
     }
     public override void Enter()
     {
-        //speed init
-        player.Rb.linearVelocity = new Vector3(0, player.Rb.linearVelocity.y, 0);
         //Idle Animation code
-
+        
     }
 
     public override void Exit()
@@ -31,10 +29,7 @@ public class Idle : State
     public override void LogicUpdate()
     {
         // input Logic
-        if(player.MoveInput != 0f)
-        {
-            ChangeState<Move>();
-        }
+
     }
 
     public override void PsycialUpdate()
