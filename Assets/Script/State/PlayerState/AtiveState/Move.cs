@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Move : State
 {
+
+    private float movebuffer;
     public Move(PlayerStateMachine stateMachine) : base(stateMachine)
     {
 
@@ -10,6 +12,7 @@ public class Move : State
     {
 
         //Move animation
+        player.animator.CrossFade(player.move, 0.02f);
     }
 
     public override void Exit()
@@ -17,25 +20,26 @@ public class Move : State
         //Stop Idle Animation code
 
     }
-
-    public override void HandleUpdate()
-    {
-        
-    }
-
     public override void LogicUpdate()
     {
-        // input Logic
-        if(player.MoveInput == 0f)
-        {
-            ChangeState<Idle>();
-        }
+
     }
 
-    public override void PsycialUpdate()
+    public override void PhysicalUpdate()
     {
-        float speed = player.isSprint ? player.status.sprintspeed : player.status.speed;
-
-        player.Rb.linearVelocity = new Vector3(player.MoveInput * speed, player.Rb.linearVelocity.y, 0f);
+        if(player.status.currentspeed != player.status.walkspeed)
+        {
+            player.status.currentspeed = player.status.walkspeed;
+        }
+        ;
+        if (Mathf.Abs(player.MoveInput - movebuffer) > 1)
+        {
+            player.animator.CrossFade(player.moveTurn, 0.02f);
+        }
+        else
+        {
+            player.Rb.linearVelocity = new Vector3(player.MoveInput * player.status.currentspeed, player.Rb.linearVelocity.y, 0f);
+        }
+        movebuffer = player.MoveInput;
     }
 }

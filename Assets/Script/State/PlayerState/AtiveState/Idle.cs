@@ -11,9 +11,10 @@ public class Idle : State
     }
     public override void Enter()
     {
-        //speed init
-        player.Rb.linearVelocity = new Vector3(0, player.Rb.linearVelocity.y, 0);
+         //speed init
+        player.Rb.linearVelocity = Vector3.zero;
         //Idle Animation code
+        player.animator.CrossFade(player.idle, 0.2f);
 
     }
 
@@ -23,21 +24,15 @@ public class Idle : State
 
     }
 
-    public override void HandleUpdate()
-    {
 
-    }
 
     public override void LogicUpdate()
     {
         // input Logic
-        if(player.MoveInput != 0f)
-        {
-            ChangeState<Move>();
-        }
+
     }
 
-    public override void PsycialUpdate()
+    public override void PhysicalUpdate()
     {
 
 

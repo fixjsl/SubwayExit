@@ -21,10 +21,13 @@ public class hit : State
 
     }
 
-    public override void HandleUpdate()
+    public override void HandleDamage(float Damage)
     {
-
+        
     }
+
+    
+
 
     public override void LogicUpdate()
     {
@@ -32,7 +35,7 @@ public class hit : State
 
     }
 
-    public override void PsycialUpdate()
+    public override void PhysicalUpdate()
     {
 
 

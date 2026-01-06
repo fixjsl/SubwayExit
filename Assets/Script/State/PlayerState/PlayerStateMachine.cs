@@ -6,7 +6,7 @@ using System.Reflection;
 using UnityEngine;
 public enum StateType
 {
-    None, idle, Dodge, Attack, interect,Perry
+    None, idle, Dodge, Attack, interect,Parry
 }
 public class PlayerStateMachine : MonoBehaviour, StateMachine
 {
@@ -14,6 +14,7 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
     private InputSystem_Actions action;
     //플레이어 객체 및 스탯
     public Rigidbody Rb { get; private set; }
+    public Animator animator{  get; private set; }
     public PlayerStatus status = new PlayerStatus();
     // 현재 플레이어의 상태
     public float MoveInput;
@@ -25,6 +26,21 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
     public bool isCrunch { get; private set; }
     //플레이어 상태 캐싱
     public Dictionary<System.Type, State> Statecaches = new Dictionary<System.Type, State>();
+    //애니메이션 상태 해싱
+    public int idle { get; private set; } = Animator.StringToHash("idle");
+    public int move { get; private set; } = Animator.StringToHash("move");
+    public readonly int moveTurn = Animator.StringToHash("moveTurn");
+    public int hit { get; private set; } = Animator.StringToHash("hit");
+    public int die { get; private set; } = Animator.StringToHash("die");
+    public int attack1 { get; private set; } = Animator.StringToHash("attack1");
+    public int attack2 { get; private set; } = Animator.StringToHash("attack2");
+    public int attack3 { get; private set; } = Animator.StringToHash("attack3");
+    public int sprint { get; private set; } = Animator.StringToHash("sprint");
+    public int sprintTrun { get; private set; } = Animator.StringToHash("sprintTurn");
+    public int crunch { get; private set; } = Animator.StringToHash("crunch");
+    public int parrying { get; private set; } = Animator.StringToHash("parrying");
+    public int guard { get; private set; } = Animator.StringToHash("guard");
+    public int dodge { get; private set; } = Animator.StringToHash("dodge");
     //플레이어 인풋버퍼
     public StateType bufferinput { get; private set; }
     public float buffertime { get; private set; } = 0.2f;
@@ -45,7 +61,7 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
         action.PlayerAction.Guard.performed += _ =>
         {
             isGuard = true;
-            SetBuffer(StateType.Perry);
+            SetBuffer(StateType.Parry);
         };
         action.PlayerAction.Sprint.canceled += _ => isSprint = false;
         action.PlayerAction.Guard.canceled += _ => isGuard = false;
@@ -64,8 +80,7 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
             }
         }
 
-
-
+        status.OnDie += () => ChangeState<Die>();
 
         ActiveState = Statecaches[typeof(Idle)];
         ActiveState.Enter();
@@ -75,6 +90,7 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
 
     void Awake() {
         Rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         stateInit();
     }
     void Update()
@@ -87,12 +103,10 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
             bufferinput = StateType.None;
             } 
         }
-        
-        ActiveState?.HandleUpdate();
-        foreach (var passive in PassiveStates)
-        {
-            passive.HandleUpdate();
-        }
+
+        CheckStateChange();
+
+
 
         ActiveState?.LogicUpdate();
         foreach (var passive in PassiveStates)
@@ -103,18 +117,89 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
 
     void FixedUpdate()
     {
-        ActiveState?.PsycialUpdate();
+        ActiveState?.PhysicalUpdate();
         foreach (var passive in PassiveStates)
         {
-            passive. PsycialUpdate();
+            passive. PhysicalUpdate();
         }
     }
     //하위 상태들의 상태 변경 제공 함수
     public void ChangeState<T>() where T : State
     {
+        System.Type type = typeof(T);
+
+        if (!Statecaches.TryGetValue(type, out State nextState))
+        {
+            Debug.LogError($"{type.Name} 상태가 캐시에 존재하지 않습니다!");
+            return;
+        }
+
         ActiveState?.Exit();
         ActiveState = Statecaches[typeof(T)];
+        Debug.Log($"change {ActiveState.ToString()} ");
         ActiveState?.Enter();
+    }
+    public bool CheckStateChange()
+    {
+        if (ActiveState.canChanged)
+        {
+            if((ActiveState is Guard || ActiveState is Parry) && !isGuard)
+            {
+                ChangeState<Idle>();
+                return true ;
+            }
+            if(ActiveState is Parry && isGuard)
+            {
+                ChangeState<Guard>();
+                return true ;
+            }
+
+            if (bufferinput != StateType.None)
+            {
+                Debug.Log($"current Buffer = {bufferinput}");
+                BufferState();
+                return true;
+            }
+
+            if (MoveInput != 0f)
+            {
+                if (isSprint)
+                {
+                    if (ActiveState is not Sprint) ChangeState<Sprint>();
+                }
+                else
+                {
+                    if (ActiveState is not Move) ChangeState<Move>();
+                }
+                return true;
+            }
+            if (ActiveState is not Idle)
+            {
+                ChangeState<Idle>();
+                return true;
+            }
+        }
+        return false;
+    }
+    public void BufferState()
+    {
+        switch (bufferinput)
+        {
+            case StateType.Attack: ChangeState<Attack>(); break;
+            case StateType.Parry: ChangeState<Parry>(); break;
+            case StateType.Dodge:
+                {
+                    if (Statecaches[typeof(Dodge)].CanEnter())
+                    {
+                        ChangeState<Dodge>();
+                    }
+                    ChangeState<Idle>();
+                    break;
+                }
+            case StateType.interect: ChangeState<Interect>(); break;
+            default: ChangeState<Idle>(); break;
+        }
+        ConsumeBuffer(bufferinput);
     }
     //선입력 함수
     public void SetBuffer(StateType buffertag)
@@ -160,4 +245,18 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
     {
         action?.Disable();
     }
+
+    //데미지 이벤트 호출 함수
+    public void OnHit(float damage)
+    {
+        if (ActiveState is Parry || ActiveState is Guard)
+        {
+            ActiveState.HandleDamage(damage);
+            return;
+        }
+        ChangeState<hit>();
+        ActiveState.HandleDamage(damage);
+
+    }
+
 }

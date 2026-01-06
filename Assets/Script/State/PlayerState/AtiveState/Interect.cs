@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class Die : State
+public class Interect : State
 {
-    public Die(PlayerStateMachine stateMachine) : base(stateMachine) { 
+
+
+    public Interect(PlayerStateMachine stateMachine) : base(stateMachine) {
+    
     }
     public override void Enter()
     {
@@ -13,7 +16,6 @@ public class Die : State
     {
         
     }
-
 
 
 

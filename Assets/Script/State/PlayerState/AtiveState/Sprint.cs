@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class Die : State
+public class Sprint : State
 {
-    public Die(PlayerStateMachine stateMachine) : base(stateMachine) { 
+    public Sprint(PlayerStateMachine stateMachine) : base(stateMachine) {
+    
     }
     public override void Enter()
     {
@@ -14,8 +15,7 @@ public class Die : State
         
     }
 
-
-
+   
 
 
     public override void LogicUpdate()
@@ -25,6 +25,6 @@ public class Die : State
 
     public override void PhysicalUpdate()
     {
-        
+  
     }
 }

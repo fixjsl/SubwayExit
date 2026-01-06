@@ -4,6 +4,9 @@ public abstract class  State : IState
 {
     public PlayerStateMachine player;
 
+    public bool canChanged = true;
+
+
     protected State(PlayerStateMachine player)
     {
         this.player = player;
@@ -11,16 +14,12 @@ public abstract class  State : IState
 
     public abstract void Enter();
 
-    public abstract void HandleUpdate();
+    public virtual void LogicUpdate() { }
 
-    public abstract void LogicUpdate();
-
-    public abstract void PsycialUpdate();
+    public virtual void PhysicalUpdate() { }
 
     public abstract void Exit();
+    public virtual void HandleDamage(float Damage) { }
+    public virtual bool CanEnter() => true;
 
-    protected void ChangeState<T>() where T : State
-    {
-        player.ChangeState<T>();
-    }
 }

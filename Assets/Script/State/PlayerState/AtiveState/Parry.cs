@@ -27,43 +27,23 @@ public class Parry: State
 
     }
 
-    public override void HandleUpdate()
+    public override void HandleDamage(float Damage)
     {
-
+        
     }
 
     public override void LogicUpdate()
     {
         // input Logic
-        
             parryTimer -= Time.deltaTime;   
             if (parryTimer <=0)
-
             {
             parryTimer = 0;
-            if (player.isGuard)
-            {
-                ChangeState<Guard>();
+            canChanged = true;
             }
-            else if (player.ConsumeBuffer(StateType.Attack))
-            {
-                ChangeState<Attack>();
-            }
-            else if (player.ConsumeBuffer(StateType.Dodge))
-            {
-                ChangeState<Dodge>();
-            }
-            else
-            {
-                ChangeState<Idle>();
-            }
-            }
-        
-
-
     }
 
-    public override void PsycialUpdate()
+    public override void PhysicalUpdate()
     {
 
 

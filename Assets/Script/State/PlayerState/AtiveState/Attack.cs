@@ -7,12 +7,12 @@ public class Attack : State
 
     public Attack(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-
+        canChanged = false;
     }
     public override void Enter()
     {
         //Idle Animation code
-        
+        canChanged = true;
     }
 
     public override void Exit()
@@ -20,19 +20,14 @@ public class Attack : State
         //Stop Idle Animation code
         
     }
-
-    public override void HandleUpdate()
-    {
-        
-    }
-
+ 
     public override void LogicUpdate()
     {
         // input Logic
         
     }
 
-    public override void PsycialUpdate()
+    public override void PhysicalUpdate()
     {
 
         
