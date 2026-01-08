@@ -12,6 +12,7 @@ public class Dodge : State
         cooltime = player.status.DodgeCooldown;
         lastTime = -99f;
         canChanged = false;
+        isBlock = true;
     }
 
     public override bool CanEnter()
@@ -23,6 +24,7 @@ public class Dodge : State
 
         lastTime = Time.time;
         //Idle Animation code
+        player.animator.CrossFade(player.dodge, 0.02f);
         
     }
 

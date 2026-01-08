@@ -7,7 +7,8 @@ public class Parry: State
 
     public Parry(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-
+        isBlock = true;
+        canChanged = false;
     }
     public override void Enter()
     {
@@ -15,15 +16,11 @@ public class Parry: State
 
 
         parryTimer = player.status.parryduration;
+        player.animator.CrossFade(player.parrying, 0.02f);
     }
 
     public override void Exit()
     {
-        //Stop Idle Animation code
-        if (!player.isGuard)
-        {
-            //stop animation
-        }
 
     }
 

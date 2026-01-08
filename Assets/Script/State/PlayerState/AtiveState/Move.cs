@@ -4,6 +4,7 @@ public class Move : State
 {
 
     private float movebuffer;
+    private AnimatorStateInfo curAni;
     public Move(PlayerStateMachine stateMachine) : base(stateMachine)
     {
 
@@ -22,7 +23,20 @@ public class Move : State
     }
     public override void LogicUpdate()
     {
+        if (Mathf.Abs(player.MoveInput - movebuffer) > 1)
+        {
+            canChanged = false;
+            player.animator.CrossFade(player.moveTurn, 0.02f);
+        }
 
+        curAni = player.animator.GetCurrentAnimatorStateInfo(0);
+
+        if(curAni.shortNameHash == player.moveTurn && curAni.normalizedTime >= 1.0f && !player.animator.IsInTransition(0))
+        {
+            player.animator.CrossFade(player.move, 0.01f);
+        }
+
+        movebuffer = player.MoveInput;
     }
 
     public override void PhysicalUpdate()
@@ -32,14 +46,9 @@ public class Move : State
             player.status.currentspeed = player.status.walkspeed;
         }
         ;
-        if (Mathf.Abs(player.MoveInput - movebuffer) > 1)
-        {
-            player.animator.CrossFade(player.moveTurn, 0.02f);
-        }
-        else
-        {
-            player.Rb.linearVelocity = new Vector3(player.MoveInput * player.status.currentspeed, player.Rb.linearVelocity.y, 0f);
-        }
-        movebuffer = player.MoveInput;
+        
+        player.Rb.linearVelocity = new Vector3(player.MoveInput * player.status.currentspeed, player.Rb.linearVelocity.y, 0f);
+        
+        
     }
 }

@@ -28,7 +28,7 @@ public class Idle : State
 
     public override void LogicUpdate()
     {
-        // input Logic
+        //여기도 뭐 없자나 나중에 여유되면 애니메이션 추가로 좀 넣죠
 
     }
 

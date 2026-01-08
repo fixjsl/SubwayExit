@@ -6,8 +6,8 @@ public class PlayerStatus
     [Header("Default Stat")]
     public string Name;
     public int Maxhp;
-    private int hp;
-    public int Hp { 
+    private float hp;
+    public float Hp { 
         get => hp;
         set {  
              if (hp <=0) return; 
@@ -46,7 +46,7 @@ public class PlayerStatus
     public float attckCost;
 
 
-    public event Action<int> ChangeHP;
+    public event Action<float> ChangeHP;
     public event Action OnDie;
     public event Action<float> ChangeStamina;
     public event Action StaminaEmpty;

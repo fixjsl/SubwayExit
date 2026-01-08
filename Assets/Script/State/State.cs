@@ -5,7 +5,7 @@ public abstract class  State : IState
     public PlayerStateMachine player;
 
     public bool canChanged = true;
-
+    public bool isBlock = false;
 
     protected State(PlayerStateMachine player)
     {
@@ -21,5 +21,9 @@ public abstract class  State : IState
     public abstract void Exit();
     public virtual void HandleDamage(float Damage) { }
     public virtual bool CanEnter() => true;
+
+    public virtual void EnableChange() {
+        canChanged = true;
+    }
 
 }
