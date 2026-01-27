@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Sprint : State
+public class Sprint : PlayerState
 {
     private float movebuffer;
     private AnimatorStateInfo curAni;

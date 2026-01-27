@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Dodge : State
+public class Dodge : PlayerState
 {
     private float cooltime;
     private float lastTime;

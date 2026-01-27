@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class hit : State
+public class hit : PlayerState
 {
 
 

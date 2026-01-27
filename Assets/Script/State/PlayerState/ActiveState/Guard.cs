@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Guard : State
+public class Guard : PlayerState
 {
 
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Interect : State
+public class Interect : PlayerState
 {
 
 

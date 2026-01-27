@@ -1,15 +1,16 @@
 using UnityEngine;
 
+
 public abstract class  State : IState
 {
-    public PlayerStateMachine player;
 
-    public bool canChanged = true;
+    public bool canChanged { get; protected set; } = true;
     public bool isBlock = false;
 
-    protected State(PlayerStateMachine player)
+
+    protected State()
     {
-        this.player = player;
+       
     }
 
     public abstract void Enter();

@@ -1,7 +1,7 @@
 using System.Threading;
 using UnityEngine;
 
-public class Parry: State
+public class Parry: PlayerState
 {
     float parryTimer;
 

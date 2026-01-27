@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Attack : State
+public class Attack : PlayerState
 {
 
     private AnimatorStateInfo curAni;

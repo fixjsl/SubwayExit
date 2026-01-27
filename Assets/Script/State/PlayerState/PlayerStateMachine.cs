@@ -8,7 +8,7 @@ public enum StateType
 {
     None, idle, Dodge, Attack, interect,Parry
 }
-public class PlayerStateMachine : MonoBehaviour, StateMachine
+public class PlayerStateMachine : MonoBehaviour
 {
     //플레이어 키세팅
     private InputSystem_Actions action;
@@ -67,13 +67,13 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
         };
         action.PlayerAction.Sprint.canceled += _ => isSprint = false;
         action.PlayerAction.Guard.canceled += _ => isGuard = false;
-        var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(State)) && !t.IsAbstract);
+        var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract);
         Debug.Log($"발견된 상태 개수: {StateT.Count()}");
         foreach (var type in StateT)
         {
             try
             {
-                var Sinstance = Activator.CreateInstance(type, new object[] { this }) as State;
+                var Sinstance = Activator.CreateInstance(type, new object[] { this }) as PlayerState;
                 Statecaches.Add(type, Sinstance);
             }
             catch (System.Exception e)
@@ -126,7 +126,7 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
         }
     }
     //하위 상태들의 상태 변경 제공 함수
-    public void ChangeState<T>() where T : State
+    public void ChangeState<T>() where T : PlayerState
     {
         System.Type type = typeof(T);
 
@@ -260,5 +260,12 @@ public class PlayerStateMachine : MonoBehaviour, StateMachine
         ActiveState?.HandleDamage(Damage);
 
     }
-
+    //애니메이션 회전
+    void OnAnimatorMove()
+    {
+        Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
+        Vector3 newPos = Rb.position;
+        
+        Rb.MovePosition(newPos);
+    }
 }
