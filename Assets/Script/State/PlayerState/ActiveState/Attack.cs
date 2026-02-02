@@ -35,21 +35,28 @@ public class Attack : PlayerState
 
         if(curAni.IsTag("Attack") && curAni.normalizedTime >= 0.75f)
         {
-            if(player.bufferinput == StateType.Attack)
-            {
-                canChanged = true;
-            }
+
         }        
 
-        if(curAni.normalizedTime >=1.0f && !player.animator.IsInTransition(0))
-        {
-            canChanged = true;
-        }
+
     }
 
     public override void PhysicalUpdate()
     {
         //이 상태에서 처리할만한 물리가 있나? 데미지는 트리거로 처리할꺼고
         
+    }
+    public override void OnAnimationFinished()
+    {
+        
+        if (player.bufferinput == StateType.Attack)
+        {
+            canChanged = true;
+        }
+        curAni = player.animator.GetCurrentAnimatorStateInfo(0);
+        if(curAni.normalizedTime >= 0.9f)
+        {
+            canChanged = true;
+        }
     }
 }

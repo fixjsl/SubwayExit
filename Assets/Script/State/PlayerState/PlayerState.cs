@@ -18,4 +18,8 @@ public abstract class PlayerState : State
     {
         
     }
+    public virtual void OnAnimationFinished()
+    {
+        canChanged = true;
+    }
 }

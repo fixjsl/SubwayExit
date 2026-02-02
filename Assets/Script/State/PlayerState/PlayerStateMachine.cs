@@ -10,6 +10,8 @@ public enum StateType
 }
 public class PlayerStateMachine : MonoBehaviour
 {
+
+    public static PlayerStateMachine Instance { get; private set; }
     //플레이어 키세팅
     private InputSystem_Actions action;
     //플레이어 객체 및 스탯
@@ -19,13 +21,13 @@ public class PlayerStateMachine : MonoBehaviour
     // 현재 플레이어의 상태
     public float MoveInput;
 
-    private State ActiveState;
-    private List<State> PassiveStates = new List<State>();
+    private PlayerState ActiveState;
+    private List<PlayerState> PassiveStates = new List<PlayerState>();
     public bool isGuard { get; private set; }
     public bool isSprint {  get; private set; }
     public bool isCrunch { get; private set; }
     //플레이어 상태 캐싱
-    public Dictionary<System.Type, State> Statecaches = new Dictionary<System.Type, State>();
+    public Dictionary<System.Type, PlayerState> Statecaches = new Dictionary<System.Type, PlayerState>();
     //애니메이션 상태 해싱
     public readonly int idle  = Animator.StringToHash("idle");
     public readonly int move = Animator.StringToHash("move");
@@ -91,6 +93,7 @@ public class PlayerStateMachine : MonoBehaviour
 
 
     void Awake() {
+        if(Instance == null) Instance = this;
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         stateInit();
@@ -111,26 +114,20 @@ public class PlayerStateMachine : MonoBehaviour
 
 
         ActiveState?.LogicUpdate();
-        foreach (var passive in PassiveStates)
-        {
-            passive.LogicUpdate();
-        }
+
     }
 
     void FixedUpdate()
     {
         ActiveState?.PhysicalUpdate();
-        foreach (var passive in PassiveStates)
-        {
-            passive. PhysicalUpdate();
-        }
+
     }
     //하위 상태들의 상태 변경 제공 함수
     public void ChangeState<T>() where T : PlayerState
     {
         System.Type type = typeof(T);
 
-        if (!Statecaches.TryGetValue(type, out State nextState))
+        if (!Statecaches.TryGetValue(type, out PlayerState nextState))
         {
             Debug.LogError($"{type.Name} 상태가 캐시에 존재하지 않습니다!");
             return;
@@ -219,23 +216,31 @@ public class PlayerStateMachine : MonoBehaviour
         return false;
     }
     //PassiveList에 상태 넣거나 빼기
-    public void AddpassiveStat<T>() where T : State
+    public void AddpassiveStat<T>() where T : PlayerState
     {
-        State passive = Statecaches[typeof(T)];
+        PlayerState passive = Statecaches[typeof(T)];
 
         if (PassiveStates.Contains(passive)) return;
 
         PassiveStates.Add(passive);
         passive.Enter();
     }
-    public void RemovepassiveStat<T>() where T : State
+    public void RemovepassiveStat<T>() where T : PlayerState
     {
-        State passive = Statecaches[typeof(T)];
+        PlayerState passive = Statecaches[typeof(T)];
 
         if (PassiveStates.Contains(passive)) {
             passive.Exit();
             PassiveStates.Remove(passive);
         }
+    }
+    public void ClearpassiveStat()
+    {
+        foreach(var state in PassiveStates)
+        {
+            state.Exit();
+        }
+        PassiveStates.Clear();
     }
     //action활성화
 
@@ -267,5 +272,9 @@ public class PlayerStateMachine : MonoBehaviour
         Vector3 newPos = Rb.position;
         
         Rb.MovePosition(newPos);
+    }
+    public void OnAnimationFinished()
+    {
+        ActiveState?.OnAnimationFinished();
     }
 }

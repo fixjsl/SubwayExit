@@ -4,10 +4,15 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using MonsterStates;
+using System.Collections;
 
 
 public class MonsterStateMachine : MonoBehaviour
 {
+    [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] private LayerMask playerLayer;
+    public Coroutine DetectCorutine { get; private set; }
+
     private State ActiveState;
     public State PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
@@ -91,4 +96,71 @@ public class MonsterStateMachine : MonoBehaviour
         ActiveState?.HandleDamage(Damage);
 
     }
+    private void OnEnable()
+    {
+        DetectCorutine = this.StartCoroutine(Detect());
+    }
+    private void OnDisable()
+    {
+        if (DetectCorutine != null)
+        {
+            StopCoroutine(DetectCorutine);
+            DetectCorutine = null;
+        }
+    }
+    IEnumerator Detect()
+    {
+        WaitForSeconds wait = YeildCache.GetIntervals(0.5f);
+        while (true)
+        {
+            Collider[] hitPlayers = Physics.OverlapSphere(transform.position, status.detect_range, playerLayer);
+
+            if (hitPlayers.Length > 0)
+            {
+                // 플레이어를 찾음!
+                var player = hitPlayers[0].GetComponent<PlayerStateMachine>();
+
+                // 2. 여기서 이제 우리가 짰던 빛/소음 계산 함수를 돌립니다.
+                float awareness = CalculateSoundAwareness(player);
+
+                // 인지 게이지 상승 로직...
+
+
+
+                // 2. 인지 게이지 상승
+                status.detection_gauge += awareness * 0.1f; // 인터벌(0.1s) 보정
+
+                // 3. 임계치 도달 시 상태 전환
+                if (status.detection_gauge >= 100f)
+                {
+                    ChangeState<Chase>();
+                    yield break;
+                }
+
+                // 4. 아무것도 감지 안 될 때 게이지 자연 감소
+                if (awareness <= 0)
+                {
+                    status.detection_gauge -= status.recovery * 0.1f;
+                }
+
+            }
+          
+                yield return wait;
+           }
+
+        }
+    float CalculateSoundAwareness(PlayerStateMachine player)
+    {
+        float dist = Vector3.Distance(transform.position, player.transform.position);
+        float noise = player.status.currentnoise;
+
+        // 장애물이 있는지 체크 (Linecast)
+        if (Physics.Linecast(transform.position, player.transform.position, obstacleMask))
+        {
+            noise *= 0.2f; // 벽이 있으면 소음 80% 감쇄
+        }
+
+        return (noise / Mathf.Max(dist * dist, 1f));
+    }
+
 }

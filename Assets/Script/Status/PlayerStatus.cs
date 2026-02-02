@@ -44,6 +44,9 @@ public class PlayerStatus
     public float DodgeCost;
     public float SprintCost;
     public float attckCost;
+    [Header("Player Hidden")]
+    public float currentnoise;
+    public float currentbrighten;
 
 
     public event Action<float> ChangeHP;
