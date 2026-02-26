@@ -1,22 +1,30 @@
-using UnityEditor;
 using UnityEngine;
+
 
 public abstract class  State : IState
 {
-    PlayerStateMachine player;
 
-    protected State(PlayerStateMachine player)
+    public bool canChanged { get; protected set; } = true;
+    public bool isBlock = false;
+
+
+    protected State()
     {
-        this.player = player;
+       
     }
 
     public abstract void Enter();
 
-    public abstract void HandleUpdate();
+    public virtual void LogicUpdate() { }
 
-    public abstract void LogicUpdate();
-
-    public abstract void PsycialUpdate();
+    public virtual void PhysicalUpdate() { }
 
     public abstract void Exit();
+    public virtual void HandleDamage(float Damage) { }
+    public virtual bool CanEnter() => true;
+
+    public virtual void EnableChange() {
+        canChanged = true;
+    }
+
 }
