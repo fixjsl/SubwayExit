@@ -13,8 +13,9 @@ public class Move : PlayerState
     {
 
         //Move animation
-
-        player.animator.CrossFade(player.move, 0.02f);
+        float dot = Vector3.Dot(player.transform.forward, Vector3.right);
+        movebuffer = (dot > 0) ? 1f : -1f;
+        player.animator.CrossFade(player.move, 0.15f);
     }
 
     public override void Exit()
@@ -25,34 +26,39 @@ public class Move : PlayerState
     {
         if (player.MoveInput != 0 && player.MoveInput != movebuffer)
         {
+            float targetY = (movebuffer > 0) ? 90f : -90f;
+            player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
             canChanged = false; 
-            player.animator.CrossFade(player.moveTurn, 0.01f);
+            player.animator.CrossFade(player.moveTurn, 0.15f);
 
 
             movebuffer = player.MoveInput;
+        }
+        if (!canChanged && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("moveTurn"))
+        {
+            canChanged = true;
         }
     }
 
     public override void PhysicalUpdate()
     {
-        if(curAni.shortNameHash != player.moveTurn)
+        if (canChanged)
         {
-            if(player.status.currentspeed != player.status.walkspeed)
-            {
-            player.status.currentspeed = player.status.walkspeed;
-            }
-        ;
+            if (player.status.currentspeed != player.status.walkspeed)
+                player.status.currentspeed = player.status.walkspeed;
 
-            player.Rb.linearVelocity = new Vector3(player.MoveInput * player.status.currentspeed,0f,0f);
-        }        
+            player.Rb.linearVelocity = new Vector3(
+                player.MoveInput * player.status.currentspeed,
+                player.Rb.linearVelocity.y,
+                0f);
+        }
     }
     public override void OnAnimationFinished()
     {
-        Vector3 currentEuler = player.Rb.rotation.eulerAngles;
-        float snappedY = Mathf.Round(currentEuler.y / 90f) * 90f;
-        player.Rb.rotation = Quaternion.Euler(0, snappedY, 0);
+        float targetY = (player.MoveInput > 0) ? 90f : -90f;
+        player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
         canChanged = true;
-        player.animator.CrossFade(player.move, 0.0001f);
+        player.animator.CrossFade(player.move, 0.15f);
     }
 }

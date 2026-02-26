@@ -11,10 +11,15 @@ namespace MonsterStates
         public override void Enter()
         {
             //사망애니메이션
+            Monster.animator.CrossFade(Monster.die, 0.001f);
+            Monster.Rb.linearVelocity = Vector3.zero;
+            Monster.enabled = false;
+            Monster.GetComponent<Collider>().enabled = false;
         }
         public override void Exit()
         {
             //몬스터 HP회복
+            Monster.status.Hp = Monster.status.Maxhp;
         }
 
         public override void LogicUpdate()

@@ -5,7 +5,7 @@ public abstract class MonsterState : State
 {
 
     protected MonsterStateMachine Monster;
-
+    protected bool HasTarget => Monster.Targetplayer != null;
     protected MonsterState(MonsterStateMachine monster)
     {
         Monster = monster;      
@@ -31,8 +31,10 @@ public abstract class MonsterState : State
     public override void HandleDamage(float Damage)
     {
             //슈퍼아머용 데미지 함수
+            Monster.status.Hp -= Damage;
 
-    }
+        }
+        public virtual void OnAnimationFinished() {}
     }
 
 

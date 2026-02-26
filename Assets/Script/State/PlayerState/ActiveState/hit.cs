@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class hit : PlayerState
+public class Hit : PlayerState
 {
 
 
 
-    public hit(PlayerStateMachine stateMachine) : base(stateMachine)
+    public Hit(PlayerStateMachine stateMachine) : base(stateMachine)
     {
         canChanged = false;
     }

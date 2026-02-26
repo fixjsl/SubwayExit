@@ -8,4 +8,8 @@ public class WeaponStatus : ScriptableObject
     public float attackRange;
     public int bloodStrenth;
     public int stunStrength;
+
+    public int attackStamina;
+    public int guardStamina;
+    public int parryStamina;
  }

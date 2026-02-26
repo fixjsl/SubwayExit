@@ -14,7 +14,7 @@ public class Parry: PlayerState
     {
         //Guard Animation code
 
-
+        canChanged = false;
         parryTimer = player.status.parryduration;
         player.animator.CrossFade(player.parrying, 0.02f);
     }

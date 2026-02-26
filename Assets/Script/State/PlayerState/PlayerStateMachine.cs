@@ -85,7 +85,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
 
         status.OnDie += () => ChangeState<Die>();
-
+        status.StaminaEmpty += () => ChangeState<Move>();
         ActiveState = Statecaches[typeof(Idle)];
         ActiveState.Enter();
     }
@@ -100,19 +100,15 @@ public class PlayerStateMachine : MonoBehaviour
     }
     void Update()
     {
-        
-        if (bufferinput != StateType.None)
-        {
-           if (bufferTimer.Timer(buffertime))
-            {
-            bufferinput = StateType.None;
-            } 
-        }
-
         CheckStateChange();
 
-
-
+        if (bufferinput != StateType.None)
+        {
+            if (bufferTimer.Timer(buffertime))
+            {
+                bufferinput = StateType.None;
+            }
+        }    
         ActiveState?.LogicUpdate();
 
     }
@@ -132,7 +128,7 @@ public class PlayerStateMachine : MonoBehaviour
             Debug.LogError($"{type.Name} 상태가 캐시에 존재하지 않습니다!");
             return;
         }
-
+        bufferinput = StateType.None;
         ActiveState?.Exit();
         ActiveState = Statecaches[typeof(T)];
         Debug.Log($"change {ActiveState.ToString()} ");
@@ -164,7 +160,11 @@ public class PlayerStateMachine : MonoBehaviour
             {
                 if (isSprint)
                 {
-                    if (ActiveState is not Sprint) ChangeState<Sprint>();
+                    if (status.Stamina > status.MaxStamina * 0.1f) {
+                        if (ActiveState is not Sprint) ChangeState<Sprint>();
+                    }
+
+                    
                 }
                 else
                 {
@@ -192,7 +192,7 @@ public class PlayerStateMachine : MonoBehaviour
                     {
                         ChangeState<Dodge>();
                     }
-                    ChangeState<Idle>();
+                    else ChangeState<Idle>();
                     break;
                 }
             case StateType.interect: ChangeState<Interect>(); break;
@@ -261,7 +261,7 @@ public class PlayerStateMachine : MonoBehaviour
             ActiveState?.HandleDamage(Damage);
             return;
         }
-        ChangeState<hit>();
+        ChangeState<Hit>();
         ActiveState?.HandleDamage(Damage);
 
     }
@@ -269,9 +269,6 @@ public class PlayerStateMachine : MonoBehaviour
     void OnAnimatorMove()
     {
         Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
-        Vector3 newPos = Rb.position;
-        
-        Rb.MovePosition(newPos);
     }
     public void OnAnimationFinished()
     {

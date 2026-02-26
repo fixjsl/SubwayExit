@@ -29,7 +29,10 @@ public class Idle : PlayerState
     public override void LogicUpdate()
     {
         //여기도 뭐 없자나 나중에 여유되면 애니메이션 추가로 좀 넣죠
-
+        if(player.status.Stamina != player.status.MaxStamina)
+        {
+            player.status.Stamina += player.status.staminaRecoverey;
+        }
     }
 
     public override void PhysicalUpdate()

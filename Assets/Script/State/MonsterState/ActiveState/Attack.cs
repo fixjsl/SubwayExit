@@ -4,29 +4,69 @@ namespace MonsterStates
 {
     public class Attack : MonsterState
     {
+        private int comboindex;
+        private bool isAnimationFinished;
         public Attack(MonsterStateMachine monster) : base(monster)
         {
         }
         public override void Enter()
         {
             //공격 애니메이션
+            isAnimationFinished = false;
+            Monster.animator.CrossFade(Monster.attackHashes[comboindex], 0.01f);
 
         }
         public override void Exit()
         {
-            //콤보 0
+            //애니메이션이 끝나지 않았을떄 상태전환이 되면
+            if (!isAnimationFinished)
+            {
+                comboindex = 0;
+            }
+
         }
 
         public override void LogicUpdate()
         {
-            //애니메이션 종료 이벤트가 오면 다시  Attack로
-            //아니면 공격 타이머 시작 후 Chanse로 전환
+
         }
         public override void PhysicalUpdate()
         {
-            //애니메이션의 정도의 따라 이벤트를 받고 앞으로 물리량 주기
+
         }
+
+        public void OnAttackColider()
+        {
+            //공격 콜라인더 키기
+            if(Monster.AttackCollider != null)
+            {
+                Monster.AttackCollider.enabled = true;
+            }
+        }
+        public void OffAttackColider()
+        {
+            //공격 콜라인더 끄기
+            if(Monster.AttackCollider != null)
+            {
+                Monster.AttackCollider.enabled = false;
+            }
+        }
+        public override void OnAnimationFinished()
+        {
+            isAnimationFinished = true;
+            if (comboindex < 2)
+            {
+                comboindex++;
+                Monster.ChangeState<Attack>();
+            }
+            else if (comboindex == 2)
+            {
+                comboindex = 0;
+                Monster.ChangeState<Battle>();
+            }
+        }
+
     }
 
-}
+    }
 

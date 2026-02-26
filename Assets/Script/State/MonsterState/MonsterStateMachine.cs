@@ -12,7 +12,7 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private LayerMask playerLayer;
     public Coroutine DetectCorutine { get; private set; }
-
+    public PlayerStateMachine Targetplayer {  get; private set; }
     private State ActiveState;
     public State PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
@@ -21,16 +21,24 @@ public class MonsterStateMachine : MonoBehaviour
     public readonly int idle = Animator.StringToHash("idle");
     public readonly int move = Animator.StringToHash("move");
     public readonly int sprint = Animator.StringToHash("chase");
+    public readonly int battle = Animator.StringToHash("battle");
     public readonly int hit = Animator.StringToHash("hit");
     public readonly int die = Animator.StringToHash("die");
-
+    public readonly int moveTurn = Animator.StringToHash("moveTurn");
+    public readonly int Stun = Animator.StringToHash("Stun");
     public readonly int[] attackHashes = {
     Animator.StringToHash("attack1"),
     Animator.StringToHash("attack2"),
     Animator.StringToHash("attack3")
     };
+    [Header("스폰포인트 지정바람")]
+    [SerializeField]
+    public Vector3 spawnpoint;
 
     public Dictionary<System.Type, State> Statecaches = new Dictionary<System.Type, State>();
+    [SerializeField] private Collider attackCollider; // 인스펙터 할당용
+
+    public Collider AttackCollider => attackCollider; // 외부에서 읽기 전용
     public void stateInit()
     {
         var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(MonsterState)) && !t.IsAbstract);
@@ -54,6 +62,11 @@ public class MonsterStateMachine : MonoBehaviour
     void Awake()
     {
         stateInit();
+        status = Instantiate(status);
+        status.Hp = status.Maxhp;
+        Rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        status.OnDie += () => ChangeState<MonsterStates.Die>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -92,15 +105,25 @@ public class MonsterStateMachine : MonoBehaviour
             ActiveState?.HandleDamage(Damage);
             return;
         }
-        ChangeState<Hit>();
+        ChangeState<MonsterStates.Hit>();
         ActiveState?.HandleDamage(Damage);
 
     }
     private void OnEnable()
     {
-        DetectCorutine = this.StartCoroutine(Detect());
+        StartDetection();
     }
     private void OnDisable()
+    {
+        StopDetection();
+    }
+    public void StartDetection()
+    {
+        StopDetection(); // 중복 실행 방지
+        DetectCorutine = StartCoroutine(Detect());
+    }
+
+    public void StopDetection()
     {
         if (DetectCorutine != null)
         {
@@ -118,10 +141,10 @@ public class MonsterStateMachine : MonoBehaviour
             if (hitPlayers.Length > 0)
             {
                 // 플레이어를 찾음!
-                var player = hitPlayers[0].GetComponent<PlayerStateMachine>();
+                Targetplayer = hitPlayers[0].GetComponent<PlayerStateMachine>();
 
                 // 2. 여기서 이제 우리가 짰던 빛/소음 계산 함수를 돌립니다.
-                float awareness = CalculateSoundAwareness(player);
+                float awareness = CalculateSoundAwareness(Targetplayer);
 
                 // 인지 게이지 상승 로직...
 
@@ -144,8 +167,13 @@ public class MonsterStateMachine : MonoBehaviour
                 }
 
             }
-          
-                yield return wait;
+            else
+            {
+                // 범위 밖으로 나가면 타겟 소실
+                if (Targetplayer != null) LoseTarget();
+            }
+
+            yield return wait;
            }
 
         }
@@ -162,5 +190,21 @@ public class MonsterStateMachine : MonoBehaviour
 
         return (noise / Mathf.Max(dist * dist, 1f));
     }
+    public void SetTarget(PlayerStateMachine target)
+    {
+        Targetplayer = target;
+    }
 
+    public void LoseTarget()
+    {
+        Targetplayer = null;
+        // 어떤 상태에 있든 타겟을 잃으면 복귀
+        ChangeState<Return>();
+    }
+
+    public void ChangeStun()
+    {
+
+        ChangeState<Stun>();
+    }
 }

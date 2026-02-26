@@ -282,14 +282,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -471,6 +471,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &549613524
 MeshFilter:
@@ -577,6 +578,9 @@ MonoBehaviour:
     DodgeCost: 0
     SprintCost: 0
     attckCost: 0
+    currentnoise: 0
+    currentbrighten: 0
+    staminaRecoverey: 0
   MoveInput: 0
 --- !u!54 &877277508
 Rigidbody:
@@ -603,7 +607,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 84
+  m_Constraints: 88
   m_CollisionDetection: 0
 --- !u!136 &877277509
 CapsuleCollider:
@@ -627,7 +631,7 @@ CapsuleCollider:
   m_Radius: 0.05
   m_Height: 0.21
   m_Direction: 1
-  m_Center: {x: 0, y: 0.1, z: 0}
+  m_Center: {x: 0, y: 0.105, z: 0}
 --- !u!1001 &1895907784
 PrefabInstance:
   m_ObjectHideFlags: 0

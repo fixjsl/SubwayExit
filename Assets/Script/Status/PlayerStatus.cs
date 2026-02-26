@@ -10,7 +10,7 @@ public class PlayerStatus
     public float Hp { 
         get => hp;
         set {  
-             if (hp <=0) return; 
+             
              hp = Mathf.Clamp(value, 0, Maxhp);
             ChangeHP?.Invoke(hp);
              if (hp <= 0) OnDie?.Invoke();
@@ -47,7 +47,8 @@ public class PlayerStatus
     [Header("Player Hidden")]
     public float currentnoise;
     public float currentbrighten;
-
+    [Header("Recovery")]
+    public float staminaRecoverey;
 
     public event Action<float> ChangeHP;
     public event Action OnDie;

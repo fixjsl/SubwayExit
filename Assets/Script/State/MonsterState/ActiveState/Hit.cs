@@ -10,6 +10,7 @@ namespace MonsterStates
         public override void Enter()
         {
             //피격 애니메이션 재생 
+            Monster.animator.CrossFade(Monster.hit, 0.01f);
         }
         public override void Exit()
         {
@@ -25,9 +26,13 @@ namespace MonsterStates
             // 무기의 세기에 따라 뒤로 밀려나는 물리량 계산
 
         }
-        public override void HandleDamage(float Damage)
+        public override void OnAnimationFinished()
         {
-            //피격시 함수 
+            if(Monster.Targetplayer != null)
+            {
+                Monster.ChangeState<Return>();
+            }
+            else Monster.ChangeState<Battle>();
         }
     }
 
