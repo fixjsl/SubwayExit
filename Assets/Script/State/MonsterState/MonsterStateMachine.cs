@@ -98,13 +98,15 @@ public class MonsterStateMachine : MonoBehaviour
         Debug.Log($"change {ActiveState.ToString()} ");
         ActiveState?.Enter();
     }
-    public void OnHit(float Damage)
+    public void OnHit(float Damage, float stunStrength)
     {
         if (ActiveState.isBlock)
         {
             ActiveState?.HandleDamage(Damage);
             return;
         }
+        var hitState = Statecaches[typeof(MonsterStates.Hit)] as MonsterStates.Hit;
+        hitState.SetHitduration(stunStrength);
         ChangeState<MonsterStates.Hit>();
         ActiveState?.HandleDamage(Damage);
 

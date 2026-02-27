@@ -5,6 +5,8 @@ namespace MonsterStates
     public class Stun : MonsterState
     {
         TimeManager stunTimer = new TimeManager();
+
+        
         public Stun(MonsterStateMachine monster) : base(monster) { 
 
         }

@@ -43,15 +43,21 @@ public class PlayerStatus
     public float parryCost;
     public float DodgeCost;
     public float SprintCost;
-    public float attckCost;
     [Header("Player Hidden")]
     public float currentnoise;
     public float currentbrighten;
     [Header("Recovery")]
     public float staminaRecoverey;
 
+    public float dodgeSpeed;
+
     public event Action<float> ChangeHP;
     public event Action OnDie;
     public event Action<float> ChangeStamina;
     public event Action StaminaEmpty;
+
+    public void UseStamina(float amount)
+    {
+        Stamina -= amount; // 그냥 차감, Stamina 프로퍼티에서 Clamp + 이벤트 처리
+    }
 }
