@@ -37,7 +37,7 @@ namespace MonsterStates
         }
         public override void PhysicalUpdate()
         {
-            if (!Monster.animator.GetCurrentAnimatorStateInfo(0).IsName("moveTurn")){
+            if (canChanged){
                 //3~5초정도 움직이다 idle상태로 돌아감
                 float dot = Vector3.Dot(Monster.transform.forward, Vector3.right);
 

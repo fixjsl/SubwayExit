@@ -3,20 +3,21 @@ using UnityEngine;
 
 public class Parry: PlayerState
 {
-    float parryTimer;
+    private TimeManager parryTimer = new TimeManager();
+
+    public bool IsInParryWindow { get; private set; }
 
     public Parry(PlayerStateMachine stateMachine) : base(stateMachine)
     {
         isBlock = true;
-        canChanged = false;
     }
     public override void Enter()
     {
-        //Guard Animation code
-
         canChanged = false;
-        parryTimer = player.status.parryduration;
+        IsInParryWindow = true;
+        parryTimer.Reset();
         player.animator.CrossFade(player.parrying, 0.02f);
+        player.status.UseStamina(player.currentWeapon.status.parryStamina);
     }
 
     public override void Exit()
@@ -32,12 +33,11 @@ public class Parry: PlayerState
     public override void LogicUpdate()
     {
         // input Logic
-            parryTimer -= Time.deltaTime;   
-            if (parryTimer <=0)
-            {
-            parryTimer = 0;
+        if (parryTimer.Timer(player.status.parryduration))
+        {
+            IsInParryWindow = false;
             canChanged = true;
-            }
+        }
     }
 
     public override void PhysicalUpdate()

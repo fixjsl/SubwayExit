@@ -18,6 +18,7 @@ public class PlayerStateMachine : MonoBehaviour
     public Rigidbody Rb { get; private set; }
     public Animator animator{  get; private set; }
     public PlayerStatus status = new PlayerStatus();
+    public Weapon currentWeapon;
     // 현재 플레이어의 상태
     public float MoveInput;
 
@@ -49,6 +50,8 @@ public class PlayerStateMachine : MonoBehaviour
     public StateType bufferinput { get; private set; }
     public float buffertime { get; private set; } = 0.2f;
     public TimeManager bufferTimer = new TimeManager();
+    //패링 가능 여부
+    public bool isParrying => ActiveState is Parry parry && parry.IsInParryWindow;
     //최초 상태 설정
     public void stateInit()
     {
@@ -265,13 +268,23 @@ public class PlayerStateMachine : MonoBehaviour
         ActiveState?.HandleDamage(Damage);
 
     }
+    public void EquipWeapon(Weapon weapon)
+    {
+        currentWeapon = weapon;
+        // 무기 장착 시 필요한 추가 로직을 여기에 작성할 수 있습니다.
+    }
     //애니메이션 회전
     void OnAnimatorMove()
     {
         Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
     }
+    // ========== 애니메이션 이벤트 ==========
     public void OnAnimationFinished()
     {
         ActiveState?.OnAnimationFinished();
+    }
+    public void OnEndInvincible()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Player");
     }
 }

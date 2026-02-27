@@ -28,6 +28,7 @@ public class MonsterStatus : ScriptableObject
     public float battle_range;
     public float stunTime;
 
+    public float knockbackForce;
     public event Action<float> ChangeHP;
     public event Action OnDie;
 }

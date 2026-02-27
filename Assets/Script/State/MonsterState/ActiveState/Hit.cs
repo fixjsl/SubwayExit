@@ -1,14 +1,18 @@
+using Unity.Properties;
 using UnityEngine;
 
 namespace MonsterStates
 {
     public class Hit : MonsterState
     {
+        private float hitduration;
+        private TimeManager Timer = new TimeManager();
         public Hit(MonsterStateMachine monster) : base(monster)
         {
         }
         public override void Enter()
         {
+            Timer.Reset();
             //피격 애니메이션 재생 
             Monster.animator.CrossFade(Monster.hit, 0.01f);
         }
@@ -17,6 +21,10 @@ namespace MonsterStates
 
         }
 
+        public void SetHitduration(float duration)
+        {
+            hitduration = duration;
+        }
         public override void LogicUpdate()
         {
 
@@ -28,11 +36,12 @@ namespace MonsterStates
         }
         public override void OnAnimationFinished()
         {
-            if(Monster.Targetplayer != null)
+            if (Timer.Timer(hitduration))
             {
-                Monster.ChangeState<Return>();
+                if(Monster.Targetplayer != null) Monster.ChangeState<Return>();
+                else Monster.ChangeState<Battle>();
             }
-            else Monster.ChangeState<Battle>();
+
         }
     }
 
