@@ -22,8 +22,8 @@ public class PlayerStateMachine : MonoBehaviour
     // 현재 플레이어의 상태
     public float MoveInput;
 
-    private PlayerState ActiveState;
-    private List<PlayerState> PassiveStates = new List<PlayerState>();
+    public PlayerState ActiveState { get; private set; }
+    public List<PlayerState> PassiveStates { get; private set; } = new List<PlayerState>();
     public bool isGuard { get; private set; }
     public bool isSprint {  get; private set; }
     public bool isCrunch { get; private set; }
@@ -131,8 +131,9 @@ public class PlayerStateMachine : MonoBehaviour
             Debug.LogError($"{type.Name} 상태가 캐시에 존재하지 않습니다!");
             return;
         }
-        bufferinput = StateType.None;
+        
         ActiveState?.Exit();
+        bufferinput = StateType.None;
         ActiveState = Statecaches[typeof(T)];
         Debug.Log($"change {ActiveState.ToString()} ");
         ActiveState?.Enter();
@@ -161,18 +162,8 @@ public class PlayerStateMachine : MonoBehaviour
 
             if (MoveInput != 0f)
             {
-                if (isSprint)
-                {
-                    if (status.Stamina > status.MaxStamina * 0.1f) {
-                        if (ActiveState is not Sprint) ChangeState<Sprint>();
-                    }
-
-                    
-                }
-                else
-                {
-                    if (ActiveState is not Move) ChangeState<Move>();
-                }
+                if (ActiveState is not Move) ChangeState<Move>();
+                
                 return true;
             }
             if (ActiveState is not Idle)
@@ -279,12 +270,5 @@ public class PlayerStateMachine : MonoBehaviour
         Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
     }
     // ========== 애니메이션 이벤트 ==========
-    public void OnAnimationFinished()
-    {
-        ActiveState?.OnAnimationFinished();
-    }
-    public void OnEndInvincible()
-    {
-        gameObject.layer = LayerMask.NameToLayer("Player");
-    }
+
 }

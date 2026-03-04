@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class Move : PlayerState
 {
@@ -28,13 +29,25 @@ public class Move : PlayerState
         {
             float targetY = (movebuffer > 0) ? 90f : -90f;
             player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
-            canChanged = false; 
-            player.animator.CrossFade(player.moveTurn, 0.15f);
+            canChanged = false;
+            if (!player.isSprint)
+            {
+                player.animator.CrossFade(player.moveTurn, 0.15f);
+            }
+            else
+            {
+                player.animator.CrossFade(player.sprintTurn, 0.15f);
+            }
+            
 
 
             movebuffer = player.MoveInput;
         }
-        if (!canChanged && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("moveTurn"))
+        if (player.isSprint)
+        {
+            player.status.Stamina -= player.status.SprintCost * Time.deltaTime;
+        }
+        if (!canChanged && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("moveTurn")&& !player.animator.GetCurrentAnimatorStateInfo(0).IsName("sprintTurn"))
         {
             canChanged = true;
         }
@@ -59,6 +72,14 @@ public class Move : PlayerState
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
         canChanged = true;
-        player.animator.CrossFade(player.move, 0.15f);
+        if (!player.isSprint)
+        {
+            player.animator.CrossFade(player.move, 0.15f);
+        }
+        else
+        {
+            player.animator.CrossFade(player.sprint, 0.15f);
+        }
+       
     }
 }
