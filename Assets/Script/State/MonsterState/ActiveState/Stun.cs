@@ -12,6 +12,7 @@ namespace MonsterStates
         }
         public override void Enter()
         {
+            Monster.gameObject.layer = Layercache.Stun;
             Monster.Rb.linearVelocity = Vector3.zero;
             Monster.animator.CrossFade(Monster.Stun, 0.01f);
             stunTimer.Reset();
@@ -19,13 +20,13 @@ namespace MonsterStates
 
         public override void Exit()
         {
-            
+            Monster.gameObject.layer = Layercache.Monster;
         }
         public override void LogicUpdate()
         {
             if (stunTimer.Timer(Monster.status.stunTime))
             {
-                if (Monster.Targetplayer != null)
+                if (Monster.Targetplayer == null)
                 {
                     Monster.ChangeState<Return>();
                 }
@@ -33,5 +34,9 @@ namespace MonsterStates
             }
         }
 
+        public override void HandleDamage(float Damage)
+        {
+            
+        }
     }
 }

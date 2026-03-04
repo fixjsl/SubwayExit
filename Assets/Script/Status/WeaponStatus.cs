@@ -7,7 +7,7 @@ public class WeaponStatus : ScriptableObject
     public int attack;
     public float attackSpeed;
     public float attackRange;
-
+    public float execution_m;
     [Header("특수 효과")]
     public int bloodStrenth;
     public float stunStrength;

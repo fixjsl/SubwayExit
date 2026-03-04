@@ -4,6 +4,7 @@ public class MonsterWeapon : MonoBehaviour
 {
     private MonsterStateMachine monster;
 
+
     private void Awake()
     {
         monster = GetComponentInParent<MonsterStateMachine>();

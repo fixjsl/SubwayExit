@@ -13,7 +13,7 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
     public Coroutine DetectCorutine { get; private set; }
     public PlayerStateMachine Targetplayer {  get; private set; }
-    private State ActiveState;
+    public State ActiveState { get; private set; }
     public State PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
     public Animator animator { get; private set; }
@@ -111,6 +111,15 @@ public class MonsterStateMachine : MonoBehaviour
         ActiveState?.HandleDamage(Damage);
 
     }
+    public void OnExeHit(float Damage)
+    {
+        ActiveState?.HandleDamage(Damage);
+        if(Targetplayer == null)
+        {
+            SetTarget(PlayerStateMachine.Instance);
+            ChangeState<Battle>();
+        }
+    }
     private void OnEnable()
     {
         StartDetection();
@@ -135,7 +144,7 @@ public class MonsterStateMachine : MonoBehaviour
     }
     IEnumerator Detect()
     {
-        WaitForSeconds wait = YeildCache.GetIntervals(0.5f);
+        WaitForSeconds wait = YeildCache.GetIntervals(0.1f);
         while (true)
         {
             Collider[] hitPlayers = Physics.OverlapSphere(transform.position, status.detect_range, playerLayer);
@@ -146,7 +155,7 @@ public class MonsterStateMachine : MonoBehaviour
                 Targetplayer = hitPlayers[0].GetComponent<PlayerStateMachine>();
 
                 // 2. 여기서 이제 우리가 짰던 빛/소음 계산 함수를 돌립니다.
-                float awareness = CalculateSoundAwareness(Targetplayer);
+                float awareness = CalculateSoundAwareness(Targetplayer) + CalculateLightAwareness(Targetplayer);
 
                 // 인지 게이지 상승 로직...
 
@@ -192,6 +201,17 @@ public class MonsterStateMachine : MonoBehaviour
 
         return (noise / Mathf.Max(dist * dist, 1f));
     }
+    float CalculateLightAwareness(PlayerStateMachine player)
+    {
+        Vector3 dirToPlayer = (player.transform.position - transform.position).normalized;
+        if (Vector3.Dot(transform.forward, dirToPlayer) <= 0f) return 0f;
+
+        if (Physics.Linecast(transform.position, player.transform.position, obstacleMask))
+            return 0f;
+
+        float distSq = (player.transform.position - transform.position).sqrMagnitude;
+        return player.status.currentbrighten / Mathf.Max(distSq, 1f);
+    }
     public void SetTarget(PlayerStateMachine target)
     {
         Targetplayer = target;
@@ -206,7 +226,6 @@ public class MonsterStateMachine : MonoBehaviour
 
     public void ChangeStun()
     {
-
         ChangeState<Stun>();
     }
 }
