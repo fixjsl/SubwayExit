@@ -59,7 +59,7 @@ public class Move : PlayerState
         {
             if (player.status.currentspeed != player.status.walkspeed)
                 player.status.currentspeed = player.status.walkspeed;
-            else if (player.isSprint && player.status.currentspeed != player.status.sprintspeed)
+            if (player.isSprint && player.status.currentspeed != player.status.sprintspeed)
                 player.status.currentspeed = player.status.sprintspeed;
 
             player.Rb.linearVelocity = new Vector3(

@@ -11,11 +11,6 @@ public abstract class MonsterState : State
         Monster = monster;      
     }
 
-    public bool ScanPlayer()
-    {
-            //플레이어 추적 함수 추적 범위에 플레이어가 있으면 true를 반환
-            return true;
-    }
 
 
     public override void Enter()

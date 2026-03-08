@@ -54,9 +54,14 @@ namespace MonsterStates
         {
             //목표까지 이동
             if (Monster.Targetplayer == null) return;
-            
-                // 플레이어 방향으로 회전
-            CheckDirection();
+
+            AnimatorStateInfo stateInfo = Monster.animator.GetCurrentAnimatorStateInfo(0);
+            // 플레이어 방향으로 회전
+            if (stateInfo.shortNameHash != Monster.moveTurn && !Monster.animator.IsInTransition(0))
+            {
+                CheckDirection();
+            }
+           
 
             if (isTurning) return;
                 // 플레이어 방향으로 이동 로직

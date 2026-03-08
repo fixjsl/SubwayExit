@@ -21,7 +21,7 @@ public class Parry: PlayerState
 
     public override void Exit()
     {
-
+        IsInParryWindow = false;
     }
 
     public override void HandleDamage(float Damage)

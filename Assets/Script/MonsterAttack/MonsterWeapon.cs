@@ -4,15 +4,17 @@ public class MonsterWeapon : MonoBehaviour
 {
     private MonsterStateMachine monster;
 
-
+    private Collider hitbox;
     private void Awake()
     {
         monster = GetComponentInParent<MonsterStateMachine>();
-        GetComponent<Collider>().enabled = false;
+        hitbox = GetComponentInParent<Collider>();
+        hitbox.enabled = false;
+
     }
 
-    public void OnAttackCollider() => GetComponent<Collider>().enabled = true;
-    public void OffAttackCollider() => GetComponent<Collider>().enabled = false;
+    public void OnAttackCollider() => hitbox.enabled = true;
+    public void OffAttackCollider() => hitbox.enabled = false;
 
     private void OnTriggerEnter(Collider other)
     {

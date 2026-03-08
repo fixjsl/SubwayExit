@@ -24,7 +24,7 @@ public class Attack : PlayerState
 
     public override void Exit()
     {
-        if(player.bufferinput == StateType.Attack)
+        if(player.bufferinput == StateType.Attack && ComboIndex <2)
         {
             ComboIndex++;
         }

@@ -20,4 +20,7 @@ public class WeaponStatus : ScriptableObject
 
     [Header("애니메이션")]
     public string[] attackAnimations; // 무기별 공격 모션
+
+    public Vector3 holdPosition; // 잡히는 위치
+    public Quaternion holdRotation; // 회전값
 }

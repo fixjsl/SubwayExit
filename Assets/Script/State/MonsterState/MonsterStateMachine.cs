@@ -61,8 +61,9 @@ public class MonsterStateMachine : MonoBehaviour
     }
     void Awake()
     {
-        stateInit();
+        
         status = Instantiate(status);
+        stateInit();
         status.Hp = status.Maxhp;
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();

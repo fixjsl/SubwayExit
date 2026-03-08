@@ -20,7 +20,7 @@ public class Battle : MonsterState
                 return;
             }
             Monster.animator.CrossFade("battle",0.01f);
-            delay = Monster.status.atkdelay + Random.Range(-1, 1);
+            delay = Monster.status.atkdelay + Random.Range(-1f, 1f);
             Timer.Reset();
         }
     public override void Exit() { 

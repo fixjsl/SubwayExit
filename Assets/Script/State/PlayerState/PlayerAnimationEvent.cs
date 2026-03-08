@@ -16,4 +16,11 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         player.gameObject.layer = LayerMask.NameToLayer("Player");
     }
+    public void OnParry()
+    {
+        if(player.ActiveState is Parry)
+        {
+            ((Parry)player.ActiveState).OnParryWindow();
+        }
+    }
 }

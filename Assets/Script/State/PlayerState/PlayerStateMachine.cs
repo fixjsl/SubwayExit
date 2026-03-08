@@ -55,13 +55,24 @@ public class PlayerStateMachine : MonoBehaviour
     public bool isParrying => ActiveState is Parry parry && parry.IsInParryWindow;
 
     public Iinterectable nearbyInteractable { get; private set; }
-    public void SetInteractable(Iinterectable interactable) => nearbyInteractable = interactable;
+    public void SetInteractable(Iinterectable interactable)
+    {
+        if (nearbyInteractable == null)
+        {
+            nearbyInteractable = interactable;
+            return;
+        }
+        // 이미 있으면 더 가까운 걸로 교체
+        float currentDist = (((MonoBehaviour)nearbyInteractable).transform.position - transform.position).sqrMagnitude;
+        float newDist = (((MonoBehaviour)interactable).transform.position - transform.position).sqrMagnitude;
+        if (newDist < currentDist) nearbyInteractable = interactable;
+    }
     public void ClearInteractable() => nearbyInteractable = null;
     //최초 상태 설정
     public void stateInit()
     {
         action = new InputSystem_Actions();
-        action.PlayerAction.Attack.performed += _ => SetBuffer(StateType.Attack);
+        action.PlayerAction.Attack.performed += _ => { if (currentWeapon != null) SetBuffer(StateType.Attack); };
         action.PlayerAction.Dodge.performed += _ => SetBuffer(StateType.Dodge);
         action.PlayerAction.Interact.performed += _ => SetBuffer(StateType.interect);
         action.PlayerAction.LightTogle.performed += _ => {  
@@ -199,7 +210,8 @@ public class PlayerStateMachine : MonoBehaviour
                         execution.setTarget(hits[0].GetComponentInParent<MonsterStateMachine>());
                         ChangeState<Execution>();
                     }
-                    else ChangeState<Attack>();  break;
+                    else ChangeState<Attack>(); 
+                    break;
                 }
             case StateType.Parry: ChangeState<Parry>(); break;
             case StateType.Dodge:
