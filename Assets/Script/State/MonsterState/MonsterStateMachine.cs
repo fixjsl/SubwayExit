@@ -13,8 +13,8 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
     public Coroutine DetectCorutine { get; private set; }
     public PlayerStateMachine Targetplayer {  get; private set; }
-    public State ActiveState { get; private set; }
-    public State PassiveState { get; private set; }
+    public MonsterState ActiveState { get; private set; }
+    public MonsterState PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
     public Animator animator { get; private set; }
     public MonsterStatus status;
@@ -35,7 +35,7 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField]
     public Vector3 spawnpoint;
 
-    public Dictionary<System.Type, State> Statecaches = new Dictionary<System.Type, State>();
+    public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
     [SerializeField] private Collider attackCollider; // 인스펙터 할당용
 
     public Collider AttackCollider => attackCollider; // 외부에서 읽기 전용
@@ -88,7 +88,7 @@ public class MonsterStateMachine : MonoBehaviour
     {
         System.Type type = typeof(T);
 
-        if (!Statecaches.TryGetValue(type, out State nextState))
+        if (!Statecaches.TryGetValue(type, out MonsterState nextState))
         {
             Debug.LogError($"{type.Name} 상태가 캐시에 존재하지 않습니다!");
             return;
@@ -229,4 +229,6 @@ public class MonsterStateMachine : MonoBehaviour
     {
         ChangeState<Stun>();
     }
+
+
 }

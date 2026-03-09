@@ -69,14 +69,14 @@ namespace MonsterStates
             Monster.Rb.linearVelocity = direction * Monster.status.speed;
             
         }
-        public override void OnAnimationFinished()
+        public override void OnTurnAnimationFinished()
         {
             Vector3 currentEuler = Monster.Rb.rotation.eulerAngles;
             float snappedY = Mathf.Round(currentEuler.y / 90f) * 90f;
             Monster.Rb.rotation = Quaternion.Euler(0, snappedY, 0);
 
             canChanged = true;
-            Monster.animator.CrossFade(Monster.move, 0.0001f);
+            Monster.animator.CrossFade(Monster.sprint, 0.0001f);
         }
     }
 }

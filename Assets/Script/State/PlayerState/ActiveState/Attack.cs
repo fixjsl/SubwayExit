@@ -19,7 +19,7 @@ public class Attack : PlayerState
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero; // Ãß°¡
         player.animator.CrossFade(hash, 0.15f);
-        player.status.UseStamina(player.currentWeapon.status.guardStamina);
+        player.status.UseStamina(player.currentWeapon.status.attackStamina);
     }
 
     public override void Exit()

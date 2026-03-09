@@ -44,6 +44,7 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int sprint = Animator.StringToHash("sprint");
     public readonly int sprintTurn = Animator.StringToHash("sprintTurn");
     public readonly int crunch = Animator.StringToHash("crunch");
+    public readonly int crunchTurn = Animator.StringToHash("crunchTrun");
     public readonly int parrying = Animator.StringToHash("parrying");
     public readonly int guard = Animator.StringToHash("guard");
     public readonly int dodge = Animator.StringToHash("dodge");

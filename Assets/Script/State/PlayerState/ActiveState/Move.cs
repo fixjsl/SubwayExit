@@ -30,24 +30,43 @@ public class Move : PlayerState
             float targetY = (movebuffer > 0) ? 90f : -90f;
             player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
             canChanged = false;
-            if (!player.isSprint)
+            if (player.isSprint)
             {
-                player.animator.CrossFade(player.moveTurn, 0.15f);
+                player.animator.CrossFade(player.sprintTurn, 0.15f);
+            }
+            else if (player.isCrunch)
+            {
+                player.animator.CrossFade(player.crunchTurn, 0.15f);
             }
             else
             {
-                player.animator.CrossFade(player.sprintTurn, 0.15f);
+                player.animator.CrossFade(player.moveTurn, 0.15f);
             }
             
 
 
             movebuffer = player.MoveInput;
         }
-        if (player.isSprint)
+        curAni = player.animator.GetCurrentAnimatorStateInfo(0);
+        if (canChanged)
+        {
+            if (player.isSprint && curAni.shortNameHash != player.sprint)
+                player.animator.CrossFade(player.sprint, 0.15f);
+            else if (player.isCrunch && curAni.shortNameHash != player.crunch)
+                player.animator.CrossFade(player.crunch, 0.15f);
+            else player.animator.CrossFade(player.move, 0.15f);
+        }
+
+        if (!player.isSprint)
+        {
+            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime;
+            
+        }
+        else
         {
             player.status.Stamina -= player.status.SprintCost * Time.deltaTime;
         }
-        if (!canChanged && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("moveTurn")&& !player.animator.GetCurrentAnimatorStateInfo(0).IsName("sprintTurn"))
+        if (!canChanged && curAni.shortNameHash == player.moveTurn&& curAni.shortNameHash==player.sprintTurn)
         {
             canChanged = true;
         }
@@ -57,6 +76,7 @@ public class Move : PlayerState
     {
         if (canChanged)
         {
+            
             if (player.status.currentspeed != player.status.walkspeed)
                 player.status.currentspeed = player.status.walkspeed;
             if (player.isSprint && player.status.currentspeed != player.status.sprintspeed)
@@ -68,20 +88,23 @@ public class Move : PlayerState
                 0f);
         }
     }
-    public override void OnAnimationFinished()
+    public override void OnTurnAnimationFinished()
     {
         float targetY = (player.MoveInput > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
-        canChanged = true;
-        if (!player.isSprint)
+        if (player.isCrunch)
         {
-            player.animator.CrossFade(player.move, 0.15f);
+            player.animator.CrossFade(player.crunch, 0.15f);
         }
-        else
+        else if (player.isSprint) 
         {
             player.animator.CrossFade(player.sprint, 0.15f);
         }
-       
+        else
+        {
+            player.animator.CrossFade(player.move, 0.15f);
+        }
+        canChanged = true;
     }
 }

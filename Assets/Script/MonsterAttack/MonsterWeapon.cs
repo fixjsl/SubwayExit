@@ -8,7 +8,7 @@ public class MonsterWeapon : MonoBehaviour
     private void Awake()
     {
         monster = GetComponentInParent<MonsterStateMachine>();
-        hitbox = GetComponentInParent<Collider>();
+        hitbox = monster.AttackCollider as Collider;
         hitbox.enabled = false;
 
     }

@@ -12,6 +12,11 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         player.ActiveState?.OnAnimationFinished();
     }
+
+    public void OnTurnAnimationFinished()
+    {
+        player.ActiveState?.OnTurnAnimationFinished();
+    }
     public void OnEndInvincible()
     {
         player.gameObject.layer = LayerMask.NameToLayer("Player");

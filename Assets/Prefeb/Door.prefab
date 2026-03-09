@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5144882749616914569}
   - component: {fileID: 8827005000552249036}
   - component: {fileID: 2723778224340002341}
+  - component: {fileID: 8928655108082095673}
   m_Layer: 3
   m_Name: Door
   m_TagString: Untagged
@@ -76,6 +77,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 24.441868, y: 27.12385, z: 1}
   m_Center: {x: 0.052797794, y: -0.020833015, z: 0}
+--- !u!114 &8928655108082095673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629917677615265081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd927ef277b5eee47b2d300ad42421c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Doorcs
 --- !u!1001 &6233474920278447711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -98,15 +111,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a182116c5acfb7049b919348da6500b0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.29
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a182116c5acfb7049b919348da6500b0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.69
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a182116c5acfb7049b919348da6500b0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5
+      value: -8.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a182116c5acfb7049b919348da6500b0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -136,6 +149,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a182116c5acfb7049b919348da6500b0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31c36f2f71d6970408666e5a4751c74c, type: 2}
     - target: {fileID: -5568371526223589888, guid: a182116c5acfb7049b919348da6500b0, type: 3}
       propertyPath: m_Layer
       value: 3

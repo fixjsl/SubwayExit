@@ -30,6 +30,7 @@ public abstract class MonsterState : State
 
         }
         public virtual void OnAnimationFinished() {}
+        public virtual void OnTurnAnimationFinished() { }
     }
 
 
