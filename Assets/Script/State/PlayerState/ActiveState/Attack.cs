@@ -14,11 +14,10 @@ public class Attack : PlayerState
     public override void Enter()
     {
         //Idle Animation code
-        int hash = Animator.StringToHash(
-        player.currentWeapon.status.attackAnimations[ComboIndex]);
+        
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero; // Ãß°¡
-        player.animator.CrossFade(hash, 0.15f);
+        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
     }
 

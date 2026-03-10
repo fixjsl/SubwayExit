@@ -15,8 +15,14 @@ MonoBehaviour:
   attack: 0
   attackSpeed: 0
   attackRange: 0
+  execution_m: 0
   bloodStrenth: 0
   stunStrength: 0
+  GuardStrength: 0
   attackStamina: 0
   guardStamina: 0
   parryStamina: 0
+  attackAnimations:
+  - {fileID: 0}
+  holdPosition: {x: 0, y: 0, z: 0}
+  holdRotation: {x: 0, y: 0, z: 0, w: 0}

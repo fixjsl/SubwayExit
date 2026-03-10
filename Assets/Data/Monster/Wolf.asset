@@ -10,8 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b34925a5307c197429fd457354d17afa, type: 3}
-  m_Name: NewMonsterStatus
+  m_Name: Wolf
   m_EditorClassIdentifier: Assembly-CSharp::MonsterStatus
-  hp: 0
-  speed: 0
-  atk: 0
+  Maxhp: 100
+  speed: 5
+  chasespeed: 5
+  atk: 5
+  atk_range: 100
+  atkdelay: 3
+  detect_range: 100
+  detection_gauge: 0
+  recovery: 0
+  battle_range: 50
+  stunTime: 0
+  knockbackForce: 0
