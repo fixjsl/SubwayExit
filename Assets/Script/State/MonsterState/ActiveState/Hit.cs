@@ -38,8 +38,8 @@ namespace MonsterStates
         {
             if (Timer.Timer(hitduration))
             {
-                if(Monster.Targetplayer != null) Monster.ChangeState<Return>();
-                else Monster.ChangeState<Battle>();
+                if(Monster.Targetplayer != null) Monster.ChangeState<Battle>();
+                else Monster.ChangeState<Return>();
             }
 
         }

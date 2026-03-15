@@ -10,8 +10,9 @@ public class Die : PlayerState
     {
         player.animator.CrossFade(player.die, 0.001f);
         player.Rb.linearVelocity = Vector3.zero;
-        player.GetComponent<PlayerStateMachine>().enabled = false;
-        player.GetComponent<Collider>().enabled = false;
+        player.Rb.isKinematic = true;
+        player.gameObject.layer = Layercache.Die;
+        player.OnDisable();
     }
 
     public override void Exit()

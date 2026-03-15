@@ -22,4 +22,5 @@ public abstract class PlayerState : State
     {
         canChanged = true;
     }
+    public virtual void OnTurnAnimationFinished() { }
 }

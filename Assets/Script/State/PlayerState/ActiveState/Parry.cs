@@ -14,7 +14,6 @@ public class Parry: PlayerState
     public override void Enter()
     {
         canChanged = false;
-        IsInParryWindow = true;
         parryTimer.Reset();
         player.animator.CrossFade(player.parrying, 0.02f);
         player.status.UseStamina(player.currentWeapon.status.parryStamina);
@@ -22,7 +21,7 @@ public class Parry: PlayerState
 
     public override void Exit()
     {
-
+        IsInParryWindow = false;
     }
 
     public override void HandleDamage(float Damage)
@@ -44,5 +43,9 @@ public class Parry: PlayerState
     {
 
 
+    }
+    public void OnParryWindow()
+    {
+        IsInParryWindow = true;
     }
 }

@@ -163,6 +163,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LightTogle"",
+                    ""type"": ""Button"",
+                    ""id"": ""2178faa6-4ae9-4a7f-9d55-ca8bb57607b9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -361,6 +370,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""94a67266-cbe3-4b01-b38b-c943d086e7f5"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LightTogle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -956,6 +976,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_PlayerAction_Crouch = m_PlayerAction.FindAction("Crouch", throwIfNotFound: true);
         m_PlayerAction_Dodge = m_PlayerAction.FindAction("Dodge", throwIfNotFound: true);
         m_PlayerAction_Reload = m_PlayerAction.FindAction("Reload", throwIfNotFound: true);
+        m_PlayerAction_LightTogle = m_PlayerAction.FindAction("LightTogle", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1057,6 +1078,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerAction_Crouch;
     private readonly InputAction m_PlayerAction_Dodge;
     private readonly InputAction m_PlayerAction_Reload;
+    private readonly InputAction m_PlayerAction_LightTogle;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerAction".
     /// </summary>
@@ -1100,6 +1122,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerAction/Reload".
         /// </summary>
         public InputAction @Reload => m_Wrapper.m_PlayerAction_Reload;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerAction/LightTogle".
+        /// </summary>
+        public InputAction @LightTogle => m_Wrapper.m_PlayerAction_LightTogle;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1150,6 +1176,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @LightTogle.started += instance.OnLightTogle;
+            @LightTogle.performed += instance.OnLightTogle;
+            @LightTogle.canceled += instance.OnLightTogle;
         }
 
         /// <summary>
@@ -1185,6 +1214,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @LightTogle.started -= instance.OnLightTogle;
+            @LightTogle.performed -= instance.OnLightTogle;
+            @LightTogle.canceled -= instance.OnLightTogle;
         }
 
         /// <summary>
@@ -1541,6 +1573,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReload(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LightTogle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLightTogle(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -13,8 +13,8 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
     public Coroutine DetectCorutine { get; private set; }
     public PlayerStateMachine Targetplayer {  get; private set; }
-    private State ActiveState;
-    public State PassiveState { get; private set; }
+    public MonsterState ActiveState { get; private set; }
+    public MonsterState PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
     public Animator animator { get; private set; }
     public MonsterStatus status;
@@ -35,7 +35,7 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField]
     public Vector3 spawnpoint;
 
-    public Dictionary<System.Type, State> Statecaches = new Dictionary<System.Type, State>();
+    public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
     [SerializeField] private Collider attackCollider; // 인스펙터 할당용
 
     public Collider AttackCollider => attackCollider; // 외부에서 읽기 전용
@@ -61,8 +61,9 @@ public class MonsterStateMachine : MonoBehaviour
     }
     void Awake()
     {
-        stateInit();
+        
         status = Instantiate(status);
+        stateInit();
         status.Hp = status.Maxhp;
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
@@ -87,7 +88,7 @@ public class MonsterStateMachine : MonoBehaviour
     {
         System.Type type = typeof(T);
 
-        if (!Statecaches.TryGetValue(type, out State nextState))
+        if (!Statecaches.TryGetValue(type, out MonsterState nextState))
         {
             Debug.LogError($"{type.Name} 상태가 캐시에 존재하지 않습니다!");
             return;
@@ -110,6 +111,15 @@ public class MonsterStateMachine : MonoBehaviour
         ChangeState<MonsterStates.Hit>();
         ActiveState?.HandleDamage(Damage);
 
+    }
+    public void OnExeHit(float Damage)
+    {
+        ActiveState?.HandleDamage(Damage);
+        if(Targetplayer == null)
+        {
+            SetTarget(PlayerStateMachine.Instance);
+            ChangeState<Battle>();
+        }
     }
     private void OnEnable()
     {
@@ -135,7 +145,7 @@ public class MonsterStateMachine : MonoBehaviour
     }
     IEnumerator Detect()
     {
-        WaitForSeconds wait = YeildCache.GetIntervals(0.5f);
+        WaitForSeconds wait = YeildCache.GetIntervals(0.1f);
         while (true)
         {
             Collider[] hitPlayers = Physics.OverlapSphere(transform.position, status.detect_range, playerLayer);
@@ -146,7 +156,7 @@ public class MonsterStateMachine : MonoBehaviour
                 Targetplayer = hitPlayers[0].GetComponent<PlayerStateMachine>();
 
                 // 2. 여기서 이제 우리가 짰던 빛/소음 계산 함수를 돌립니다.
-                float awareness = CalculateSoundAwareness(Targetplayer);
+                float awareness = CalculateSoundAwareness(Targetplayer) + CalculateLightAwareness(Targetplayer);
 
                 // 인지 게이지 상승 로직...
 
@@ -192,6 +202,17 @@ public class MonsterStateMachine : MonoBehaviour
 
         return (noise / Mathf.Max(dist * dist, 1f));
     }
+    float CalculateLightAwareness(PlayerStateMachine player)
+    {
+        Vector3 dirToPlayer = (player.transform.position - transform.position).normalized;
+        if (Vector3.Dot(transform.forward, dirToPlayer) <= 0f) return 0f;
+
+        if (Physics.Linecast(transform.position, player.transform.position, obstacleMask))
+            return 0f;
+
+        float distSq = (player.transform.position - transform.position).sqrMagnitude;
+        return player.status.currentbrighten / Mathf.Max(distSq, 1f);
+    }
     public void SetTarget(PlayerStateMachine target)
     {
         Targetplayer = target;
@@ -206,7 +227,8 @@ public class MonsterStateMachine : MonoBehaviour
 
     public void ChangeStun()
     {
-
         ChangeState<Stun>();
     }
+
+
 }

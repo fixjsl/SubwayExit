@@ -24,7 +24,7 @@ public class Dodge : PlayerState
         lastTime = Time.time;
         canChanged = false;
         player.gameObject.layer = LayerMask.NameToLayer("Dodge");
-        player.animator.CrossFade(player.dodge, 0.02f);
+        player.animator.CrossFade(player.dodge, 0.15f);
 
     }
 
@@ -49,9 +49,5 @@ public class Dodge : PlayerState
             player.Rb.linearVelocity.y,
             0f);
 
-    }
-    public override void OnAnimationFinished()
-    {
-        canChanged = true; // ÀÚµ¿ Å»Ãâ
     }
 }

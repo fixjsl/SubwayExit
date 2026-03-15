@@ -54,9 +54,14 @@ namespace MonsterStates
         {
             //목표까지 이동
             if (Monster.Targetplayer == null) return;
-            
-                // 플레이어 방향으로 회전
-            CheckDirection();
+
+            AnimatorStateInfo stateInfo = Monster.animator.GetCurrentAnimatorStateInfo(0);
+            // 플레이어 방향으로 회전
+            if (stateInfo.shortNameHash != Monster.moveTurn && !Monster.animator.IsInTransition(0))
+            {
+                CheckDirection();
+            }
+           
 
             if (isTurning) return;
                 // 플레이어 방향으로 이동 로직
@@ -64,14 +69,14 @@ namespace MonsterStates
             Monster.Rb.linearVelocity = direction * Monster.status.speed;
             
         }
-        public override void OnAnimationFinished()
+        public override void OnTurnAnimationFinished()
         {
             Vector3 currentEuler = Monster.Rb.rotation.eulerAngles;
             float snappedY = Mathf.Round(currentEuler.y / 90f) * 90f;
             Monster.Rb.rotation = Quaternion.Euler(0, snappedY, 0);
 
             canChanged = true;
-            Monster.animator.CrossFade(Monster.move, 0.0001f);
+            Monster.animator.CrossFade(Monster.sprint, 0.0001f);
         }
     }
 }

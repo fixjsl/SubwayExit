@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 public enum StateType
 {
     None, idle, Dodge, Attack, interect,Parry
@@ -21,9 +22,9 @@ public class PlayerStateMachine : MonoBehaviour
     public Weapon currentWeapon;
     // 현재 플레이어의 상태
     public float MoveInput;
-
-    private PlayerState ActiveState;
-    private List<PlayerState> PassiveStates = new List<PlayerState>();
+    public Light currentLight {get; private set; }
+    public PlayerState ActiveState { get; private set; }
+    public List<PlayerState> PassiveStates { get; private set; } = new List<PlayerState>();
     public bool isGuard { get; private set; }
     public bool isSprint {  get; private set; }
     public bool isCrunch { get; private set; }
@@ -43,6 +44,7 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int sprint = Animator.StringToHash("sprint");
     public readonly int sprintTurn = Animator.StringToHash("sprintTurn");
     public readonly int crunch = Animator.StringToHash("crunch");
+    public readonly int crunchTurn = Animator.StringToHash("crunchTrun");
     public readonly int parrying = Animator.StringToHash("parrying");
     public readonly int guard = Animator.StringToHash("guard");
     public readonly int dodge = Animator.StringToHash("dodge");
@@ -52,14 +54,34 @@ public class PlayerStateMachine : MonoBehaviour
     public TimeManager bufferTimer = new TimeManager();
     //패링 가능 여부
     public bool isParrying => ActiveState is Parry parry && parry.IsInParryWindow;
+
+    public Iinterectable nearbyInteractable { get; private set; }
+    public void SetInteractable(Iinterectable interactable)
+    {
+        if (nearbyInteractable == null)
+        {
+            nearbyInteractable = interactable;
+            return;
+        }
+        // 이미 있으면 더 가까운 걸로 교체
+        float currentDist = (((MonoBehaviour)nearbyInteractable).transform.position - transform.position).sqrMagnitude;
+        float newDist = (((MonoBehaviour)interactable).transform.position - transform.position).sqrMagnitude;
+        if (newDist < currentDist) nearbyInteractable = interactable;
+    }
+    public void ClearInteractable() => nearbyInteractable = null;
     //최초 상태 설정
     public void stateInit()
     {
         action = new InputSystem_Actions();
-        action.PlayerAction.Attack.performed += _ => SetBuffer(StateType.Attack);
+        action.PlayerAction.Attack.performed += _ => { if (currentWeapon != null) SetBuffer(StateType.Attack); };
         action.PlayerAction.Dodge.performed += _ => SetBuffer(StateType.Dodge);
         action.PlayerAction.Interact.performed += _ => SetBuffer(StateType.interect);
-
+        action.PlayerAction.LightTogle.performed += _ => {  
+           if(currentLight != null)
+            {
+                currentLight.enabled = !currentLight.enabled;
+            }
+        };
         action.PlayerAction.Move.performed += ctx => MoveInput = ctx.ReadValue<float>();
         action.PlayerAction.Move.canceled += ctx => MoveInput = 0f;
 
@@ -86,7 +108,7 @@ public class PlayerStateMachine : MonoBehaviour
                 Debug.LogError($"{type.Name} 클래스의 생성자가 잘못되었습니다! : {e.Message}");
             }
         }
-
+        AddpassiveStat<NoiseABright>();
         status.OnDie += () => ChangeState<Die>();
         status.StaminaEmpty += () => ChangeState<Move>();
         ActiveState = Statecaches[typeof(Idle)];
@@ -97,6 +119,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Awake() {
         if(Instance == null) Instance = this;
+        currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         stateInit();
@@ -131,8 +154,9 @@ public class PlayerStateMachine : MonoBehaviour
             Debug.LogError($"{type.Name} 상태가 캐시에 존재하지 않습니다!");
             return;
         }
-        bufferinput = StateType.None;
+        
         ActiveState?.Exit();
+        bufferinput = StateType.None;
         ActiveState = Statecaches[typeof(T)];
         Debug.Log($"change {ActiveState.ToString()} ");
         ActiveState?.Enter();
@@ -161,18 +185,8 @@ public class PlayerStateMachine : MonoBehaviour
 
             if (MoveInput != 0f)
             {
-                if (isSprint)
-                {
-                    if (status.Stamina > status.MaxStamina * 0.1f) {
-                        if (ActiveState is not Sprint) ChangeState<Sprint>();
-                    }
-
-                    
-                }
-                else
-                {
-                    if (ActiveState is not Move) ChangeState<Move>();
-                }
+                if (ActiveState is not Move) ChangeState<Move>();
+                
                 return true;
             }
             if (ActiveState is not Idle)
@@ -187,7 +201,19 @@ public class PlayerStateMachine : MonoBehaviour
     {
         switch (bufferinput)
         {
-            case StateType.Attack: ChangeState<Attack>(); break;
+            case StateType.Attack:
+                {
+                    Collider[] hits = Physics.OverlapSphere(transform.position,
+                         currentWeapon.status.attackRange, 1 << Layercache.Stun);
+                    if (hits.Length > 0)
+                    {
+                        var execution = Statecaches[typeof(Execution)] as Execution;
+                        execution.setTarget(hits[0].GetComponentInParent<MonsterStateMachine>());
+                        ChangeState<Execution>();
+                    }
+                    else ChangeState<Attack>(); 
+                    break;
+                }
             case StateType.Parry: ChangeState<Parry>(); break;
             case StateType.Dodge:
                 {
@@ -273,18 +299,16 @@ public class PlayerStateMachine : MonoBehaviour
         currentWeapon = weapon;
         // 무기 장착 시 필요한 추가 로직을 여기에 작성할 수 있습니다.
     }
+    public void EquipLight(Light newLight)
+    {
+        currentLight = newLight;
+        (Statecaches[typeof(NoiseABright)] as NoiseABright).light = newLight;
+    }
     //애니메이션 회전
     void OnAnimatorMove()
     {
         Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
     }
     // ========== 애니메이션 이벤트 ==========
-    public void OnAnimationFinished()
-    {
-        ActiveState?.OnAnimationFinished();
-    }
-    public void OnEndInvincible()
-    {
-        gameObject.layer = LayerMask.NameToLayer("Player");
-    }
+
 }

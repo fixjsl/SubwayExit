@@ -32,7 +32,7 @@ public abstract class PassiveState : PlayerState
         while (true)
         {
             OnTick();
-            yield return null;
+            yield return wait;
         }
     }
     protected abstract void OnTick();
