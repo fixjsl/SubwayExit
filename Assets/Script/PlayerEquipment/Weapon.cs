@@ -6,7 +6,7 @@ public class Weapon : MonoBehaviour, ICreatable
     private PlayerStateMachine player;
     [SerializeField]
     public WeaponStatus status;
-    private Collider weaponCollider;
+    [SerializeField] private Collider weaponCollider;
     [SerializeField] private ItemBase _iteminfo;
     public ItemBase iteminfo => _iteminfo;
 
@@ -14,13 +14,13 @@ public class Weapon : MonoBehaviour, ICreatable
 
     private void Awake()
     {
+        status = Instantiate(status);
         player = GetComponentInParent<PlayerStateMachine>();
-        weaponCollider = GetComponent<Collider>();
         weaponCollider.enabled = false;
     }
 
-    public void OnAttackColider() =>         weaponCollider.enabled = true;
-    public void OffAttackColider() =>         weaponCollider.enabled = false;
+    public void OnAttackColider() =>  weaponCollider.enabled = true;
+    public void OffAttackColider() => weaponCollider.enabled = false;
 
     private void OnTriggerEnter(Collider other)
     {

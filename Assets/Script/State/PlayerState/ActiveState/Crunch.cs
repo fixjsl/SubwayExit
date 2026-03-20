@@ -1,12 +1,10 @@
 using UnityEngine;
-using UnityEngine.Profiling;
 
-public class Move : PlayerState
+public class Crunch : PlayerState
 {
-
     private float movebuffer;
     private AnimatorStateInfo curAni;
-    public Move(PlayerStateMachine stateMachine) : base(stateMachine)
+    public Crunch(PlayerStateMachine stateMachine) : base(stateMachine)
     {
 
     }
@@ -16,7 +14,8 @@ public class Move : PlayerState
         //Move animation
         float dot = Vector3.Dot(player.transform.forward, Vector3.right);
         movebuffer = (dot > 0) ? 1f : -1f;
-        player.animator.CrossFade(player.move, 0.15f);
+
+        player.animator.CrossFade(player.incrunch, 0.15f);
     }
 
     public override void Exit()
@@ -38,7 +37,7 @@ public class Move : PlayerState
             {
                 player.animator.CrossFade(player.moveTurn, 0.15f);
             }
-            
+
 
 
             movebuffer = player.MoveInput;
@@ -53,13 +52,14 @@ public class Move : PlayerState
 
         if (!player.isSprint)
         {
-            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime; 
+            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime;
+
         }
         else
         {
             player.status.Stamina -= player.status.SprintCost * Time.deltaTime;
         }
-        if (!canChanged && curAni.shortNameHash == player.moveTurn&& curAni.shortNameHash==player.sprintTurn)
+        if (!canChanged && curAni.shortNameHash == player.moveTurn && curAni.shortNameHash == player.sprintTurn)
         {
             canChanged = true;
         }
@@ -69,7 +69,7 @@ public class Move : PlayerState
     {
         if (canChanged)
         {
-            
+
             if (player.status.currentspeed != player.status.walkspeed)
                 player.status.currentspeed = player.status.walkspeed;
             if (player.isSprint && player.status.currentspeed != player.status.sprintspeed)
@@ -86,14 +86,8 @@ public class Move : PlayerState
         float targetY = (player.MoveInput > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
-        if (player.isSprint) 
-        {
-            player.animator.CrossFade(player.sprint, 0.15f);
-        }
-        else
-        {
-            player.animator.CrossFade(player.move, 0.15f);
-        }
+        player.animator.CrossFade(player.crunchIdle, 0.15f);
         canChanged = true;
     }
+
 }

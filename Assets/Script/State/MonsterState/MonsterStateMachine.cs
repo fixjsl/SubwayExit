@@ -56,7 +56,7 @@ public class MonsterStateMachine : MonoBehaviour
             }
         }
 
-        ActiveState = Statecaches[typeof(Idle)];
+        ActiveState = Statecaches[typeof(MonsterStates.Idle)];
         ActiveState.Enter();
     }
     void Awake()
