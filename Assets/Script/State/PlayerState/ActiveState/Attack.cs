@@ -16,7 +16,8 @@ public class Attack : PlayerState
         //Idle Animation code
         
         canChanged = false;
-        player.Rb.linearVelocity = Vector3.zero; // Ãß°¡
+        canCombo = false;
+        player.Rb.linearVelocity = Vector3.zero; // ï¿½ß°ï¿½
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
     }
@@ -35,17 +36,8 @@ public class Attack : PlayerState
  
     public override void LogicUpdate()
     {
-        // ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ ³¡³ª±â 70ÆÛ »óÅÂºÎÅÍ »óÅÂÀüÀÌ °¡´É
-        if(!canCombo)
-        {
-            curAni = player.animator.GetCurrentAnimatorStateInfo(0);
-
-            if(curAni.IsTag("Attack") && curAni.normalizedTime >= 0.75f)
-            {
-                canCombo = true;
-            } 
-        }
-        if(canCombo && player.bufferinput == StateType.Attack) 
+        // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 70ï¿½ï¿½ ï¿½ï¿½ï¿½Âºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (canCombo && player.bufferinput == StateType.Attack)
         {
             canChanged = true;
         }       
@@ -55,7 +47,11 @@ public class Attack : PlayerState
 
     public override void PhysicalUpdate()
     {
-        //ÀÌ »óÅÂ¿¡¼­ Ã³¸®ÇÒ¸¸ÇÑ ¹°¸®°¡ ÀÖ³ª? µ¥¹ÌÁö´Â Æ®¸®°Å·Î Ã³¸®ÇÒ²¨°í
+        //ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ò¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö³ï¿½? ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½Å·ï¿½ Ã³ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½
         
+    }
+    public override void OncanCombo()
+    {
+        canCombo = true;
     }
 }

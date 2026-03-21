@@ -31,18 +31,18 @@ public class MonsterStateMachine : MonoBehaviour
     Animator.StringToHash("attack2"),
     Animator.StringToHash("attack3")
     };
-    [Header("½ºÆùÆ÷ÀÎÆ® ÁöÁ¤¹Ù¶÷")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½")]
     [SerializeField]
     public Vector3 spawnpoint;
 
     public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
-    [SerializeField] private Collider attackCollider; // ÀÎ½ºÆåÅÍ ÇÒ´ç¿ë
+    [SerializeField] private Collider attackCollider; // ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½
 
-    public Collider AttackCollider => attackCollider; // ¿ÜºÎ¿¡¼­ ÀÐ±â Àü¿ë
+    public Collider AttackCollider => attackCollider; // ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void stateInit()
     {
         var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(MonsterState)) && !t.IsAbstract);
-        Debug.Log($"¹ß°ßµÈ »óÅÂ °³¼ö: {StateT.Count()}");
+        Debug.Log($"ï¿½ß°ßµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {StateT.Count()}");
         foreach (var type in StateT)
         {
             try
@@ -52,7 +52,7 @@ public class MonsterStateMachine : MonoBehaviour
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"{type.Name} Å¬·¡½ºÀÇ »ý¼ºÀÚ°¡ Àß¸øµÇ¾ú½À´Ï´Ù! : {e.Message}");
+                Debug.LogError($"{type.Name} Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ß¸ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½! : {e.Message}");
             }
         }
 
@@ -63,11 +63,12 @@ public class MonsterStateMachine : MonoBehaviour
     {
         
         status = Instantiate(status);
-        stateInit();
+        
         status.Hp = status.Maxhp;
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         status.OnDie += () => ChangeState<MonsterStates.Die>();
+        stateInit();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -90,7 +91,7 @@ public class MonsterStateMachine : MonoBehaviour
 
         if (!Statecaches.TryGetValue(type, out MonsterState nextState))
         {
-            Debug.LogError($"{type.Name} »óÅÂ°¡ Ä³½Ã¿¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù!");
+            Debug.LogError($"{type.Name} ï¿½ï¿½ï¿½Â°ï¿½ Ä³ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
 
@@ -131,7 +132,7 @@ public class MonsterStateMachine : MonoBehaviour
     }
     public void StartDetection()
     {
-        StopDetection(); // Áßº¹ ½ÇÇà ¹æÁö
+        StopDetection(); // ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         DetectCorutine = StartCoroutine(Detect());
     }
 
@@ -152,27 +153,30 @@ public class MonsterStateMachine : MonoBehaviour
 
             if (hitPlayers.Length > 0)
             {
-                // ÇÃ·¹ÀÌ¾î¸¦ Ã£À½!
+                // ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ Ã£ï¿½ï¿½!
                 Targetplayer = hitPlayers[0].GetComponent<PlayerStateMachine>();
 
-                // 2. ¿©±â¼­ ÀÌÁ¦ ¿ì¸®°¡ Â®´ø ºû/¼ÒÀ½ °è»ê ÇÔ¼ö¸¦ µ¹¸³´Ï´Ù.
+                // 2. ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ Â®ï¿½ï¿½ ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
                 float awareness = CalculateSoundAwareness(Targetplayer) + CalculateLightAwareness(Targetplayer);
 
-                // ÀÎÁö °ÔÀÌÁö »ó½Â ·ÎÁ÷...
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½...
 
 
 
-                // 2. ÀÎÁö °ÔÀÌÁö »ó½Â
-                status.detection_gauge += awareness * 0.1f; // ÀÎÅÍ¹ú(0.1s) º¸Á¤
+                // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+                status.detection_gauge += awareness * 0.1f; // ï¿½ï¿½ï¿½Í¹ï¿½(0.1s) ï¿½ï¿½ï¿½ï¿½
 
-                // 3. ÀÓ°èÄ¡ µµ´Þ ½Ã »óÅÂ ÀüÈ¯
+                // 3. ê°ì§€ ê²Œì´ì§€ ì´ˆê³¼ ì‹œ Chase ì „í™˜
                 if (status.detection_gauge >= 100f)
                 {
-                    ChangeState<Chase>();
-                    yield break;
+                    status.detection_gauge = 0f;
+                    if (ActiveState is MonsterStates.Idle || ActiveState is MonsterStates.Move || ActiveState is MonsterStates.Return)
+                    {
+                        ChangeState<Chase>();
+                    }
                 }
 
-                // 4. ¾Æ¹«°Íµµ °¨Áö ¾È µÉ ¶§ °ÔÀÌÁö ÀÚ¿¬ °¨¼Ò
+                // 4. ï¿½Æ¹ï¿½ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if (awareness <= 0)
                 {
                     status.detection_gauge -= status.recovery * 0.1f;
@@ -181,7 +185,7 @@ public class MonsterStateMachine : MonoBehaviour
             }
             else
             {
-                // ¹üÀ§ ¹ÛÀ¸·Î ³ª°¡¸é Å¸°Ù ¼Ò½Ç
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½Ò½ï¿½
                 if (Targetplayer != null) LoseTarget();
             }
 
@@ -194,10 +198,10 @@ public class MonsterStateMachine : MonoBehaviour
         float dist = Vector3.Distance(transform.position, player.transform.position);
         float noise = player.status.currentnoise;
 
-        // Àå¾Ö¹°ÀÌ ÀÖ´ÂÁö Ã¼Å© (Linecast)
+        // ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ Ã¼Å© (Linecast)
         if (Physics.Linecast(transform.position, player.transform.position, obstacleMask))
         {
-            noise *= 0.2f; // º®ÀÌ ÀÖÀ¸¸é ¼ÒÀ½ 80% °¨¼â
+            noise *= 0.2f; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 80% ï¿½ï¿½ï¿½ï¿½
         }
 
         return (noise / Mathf.Max(dist * dist, 1f));
@@ -221,7 +225,7 @@ public class MonsterStateMachine : MonoBehaviour
     public void LoseTarget()
     {
         Targetplayer = null;
-        // ¾î¶² »óÅÂ¿¡ ÀÖµç Å¸°ÙÀ» ÀÒÀ¸¸é º¹±Í
+        // ï¿½î¶² ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½Öµï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         ChangeState<Return>();
     }
 

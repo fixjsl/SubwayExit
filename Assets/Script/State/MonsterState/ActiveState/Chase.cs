@@ -11,7 +11,7 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            //Ãß°Ý ¾Ö´Ï¸ÞÀÌ¼Ç
+            //ï¿½ß°ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
             Monster.StopDetection();
             isTurning = false;
             CheckDirection();
@@ -24,12 +24,12 @@ namespace MonsterStates
         {
             if (Monster.Targetplayer == null) return;
 
-            // ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊÀÎÁö ¿ÞÂÊÀÎÁö
+            // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             float dirToPlayer = Monster.Targetplayer.transform.position.x - Monster.transform.position.x;
-            // ³»°¡ ¹Ù¶óº¸´Â ¹æÇâ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½ï¿½ï¿½ï¿½
             float myDir = Vector3.Dot(Monster.transform.forward, Vector3.right);
 
-            // ¹Ý´ë ¹æÇâÀÌ¸é Turn
+            // ï¿½Ý´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ Turn
             if ((dirToPlayer > 0 && myDir < 0) || (dirToPlayer < 0 && myDir > 0))
             {
                 isTurning = true;
@@ -37,13 +37,19 @@ namespace MonsterStates
             }
             else
             {
+                isTurning = false;
                 Monster.animator.CrossFade(Monster.sprint, 0.01f);
             }
         }
         public override void LogicUpdate()
         {
-            //¸ñÇ¥±îÁöÀÇ °Å¸®°è»ê
-            //¸ñÇ¥¿ÍÀÇ °Å¸®°¡ ÀÏÁ¤ÀÌ»ó °¡±î¿ì¸é °ø°Ý
+            //ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ï¿½
+            //ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            if(Monster.Targetplayer == null)
+            {
+                Monster.ChangeState<Return>();
+                return;
+            }
             if (Vector3.Distance(Monster.Targetplayer.transform.position, Monster.transform.position) < Monster.status.atk_range)
             {
                 Monster.ChangeState<Attack>();
@@ -52,11 +58,11 @@ namespace MonsterStates
         }
         public override void PhysicalUpdate()
         {
-            //¸ñÇ¥±îÁö ÀÌµ¿
+            //ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
             if (Monster.Targetplayer == null) return;
 
             AnimatorStateInfo stateInfo = Monster.animator.GetCurrentAnimatorStateInfo(0);
-            // ÇÃ·¹ÀÌ¾î ¹æÇâÀ¸·Î È¸Àü
+            // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
             if (stateInfo.shortNameHash != Monster.moveTurn && !Monster.animator.IsInTransition(0))
             {
                 CheckDirection();
@@ -64,7 +70,7 @@ namespace MonsterStates
            
 
             if (isTurning) return;
-                // ÇÃ·¹ÀÌ¾î ¹æÇâÀ¸·Î ÀÌµ¿ ·ÎÁ÷
+                // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
             Vector3 direction = (Monster.Targetplayer.transform.position - Monster.transform.position).normalized;
             Monster.Rb.linearVelocity = direction * Monster.status.speed;
             
@@ -75,7 +81,8 @@ namespace MonsterStates
             float snappedY = Mathf.Round(currentEuler.y / 90f) * 90f;
             Monster.Rb.rotation = Quaternion.Euler(0, snappedY, 0);
 
-            canChanged = true;
+            isTurning = false;
+
             Monster.animator.CrossFade(Monster.sprint, 0.0001f);
         }
     }

@@ -4,23 +4,23 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
+
 public enum StateType
 {
-    None, idle, Dodge, Attack, interect,Parry
+    None, idle, Dodge, Attack, interect,Parry, crunch
 }
 public class PlayerStateMachine : MonoBehaviour
 {
 
     public static PlayerStateMachine Instance { get; private set; }
-    //ÇÃ·¹ÀÌ¾î Å°¼¼ÆÃ
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Å°ï¿½ï¿½ï¿½ï¿½
     private InputSystem_Actions action;
-    //ÇÃ·¹ÀÌ¾î °´Ã¼ ¹× ½ºÅÈ
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public Rigidbody Rb { get; private set; }
     public Animator animator{  get; private set; }
     public PlayerStatus status = new PlayerStatus();
     public Weapon currentWeapon;
-    // ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ »óÅÂ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public float MoveInput;
     public Light currentLight {get; private set; }
     public PlayerState ActiveState { get; private set; }
@@ -28,9 +28,9 @@ public class PlayerStateMachine : MonoBehaviour
     public bool isGuard { get; private set; }
     public bool isSprint {  get; private set; }
     public bool isCrunch { get; private set; }
-    //ÇÃ·¹ÀÌ¾î »óÅÂ Ä³½Ì
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½
     public Dictionary<System.Type, PlayerState> Statecaches = new Dictionary<System.Type, PlayerState>();
-    //¾Ö´Ï¸ÞÀÌ¼Ç »óÅÂ ÇØ½Ì
+    //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½
     public readonly int idle  = Animator.StringToHash("idle");
     public readonly int move = Animator.StringToHash("move");
     public readonly int moveTurn = Animator.StringToHash("moveTurn");
@@ -45,16 +45,17 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int sprintTurn = Animator.StringToHash("sprintTurn");
     public readonly int incrunch = Animator.StringToHash("incrunch");
     public readonly int outcrunch = Animator.StringToHash("outcrunch");
-    public readonly int crunchTurn = Animator.StringToHash("crunchTrun");
+    public readonly int crunchTurn = Animator.StringToHash("crunchTurn");
     public readonly int crunchIdle = Animator.StringToHash("crunchIdle");
+    public readonly int crunchMove = Animator.StringToHash("crunchMove");
     public readonly int parrying = Animator.StringToHash("parrying");
     public readonly int guard = Animator.StringToHash("guard");
     public readonly int dodge = Animator.StringToHash("dodge");
-    //ÇÃ·¹ÀÌ¾î ÀÎÇ²¹öÆÛ
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ç²ï¿½ï¿½ï¿½ï¿½
     public StateType bufferinput { get; private set; }
     public float buffertime { get; private set; } = 0.2f;
     public TimeManager bufferTimer = new TimeManager();
-    //ÆÐ¸µ °¡´É ¿©ºÎ
+    //ï¿½Ð¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public bool isParrying => ActiveState is Parry parry && parry.IsInParryWindow;
 
     public Iinterectable nearbyInteractable { get; private set; }
@@ -65,13 +66,13 @@ public class PlayerStateMachine : MonoBehaviour
             nearbyInteractable = interactable;
             return;
         }
-        // ÀÌ¹Ì ÀÖÀ¸¸é ´õ °¡±î¿î °É·Î ±³Ã¼
+        // ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½É·ï¿½ ï¿½ï¿½Ã¼
         float currentDist = (((MonoBehaviour)nearbyInteractable).transform.position - transform.position).sqrMagnitude;
         float newDist = (((MonoBehaviour)interactable).transform.position - transform.position).sqrMagnitude;
         if (newDist < currentDist) nearbyInteractable = interactable;
     }
     public void ClearInteractable() => nearbyInteractable = null;
-    //ÃÖÃÊ »óÅÂ ¼³Á¤
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void stateInit()
     {
         action = new InputSystem_Actions();
@@ -97,7 +98,7 @@ public class PlayerStateMachine : MonoBehaviour
         action.PlayerAction.Sprint.canceled += _ => isSprint = false;
         action.PlayerAction.Guard.canceled += _ => isGuard = false;
         var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract);
-        Debug.Log($"¹ß°ßµÈ »óÅÂ °³¼ö: {StateT.Count()}");
+        Debug.Log($"ï¿½ß°ßµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {StateT.Count()}");
         foreach (var type in StateT)
         {
             try
@@ -107,7 +108,7 @@ public class PlayerStateMachine : MonoBehaviour
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"{type.Name} Å¬·¡½ºÀÇ »ý¼ºÀÚ°¡ Àß¸øµÇ¾ú½À´Ï´Ù! : {e.Message}");
+                Debug.LogError($"{type.Name} Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ß¸ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½! : {e.Message}");
             }
         }
         AddpassiveStat<NoiseABright>();
@@ -146,14 +147,14 @@ public class PlayerStateMachine : MonoBehaviour
         ActiveState?.PhysicalUpdate();
 
     }
-    //ÇÏÀ§ »óÅÂµéÀÇ »óÅÂ º¯°æ Á¦°ø ÇÔ¼ö
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
     public void ChangeState<T>() where T : PlayerState
     {
         System.Type type = typeof(T);
 
         if (!Statecaches.TryGetValue(type, out PlayerState nextState))
         {
-            Debug.LogError($"{type.Name} »óÅÂ°¡ Ä³½Ã¿¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù!");
+            Debug.LogError($"{type.Name} ï¿½ï¿½ï¿½Â°ï¿½ Ä³ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
         
@@ -167,11 +168,13 @@ public class PlayerStateMachine : MonoBehaviour
     {
         if (ActiveState.canChanged)
         {
-            if((ActiveState is Guard || ActiveState is Parry) && !isGuard)
+
+            if (isCrunch && ActiveState is not Crunch)
             {
-                ChangeState<Idle>();
-                return true ;
+                ChangeState<Crunch>();
+                return true;
             }
+
             if(ActiveState is Parry && isGuard)
             {
                 ChangeState<Guard>();
@@ -184,7 +187,12 @@ public class PlayerStateMachine : MonoBehaviour
                 BufferState();
                 return true;
             }
-
+            if((ActiveState is Guard || ActiveState is Parry) && !isGuard)
+            {
+                ChangeState<Idle>();
+                return true ;
+            }
+            if (ActiveState is Crunch) return false;
             if (MoveInput != 0f)
             {
                 if (ActiveState is not Move) ChangeState<Move>();
@@ -231,7 +239,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         ConsumeBuffer(bufferinput);
     }
-    //¼±ÀÔ·Â ÇÔ¼ö
+    //ï¿½ï¿½ï¿½Ô·ï¿½ ï¿½Ô¼ï¿½
     public void SetBuffer(StateType buffertag)
     {
         bufferinput = buffertag;
@@ -246,7 +254,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         return false;
     }
-    //PassiveList¿¡ »óÅÂ ³Ö°Å³ª »©±â
+    //PassiveListï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void AddpassiveStat<T>() where T : PlayerState
     {
         PlayerState passive = Statecaches[typeof(T)];
@@ -273,7 +281,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         PassiveStates.Clear();
     }
-    //actionÈ°¼ºÈ­
+    //actionÈ°ï¿½ï¿½È­
 
     public void OnEnable()
     {
@@ -284,7 +292,7 @@ public class PlayerStateMachine : MonoBehaviour
         action?.Disable();
     }
 
-    //µ¥¹ÌÁö ÀÌº¥Æ® È£Ãâ ÇÔ¼ö
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® È£ï¿½ï¿½ ï¿½Ô¼ï¿½
     public void OnHit(float Damage)
     {
         if (ActiveState.isBlock)
@@ -299,18 +307,18 @@ public class PlayerStateMachine : MonoBehaviour
     public void EquipWeapon(Weapon weapon)
     {
         currentWeapon = weapon;
-        // ¹«±â ÀåÂø ½Ã ÇÊ¿äÇÑ Ãß°¡ ·ÎÁ÷À» ¿©±â¿¡ ÀÛ¼ºÇÒ ¼ö ÀÖ½À´Ï´Ù.
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.
     }
     public void EquipLight(Light newLight)
     {
         currentLight = newLight;
         (Statecaches[typeof(NoiseABright)] as NoiseABright).light = newLight;
     }
-    //¾Ö´Ï¸ÞÀÌ¼Ç È¸Àü
+    //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ È¸ï¿½ï¿½
     void OnAnimatorMove()
     {
         Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
     }
-    // ========== ¾Ö´Ï¸ÞÀÌ¼Ç ÀÌº¥Æ® ==========
+    // ========== ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ìºï¿½Æ® ==========
 
 }

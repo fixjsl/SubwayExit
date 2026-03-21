@@ -23,4 +23,6 @@ public abstract class PlayerState : State
         canChanged = true;
     }
     public virtual void OnTurnAnimationFinished() { }
+    public virtual void OncanCombo() { }
+    
 }

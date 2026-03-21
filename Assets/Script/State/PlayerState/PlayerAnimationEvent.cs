@@ -17,6 +17,19 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         player.ActiveState?.OnTurnAnimationFinished();
     }
+    public void OncanCombo()
+    {
+        player.ActiveState?.OncanCombo();
+    }
+    public void OnAttackCollider()
+    {
+        player.currentWeapon?.OnAttackColider();
+    }
+
+    public void OffAttackCollider()
+    {
+        player.currentWeapon?.OffAttackColider();
+    }
     public void OnEndInvincible()
     {
         player.gameObject.layer = LayerMask.NameToLayer("Player");

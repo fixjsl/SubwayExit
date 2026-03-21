@@ -59,7 +59,7 @@ public class Move : PlayerState
         {
             player.status.Stamina -= player.status.SprintCost * Time.deltaTime;
         }
-        if (!canChanged && curAni.shortNameHash == player.moveTurn&& curAni.shortNameHash==player.sprintTurn)
+        if (!canChanged && (curAni.shortNameHash == player.moveTurn|| curAni.shortNameHash==player.sprintTurn))
         {
             canChanged = true;
         }

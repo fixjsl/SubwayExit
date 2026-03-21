@@ -12,7 +12,7 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            //idle¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý
+            //idleï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
             changeTime = Random.Range(3, 5);
             Monster.StartDetection();
             Timer.Reset();
@@ -24,11 +24,7 @@ namespace MonsterStates
 
         public override void LogicUpdate()
         {
-            if (Monster.status.detection_gauge >= 1f)
-            {
-                Monster.ChangeState<Chase>();
-            }
-            //3~5ÃÊµÚ Move·Î ÀüÈ¯
+            //3~5ì´ˆë’¤ Moveë¡œ ì „í™˜
             if (Timer.Timer(changeTime))
             {
                 Monster.ChangeState<move>();

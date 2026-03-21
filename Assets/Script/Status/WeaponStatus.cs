@@ -21,9 +21,6 @@ public class WeaponStatus : ScriptableObject
     [Header("애니메이션")]
     public AnimatorOverrideController WeaponAnimations; // 무기별 모션
 
-    [Header("공격히트박스")]
-    public Collider attackcolider;
-
     public Vector3 holdPosition; // 잡히는 위치
     public Quaternion holdRotation; // 회전값
 }

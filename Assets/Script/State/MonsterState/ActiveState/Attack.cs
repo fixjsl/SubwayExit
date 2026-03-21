@@ -11,19 +11,19 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            //°ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
             isAnimationFinished = false;
             Monster.animator.CrossFade(Monster.attackHashes[comboindex], 0.01f);
 
         }
         public override void Exit()
         {
-            //¾Ö´Ï¸ÞÀÌ¼ÇÀÌ ³¡³ªÁö ¾Ê¾ÒÀ»‹š »óÅÂÀüÈ¯ÀÌ µÇ¸é
+            //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¯ï¿½ï¿½ ï¿½Ç¸ï¿½
             if (!isAnimationFinished)
             {
                 comboindex = 0;
             }
-
+            
         }
 
         public override void LogicUpdate()
@@ -37,7 +37,7 @@ namespace MonsterStates
 
         public void OnAttackColider()
         {
-            //°ø°Ý ÄÝ¶óÀÎ´õ Å°±â
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Î´ï¿½ Å°ï¿½ï¿½
             if(Monster.AttackCollider != null)
             {
                 Monster.AttackCollider.enabled = true;
@@ -45,7 +45,7 @@ namespace MonsterStates
         }
         public void OffAttackColider()
         {
-            //°ø°Ý ÄÝ¶óÀÎ´õ ²ô±â
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½
             if(Monster.AttackCollider != null)
             {
                 Monster.AttackCollider.enabled = false;

@@ -1,6 +1,5 @@
 using Unity.VisualScripting;
 using UnityEngine;
-
 public class Dodge : PlayerState
 {
     private float cooltime;
@@ -24,13 +23,14 @@ public class Dodge : PlayerState
         lastTime = Time.time;
         canChanged = false;
         player.gameObject.layer = LayerMask.NameToLayer("Dodge");
+        player.status.UseStamina(player.status.DodgeCost);
         player.animator.CrossFade(player.dodge, 0.15f);
 
     }
 
     public override void Exit()
     {
-        // È¤½Ã ¸ð¸¦ °æ¿ì ´ëºñ Exit¿¡¼­µµ º¹±¸
+        // È¤ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Exitï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         player.gameObject.layer = LayerMask.NameToLayer("Player");
     }
 
