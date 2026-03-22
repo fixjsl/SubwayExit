@@ -34,23 +34,6 @@ namespace MonsterStates
         {
 
         }
-
-        public void OnAttackColider()
-        {
-            //���� �ݶ��δ� Ű��
-            if(Monster.AttackCollider != null)
-            {
-                Monster.AttackCollider.enabled = true;
-            }
-        }
-        public void OffAttackColider()
-        {
-            //���� �ݶ��δ� ����
-            if(Monster.AttackCollider != null)
-            {
-                Monster.AttackCollider.enabled = false;
-            }
-        }
         public override void OnAnimationFinished()
         {
             isAnimationFinished = true;

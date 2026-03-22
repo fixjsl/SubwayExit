@@ -170,7 +170,7 @@ public class MonsterStateMachine : MonoBehaviour
                 if (status.detection_gauge >= 100f)
                 {
                     status.detection_gauge = 0f;
-                    if (ActiveState is MonsterStates.Idle || ActiveState is MonsterStates.Move || ActiveState is MonsterStates.Return)
+                    if (ActiveState is MonsterStates.Idle || ActiveState is MonsterStates.move || ActiveState is MonsterStates.Return)
                     {
                         ChangeState<Chase>();
                     }

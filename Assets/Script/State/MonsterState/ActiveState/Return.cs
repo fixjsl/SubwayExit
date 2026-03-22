@@ -17,12 +17,12 @@ namespace MonsterStates
         {
 
 
-
+            isTurning = false;
             Monster.status.detection_gauge = 0f;
             Monster.StartDetection();
             this.spawnPoint = Monster.spawnpoint;
 
-            //½ºÆùÁöÁ¡ ¹æÇâ°ú ÇöÀç ¸ó½ºÅÍÀÇ ¾ó±¼ ¹æÇâ¿¡ µû¶ó È¸Àü
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
             CheckDirection();
         }
         public override void Exit() {
@@ -32,12 +32,12 @@ namespace MonsterStates
         {
             
 
-            // ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊÀÎÁö ¿ÞÂÊÀÎÁö
+            // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             float dirToPlayer = Monster.spawnpoint.x - Monster.transform.position.x;
-            // ³»°¡ ¹Ù¶óº¸´Â ¹æÇâ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½ï¿½ï¿½ï¿½
             float myDir = Vector3.Dot(Monster.transform.forward, Vector3.right);
 
-            // ¹Ý´ë ¹æÇâÀÌ¸é Turn
+            // ï¿½Ý´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ Turn
             if ((dirToPlayer > 0 && myDir < 0) || (dirToPlayer < 0 && myDir > 0))
             {
                 isTurning = true;
@@ -52,7 +52,7 @@ namespace MonsterStates
         {
             float distanceToSpawn = Vector3.Distance(Monster.transform.position, spawnPoint);
 
-            // 2. µµÂøÇß´Ù¸é idle »óÅÂ·Î ÀüÈ¯
+            // 2. ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½ idle ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯
             if (distanceToSpawn <= arrivalThreshold)
             {
                 EndReturn();
@@ -62,10 +62,10 @@ namespace MonsterStates
         {
             if (!isTurning)
             {
-                //ÀÚ±â ½ºÆùÁöÁ¡À¸·Î µ¹¾Æ°¨
+                //ï¿½Ú±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½
                 Vector3 direction = (spawnPoint - Monster.transform.position).normalized;
 
-                // 4. ¸®Áöµå¹Ùµð¿¡ ¼Óµµ ºÎ¿© (yÃàÀº Áß·Â À¯Áö¸¦ À§ÇØ ±âÁ¸ °ª »ç¿ë)
+                // 4. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùµï¿½ ï¿½Óµï¿½ ï¿½Î¿ï¿½ (yï¿½ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½)
                 Monster.Rb.linearVelocity = new Vector3(
                     direction.x * Monster.status.speed,
                     Monster.Rb.linearVelocity.y,

@@ -23,6 +23,6 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
     protected virtual void OnTriggerExit(Collider other)
     {
         var player = other.GetComponent<PlayerStateMachine>();
-        if (player != null) player.ClearInteractable();
+        if (player != null) player.ClearInteractable(this);
     }
 }

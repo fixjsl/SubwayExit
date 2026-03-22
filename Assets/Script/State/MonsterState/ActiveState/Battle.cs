@@ -11,13 +11,13 @@ public class Battle : MonsterState
         private float delay;
 
 
-        // ÁÂ¿ì ¹èÈ¸
-        private float strafeDir;       // +1 ¿À¸¥ÂÊ, -1 ¿ÞÂÊ
-        private float strafeDuration;  // ÀÌ ¹æÇâÀ¸·Î ¾ó¸¶³ª °ÉÀ»Áö
+        //Â¿ È¸
+        private float strafeDir;       // +1, -1
+        private float strafeDuration;  //  ó¸¶³
 
-        // ÇÃ·¹ÀÌ¾î¿Í À¯ÁöÇÒ ÀûÁ¤ °Å¸® (atk_rangeº¸´Ù »ìÂ¦ ¹Ù±ù)
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ (atk_rangeï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ ï¿½Ù±ï¿½)
         private float preferredDist => Monster.status.atk_range * 1.3f;
-        private float distThreshold = 0.3f; // °Å¸® ¿ÀÂ÷ Çã¿ë ¹üÀ§
+        private float distThreshold = 0.3f; // ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         public Battle(MonsterStateMachine monster) : base(monster)
     {
 
@@ -30,10 +30,10 @@ public class Battle : MonsterState
                 return;
             }
             Monster.animator.CrossFade("battle",0.01f);
-            delay = Monster.status.atkdelay + Random.Range(-1f, 1f);
+            delay = Mathf.Max(0.5f, Monster.status.atkdelay + Random.Range(-1f, 1f));
             Timer.Reset();
 
-            // Ã¹ ¹èÈ¸ ¹æÇâ ·£´ý
+            // Ã¹ ï¿½ï¿½È¸ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             strafeDir = (Random.value > 0.5f) ? 1f : -1f;
             strafeDuration = Random.Range(0.8f, 2.0f);
             strafeTimer.Reset();
@@ -66,12 +66,12 @@ public class Battle : MonsterState
     {
             if (Monster.Targetplayer == null) return;
 
-            //ÇÃ·¹ÀÌ¾î¿Í ´ëÄ¡
+            //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½Ä¡
             float playerX = Monster.Targetplayer.transform.position.x;
             float myX = Monster.transform.position.x;
             float dist = Mathf.Abs(playerX - myX);
 
-            // Ç×»ó ÇÃ·¹ÀÌ¾î ¹æÇâ ¹Ù¶óº¸±â (È¸Àü¸¸, µÚµ¹±â ¾øÀ½)
+            // ï¿½×»ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸±ï¿½ (È¸ï¿½ï¿½ï¿½ï¿½, ï¿½Úµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             float targetY = (playerX >= myX) ? 90f : -90f;
             Monster.Rb.rotation = Quaternion.Euler(0f, targetY, 0f);
 
@@ -79,17 +79,17 @@ public class Battle : MonsterState
 
             if (dist < preferredDist - distThreshold)
             {
-                // ³Ê¹« °¡±î¿ò ¡æ ÇÃ·¹ÀÌ¾î ¹Ý´ë ¹æÇâÀ¸·Î ½½¶óÀÌµù (µÚµ¹Áö ¾ÊÀ½)
+                // ï¿½Ê¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ý´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ (ï¿½Úµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
                 moveX = (myX >= playerX) ? 1f : -1f;
             }
             else if (dist > preferredDist + distThreshold)
             {
-                // ³Ê¹« ¸Ö¾îÁü ¡æ ÇÃ·¹ÀÌ¾î ÂÊÀ¸·Î ºÙ±â
+                // ï¿½Ê¹ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù±ï¿½
                 moveX = (playerX >= myX) ? 1f : -1f;
             }
             else
             {
-                // ÀûÁ¤ °Å¸® ¡æ ÁÂ¿ì ¹èÈ¸
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ ï¿½Â¿ï¿½ ï¿½ï¿½È¸
                 moveX = strafeDir;
             }
 

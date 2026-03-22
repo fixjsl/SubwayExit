@@ -13,7 +13,7 @@ namespace MonsterStates
         public override void Enter()
         {
             Timer.Reset();
-            //ÇÇ°Ý ¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý 
+            //ï¿½Ç°ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ 
             Monster.animator.CrossFade(Monster.hit, 0.01f);
         }
         public override void Exit()
@@ -27,20 +27,19 @@ namespace MonsterStates
         }
         public override void LogicUpdate()
         {
-
+            if (Timer.Timer(hitduration))
+            {
+                if (Monster.Targetplayer != null) Monster.ChangeState<Battle>();
+                else Monster.ChangeState<Return>();
+            }
         }
         public override void PhysicalUpdate()
         {
-            // ¹«±âÀÇ ¼¼±â¿¡ µû¶ó µÚ·Î ¹Ð·Á³ª´Â ¹°¸®·® °è»ê
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½ ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
         }
         public override void OnAnimationFinished()
         {
-            if (Timer.Timer(hitduration))
-            {
-                if(Monster.Targetplayer != null) Monster.ChangeState<Battle>();
-                else Monster.ChangeState<Return>();
-            }
 
         }
     }

@@ -6,10 +6,10 @@ public enum MonsterType {}
 public class MonsterManager : MonoBehaviour
 {
     public static MonsterManager Instance { get; private set; }
-    // È°¼ºÈ­µÈ ¸ó½ºÅÍ ¸®½ºÆ®
+    // È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
     private List<MonsterStateMachine> activeMonsters = new List<MonsterStateMachine>();
 
-    // ºñÈ°¼ºÈ­µÈ ¸ó½ºÅÍ Ç® (ÇÁ¸®ÆÕ Å¸ÀÔº°)
+    // ï¿½ï¿½È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç® (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ôºï¿½)
     private Dictionary<MonsterType, Queue<MonsterStateMachine>> pool = new Dictionary<MonsterType, Queue<MonsterStateMachine>>();
 
     private void Awake()
@@ -36,7 +36,7 @@ public class MonsterManager : MonoBehaviour
             activeMonsters.Add(monster);
     }
 
-    // ¸ó½ºÅÍ »ç¸Á ½Ã Ç®·Î ¹ÝÈ¯
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ Ç®ï¿½ï¿½ ï¿½ï¿½È¯
     public void ReturnToPool(MonsterStateMachine monster, MonsterType key)
     {
         activeMonsters.Remove(monster);
@@ -49,14 +49,15 @@ public class MonsterManager : MonoBehaviour
     }
     public MonsterStateMachine Spawn(MonsterType type, Vector3 position)
     {
+        if(!pool.ContainsKey(type) || pool[type].Count == 0) return null;
         var monster = pool[type].Dequeue();
         monster.transform.position = position;
-        monster.spawnpoint = position; // ½ºÆùÆ÷ÀÎÆ®µµ °°ÀÌ ÁöÁ¤
+        monster.spawnpoint = position; 
         monster.gameObject.SetActive(true);
         Register(monster);
         return monster;
     }
-    // È°¼º ¸ó½ºÅÍ Áß ¹üÀ§ ³» ½ºÅÏ »óÅÂ Å½»ö
+    // È°     Å½
     public MonsterStateMachine GetStunnedInRange(Vector3 origin, float range)
     {
         float rangeSq = range * range;
@@ -70,7 +71,7 @@ public class MonsterManager : MonoBehaviour
         return null;
     }
 
-    // È°¼º ¸ó½ºÅÍ Áß ¹üÀ§ ³» ±â½À °¡´É »óÅÂ Å½»ö
+    // È°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å½ï¿½ï¿½
     public MonsterStateMachine GetAmbushTargetInRange(Vector3 origin, float range, float gaugeLimit)
     {
         float rangeSq = range * range;

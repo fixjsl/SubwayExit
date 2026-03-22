@@ -26,10 +26,6 @@ namespace MonsterStates
 
         public override void LogicUpdate()
         {
-            if (Monster.status.detection_gauge >= 1f)
-            {
-                Monster.ChangeState<Chase>();
-            }
             if (Timer.Timer(changeTime))
             {
                 Monster.ChangeState<Idle>();
@@ -38,18 +34,18 @@ namespace MonsterStates
         public override void PhysicalUpdate()
         {
             if (canChanged){
-                //3~5ÃÊÁ¤µµ ¿òÁ÷ÀÌ´Ù idle»óÅÂ·Î µ¹¾Æ°¨
+                //3~5ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ idleï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½
                 float dot = Vector3.Dot(Monster.transform.forward, Vector3.right);
 
-                // ¿À¸¥ÂÊÀ» ´õ ¸¹ÀÌ º¸°í ÀÖÀ¸¸é 1, ¿ÞÂÊÀÌ¸é -1
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1, ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ -1
                 moveDir = (dot > 0) ? 1 : -1;
 
-                // 2. °áÁ¤µÈ moveDir·Î ¼Óµµ ºÎ¿©
+                // 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ moveDirï¿½ï¿½ ï¿½Óµï¿½ ï¿½Î¿ï¿½
                 Monster.Rb.linearVelocity = new Vector3(moveDir * Monster.status.speed, Monster.Rb.linearVelocity.y, 0f);
             }
 
         }
-        //Trun¾Ö´Ï¸ÞÀÌ¼ÇÀÏ¶§ ³¡³ª¸é ¹æÇâ º¸Á¤ ÈÄ Move¾Ö´Ï¸ÞÀÌ¼ÇÀ¸·Î ÀüÈ¯
+        //Trunï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½Ï¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Moveï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         public  override void OnAnimationFinished()
         {
             Vector3 currentEuler = Monster.Rb.rotation.eulerAngles;

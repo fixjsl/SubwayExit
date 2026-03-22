@@ -58,21 +58,25 @@ public class PlayerStateMachine : MonoBehaviour
     //�и� ���� ����
     public bool isParrying => ActiveState is Parry parry && parry.IsInParryWindow;
 
-    public Iinterectable nearbyInteractable { get; private set; }
+    private List<Iinterectable> nearbyInteractables = new List<Iinterectable>();
+    public Iinterectable nearbyInteractable => GetClosest();
     public void SetInteractable(Iinterectable interactable)
     {
-        if (nearbyInteractable == null)
-        {
-            nearbyInteractable = interactable;
-            return;
-        }
-        // �̹� ������ �� ����� �ɷ� ��ü
-        float currentDist = (((MonoBehaviour)nearbyInteractable).transform.position - transform.position).sqrMagnitude;
-        float newDist = (((MonoBehaviour)interactable).transform.position - transform.position).sqrMagnitude;
-        if (newDist < currentDist) nearbyInteractable = interactable;
+    if (!nearbyInteractables.Contains(interactable))
+        nearbyInteractables.Add(interactable);
     }
-    public void ClearInteractable() => nearbyInteractable = null;
-    //���� ���� ����
+    public void ClearInteractable(Iinterectable interactable)
+    {
+        nearbyInteractables.Remove(interactable);
+    }
+    private Iinterectable GetClosest()
+{
+    if (nearbyInteractables.Count == 0) return null;
+    return nearbyInteractables
+        .OrderBy(i => (((MonoBehaviour)i).transform.position - transform.position).sqrMagnitude)
+        .First();
+}
+    //
     public void stateInit()
     {
         action = new InputSystem_Actions();
@@ -93,7 +97,10 @@ public class PlayerStateMachine : MonoBehaviour
         action.PlayerAction.Guard.performed += _ =>
         {
             isGuard = true;
-            SetBuffer(StateType.Parry);
+            if (currentWeapon != null)
+            {
+                SetBuffer(StateType.Parry);
+            }
         };
         action.PlayerAction.Sprint.canceled += _ => isSprint = false;
         action.PlayerAction.Guard.canceled += _ => isGuard = false;

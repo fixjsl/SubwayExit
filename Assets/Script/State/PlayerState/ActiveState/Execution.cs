@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Execution : PlayerState
 {
@@ -18,7 +17,7 @@ public class Execution : PlayerState
     {
         canChanged = false;
         damage = player.currentWeapon.status.attack * player.currentWeapon.status.execution_m;
-        player.gameObject.layer = Layercache.Dodge; // ¹«Àû
+        player.gameObject.layer = Layercache.Dodge; // ï¿½ï¿½ï¿½ï¿½
         player.Rb.linearVelocity = Vector3.zero;
     }
     public override void Exit() 

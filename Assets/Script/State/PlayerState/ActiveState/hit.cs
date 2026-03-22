@@ -12,6 +12,7 @@ public class Hit : PlayerState
     public override void Enter()
     {
         //Idle Animation code
+        canChanged = false;
         player.animator.CrossFade(player.hit, 0.02f);
     }
 
