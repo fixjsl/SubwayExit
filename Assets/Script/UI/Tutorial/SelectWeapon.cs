@@ -1,16 +1,25 @@
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SelectWeapon : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public GameObject WeaponP{get; private set;}
+    public Transform WeaponSpawnPoint;
+    public Button WeaponSelectButton;
+
+    void Awake()
     {
-        
+        WeaponSelectButton.onClick.AddListener(() => spawnWeapon(WeaponP));
     }
 
-    // Update is called once per frame
-    void Update()
+    public void spawnWeapon(GameObject weapon)
     {
-        
+        GameObject sweapon = Instantiate(weapon,WeaponSpawnPoint.position, WeaponSpawnPoint.rotation);
+        sweapon.SetActive(true);
     }
+
+
 }
