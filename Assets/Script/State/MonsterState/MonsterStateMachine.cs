@@ -147,6 +147,8 @@ public class MonsterStateMachine : MonoBehaviour
     IEnumerator Detect()
     {
         WaitForSeconds wait = YeildCache.GetIntervals(0.1f);
+        int lostFrames = 0;
+        const int lostThreshold = 5; // 0.5초 유예
         while (true)
         {
             Collider[] hitPlayers = Physics.OverlapSphere(transform.position, status.detect_range, playerLayer);
@@ -154,6 +156,7 @@ public class MonsterStateMachine : MonoBehaviour
             if (hitPlayers.Length > 0)
             {
                 // �÷��̾ ã��!
+                lostFrames = 0;
                 Targetplayer = hitPlayers[0].GetComponent<PlayerStateMachine>();
 
                 // 2. ���⼭ ���� �츮�� ®�� ��/���� ��� �Լ��� �����ϴ�.
@@ -186,7 +189,15 @@ public class MonsterStateMachine : MonoBehaviour
             else
             {
                 // ���� ������ ������ Ÿ�� �ҽ�
-                if (Targetplayer != null) LoseTarget();
+                if (Targetplayer != null)
+                {
+                    lostFrames++;
+                    if (lostFrames >= lostThreshold)
+                    {
+                        lostFrames = 0;
+                        LoseTarget();
+                    }
+                }
             }
 
             yield return wait;
