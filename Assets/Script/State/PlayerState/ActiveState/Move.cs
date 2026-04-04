@@ -26,6 +26,7 @@ public class Move : PlayerState
     }
     public override void LogicUpdate()
     {
+        
         if (player.MoveInput != 0 && player.MoveInput != movebuffer)
         {
             float targetY = (movebuffer > 0) ? 90f : -90f;
@@ -41,13 +42,13 @@ public class Move : PlayerState
             }
             movebuffer = player.MoveInput;
         }
-        if(player.animator.isInTransition(0)) return;
+        if(player.animator.IsInTransition(0)) return;
         curAni = player.animator.GetCurrentAnimatorStateInfo(0);
         if (canChanged)
         {
-            if (player.isSprint && curAni.shortNameHash != player.sprint&& !player.animator.IsInTransition(0))
+            if (player.isSprint && curAni.shortNameHash != player.sprint)
                 player.animator.CrossFade(player.sprint, 0.15f);
-            else if (!player.isSprint && curAni.shortNameHash != player.move && !player.animator.IsInTransition(0))
+            else if (!player.isSprint && curAni.shortNameHash != player.move)
                 player.animator.CrossFade(player.move, 0.15f);
         }
 

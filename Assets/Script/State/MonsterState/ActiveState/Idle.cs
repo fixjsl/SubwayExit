@@ -27,7 +27,7 @@ namespace MonsterStates
             //3~5초뒤 Move로 전환
             if (Timer.Timer(changeTime))
             {
-                Monster.ChangeState<move>();
+                Monster.ChangeState<Move>();
             }
         }
         public override void PhysicalUpdate()

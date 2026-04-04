@@ -27,6 +27,7 @@ public class PlayerStateMachine : MonoBehaviour
     
     // ���� �÷��̾��� ����
     public float MoveInput;
+    float lastMoveInput;
     public Light currentLight {get; private set; }
     public PlayerState ActiveState { get; private set; }
     public List<PlayerState> PassiveStates { get; private set; } = new List<PlayerState>();
@@ -95,15 +96,19 @@ public class PlayerStateMachine : MonoBehaviour
             }
         };
         action.PlayerAction.Move.performed += ctx => {
-    float value = ctx.ReadValue<float>();
+            float value = ctx.ReadValue<float>();
     // 반대 방향일 때만 업데이트
-    if (lastMoveInput == 0f)
-    {
-        MoveInput = value;
-        lastMoveInput = value;
-    }
-};
-        action.PlayerAction.Move.canceled += ctx => MoveInput = 0f;
+            if (lastMoveInput == 0f)
+            {
+                MoveInput = value;
+                lastMoveInput = value;
+            }
+        };
+        action.PlayerAction.Move.canceled += ctx =>
+        {
+            MoveInput = 0f;
+            lastMoveInput = 0f;
+        };
 
         action.PlayerAction.Crouch.performed += _ => isCrunch = !isCrunch;
         action.PlayerAction.Sprint.performed += _ => isSprint = true;

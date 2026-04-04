@@ -80,7 +80,7 @@ public class MonsterManager : MonoBehaviour
             if (monster == null) continue;
             if ((monster.transform.position - origin).sqrMagnitude > rangeSq) continue;
             if (monster.status.detection_gauge > gaugeLimit) continue;
-            if (monster.ActiveState is MonsterStates.Idle || monster.ActiveState is MonsterStates.move)
+            if (monster.ActiveState is MonsterStates.Idle || monster.ActiveState is MonsterStates.Move)
                 return monster;
         }
         return null;
