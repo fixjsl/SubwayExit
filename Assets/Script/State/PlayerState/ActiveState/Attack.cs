@@ -18,7 +18,7 @@ public class Attack : PlayerState
         canChanged = false;
         canCombo = false;
         player.Rb.linearVelocity = Vector3.zero; // �߰�
-        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f);
+        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f,1);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
     }
 

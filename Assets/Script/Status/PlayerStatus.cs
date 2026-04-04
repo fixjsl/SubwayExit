@@ -75,6 +75,10 @@ public class PlayerStatus
     public float staminaRecoverey;
 
     public float dodgeSpeed;
+
+    [Header("Inventory Status")]
+    public float maxCarryWeight;
+    public float maxSlots;
     //Event
     //base Stat event
     public event Action<float> ChangeHP;
@@ -85,6 +89,6 @@ public class PlayerStatus
     public event Action ChangeNoiseStat;
     public void UseStamina(float amount)
     {
-        Stamina -= amount; // ±×³É Â÷°¨, Stamina ÇÁ·ÎÆÛÆ¼¿¡¼­ Clamp + ÀÌº¥Æ® Ã³¸®
+        Stamina -= amount; // ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½, Stamina ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ Clamp + ï¿½Ìºï¿½Æ® Ã³ï¿½ï¿½
     }
 }

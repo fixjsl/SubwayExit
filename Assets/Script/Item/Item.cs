@@ -13,7 +13,8 @@ public class Item : MonoBehaviour
     {
         foreach (var material in iteminfo.materials)
         {
-            if (!inventory.slots.TryGetValue(material.item, out int count)) return false;
+            int key = material.item.iteminfo.itemcode;
+            if (!inventory.slots.TryGetValue(key, out int count)) return false;
             if (count < material.amount) return false;
         }
         return true;

@@ -1,4 +1,4 @@
-using System.Security;
+
 using UnityEngine;
 
 public class Crunch : PlayerState
@@ -41,11 +41,11 @@ public class Crunch : PlayerState
             player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
             canChanged = false;
             player.animator.CrossFade(player.crunchTurn, 0.15f);
-
-
-
             movebuffer = player.MoveInput;
         }
+
+        if (player.animator.IsInTransition(0)) return;
+
         curAni = player.animator.GetCurrentAnimatorStateInfo(0);
     
         if (player.MoveInput != 0)

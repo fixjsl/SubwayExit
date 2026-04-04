@@ -1,0 +1,21 @@
+using UnityEngine;
+
+public class WeaponPickup : ItObjectBase
+{
+    private Weapon weapon;
+
+    public override bool isStuck => false;
+
+    public void SetWeapon(Weapon weapon)
+    {
+        this.weapon = weapon;
+    }
+
+    protected override void OnInteractInternal(Vector3 interacterPosition)
+    {
+        if (weapon == null) return;
+
+        PlayerStateMachine.Instance.EquipWeapon(weapon);
+        gameObject.SetActive(false);
+    }
+}

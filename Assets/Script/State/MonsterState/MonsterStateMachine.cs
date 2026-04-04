@@ -71,10 +71,6 @@ public class MonsterStateMachine : MonoBehaviour
         stateInit();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -97,7 +93,6 @@ public class MonsterStateMachine : MonoBehaviour
 
         ActiveState?.Exit();
         ActiveState = Statecaches[typeof(T)];
-        Debug.Log($"change {ActiveState.ToString()} ");
         ActiveState?.Enter();
     }
     public void OnHit(float Damage, float stunStrength)
@@ -173,7 +168,7 @@ public class MonsterStateMachine : MonoBehaviour
                 if (status.detection_gauge >= 100f)
                 {
                     status.detection_gauge = 0f;
-                    if (ActiveState is MonsterStates.Idle || ActiveState is MonsterStates.move || ActiveState is MonsterStates.Return)
+                    if (ActiveState is MonsterStates.Idle || ActiveState is MonsterStates.Move || ActiveState is MonsterStates.Return)
                     {
                         ChangeState<Chase>();
                     }

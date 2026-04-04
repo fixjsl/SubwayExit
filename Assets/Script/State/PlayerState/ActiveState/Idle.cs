@@ -1,3 +1,4 @@
+using System.Security;
 using UnityEngine;
 
 public class Idle : PlayerState
@@ -7,7 +8,6 @@ public class Idle : PlayerState
 
     public Idle(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-
     }
     public override void Enter()
     {
@@ -21,14 +21,14 @@ public class Idle : PlayerState
     public override void Exit()
     {
         //Stop Idle Animation code
-
+        
     }
 
 
 
     public override void LogicUpdate()
     {
-        //¿©±âµµ ¹¹ ¾øÀÚ³ª ³ªÁß¿¡ ¿©À¯µÇ¸é ¾Ö´Ï¸ÞÀÌ¼Ç Ãß°¡·Î Á» ³ÖÁÒ
+        //ï¿½ï¿½ï¿½âµµ ï¿½ï¿½ ï¿½ï¿½ï¿½Ú³ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if(player.status.Stamina != player.status.MaxStamina)
         {
             player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime;

@@ -41,4 +41,11 @@ public class PlayerAnimationEvent : MonoBehaviour
             ((Parry)player.ActiveState).OnParryWindow();
         }
     }
+    public void OnDamage()
+    {
+        if(player.ActiveState is Execution)
+        {
+            ((Execution)player.ActiveState).OnDamage();
+        }
+    }
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Profiling;
 
 public class Move : PlayerState
 {
@@ -12,16 +11,18 @@ public class Move : PlayerState
     }
     public override void Enter()
     {
-
+        curAni = player.animator.GetCurrentAnimatorStateInfo(0);
         //Move animation
         float dot = Vector3.Dot(player.transform.forward, Vector3.right);
         movebuffer = (dot > 0) ? 1f : -1f;
-        player.animator.CrossFade(player.move, 0.15f);
+        if(curAni.shortNameHash != player.move  && !player.animator.IsInTransition(0))
+        {
+            player.animator.CrossFade(player.move, 0.15f);
+        }
     }
 
     public override void Exit()
     {
-        Debug.Log($"curMovebuffer = {movebuffer.ToString()}");
     }
     public override void LogicUpdate()
     {
@@ -38,17 +39,16 @@ public class Move : PlayerState
             {
                 player.animator.CrossFade(player.moveTurn, 0.15f);
             }
-            
-
-
             movebuffer = player.MoveInput;
         }
+        if(player.animator.isInTransition(0)) return;
         curAni = player.animator.GetCurrentAnimatorStateInfo(0);
         if (canChanged)
         {
-            if (player.isSprint && curAni.shortNameHash != player.sprint)
+            if (player.isSprint && curAni.shortNameHash != player.sprint&& !player.animator.IsInTransition(0))
                 player.animator.CrossFade(player.sprint, 0.15f);
-            else player.animator.CrossFade(player.move, 0.15f);
+            else if (!player.isSprint && curAni.shortNameHash != player.move && !player.animator.IsInTransition(0))
+                player.animator.CrossFade(player.move, 0.15f);
         }
 
         if (!player.isSprint)
@@ -80,12 +80,14 @@ public class Move : PlayerState
                 player.Rb.linearVelocity.y,
                 0f);
         }
+
     }
     public override void OnTurnAnimationFinished()
     {
+        
         float targetY = (player.MoveInput > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
-
+        Debug.Log("Turn Animation Finished");
         if (player.isSprint) 
         {
             player.animator.CrossFade(player.sprint, 0.15f);

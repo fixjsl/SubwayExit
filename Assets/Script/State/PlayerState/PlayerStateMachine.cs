@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,7 +20,11 @@ public class PlayerStateMachine : MonoBehaviour
     public Rigidbody Rb { get; private set; }
     public Animator animator{  get; private set; }
     public PlayerStatus status = new PlayerStatus();
+    public Inventory inventory;
     public Weapon currentWeapon;
+    [SerializeField] public Transform weaponSlot;
+    [SerializeField] private Transform leftHandTarget;
+    
     // ���� �÷��̾��� ����
     public float MoveInput;
     public Light currentLight {get; private set; }
@@ -89,7 +94,15 @@ public class PlayerStateMachine : MonoBehaviour
                 currentLight.enabled = !currentLight.enabled;
             }
         };
-        action.PlayerAction.Move.performed += ctx => MoveInput = ctx.ReadValue<float>();
+        action.PlayerAction.Move.performed += ctx => {
+    float value = ctx.ReadValue<float>();
+    // 반대 방향일 때만 업데이트
+    if (lastMoveInput == 0f)
+    {
+        MoveInput = value;
+        lastMoveInput = value;
+    }
+};
         action.PlayerAction.Move.canceled += ctx => MoveInput = 0f;
 
         action.PlayerAction.Crouch.performed += _ => isCrunch = !isCrunch;
@@ -120,7 +133,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         AddpassiveStat<NoiseABright>();
         status.OnDie += () => ChangeState<Die>();
-        status.StaminaEmpty += () => ChangeState<Move>();
+        status.StaminaEmpty += () => { if (ActiveState is not Move && ActiveState is not Idle) ChangeState<Move>(); };
         ActiveState = Statecaches[typeof(Idle)];
         ActiveState.Enter();
     }
@@ -129,6 +142,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Awake() {
         if(Instance == null) Instance = this;
+        inventory = new Inventory(status);
         currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
@@ -152,6 +166,7 @@ public class PlayerStateMachine : MonoBehaviour
     void FixedUpdate()
     {
         ActiveState?.PhysicalUpdate();
+        
 
     }
     //���� ���µ��� ���� ���� ���� �Լ�
@@ -164,11 +179,14 @@ public class PlayerStateMachine : MonoBehaviour
             Debug.LogError($"{type.Name} ���°� ĳ�ÿ� �������� �ʽ��ϴ�!");
             return;
         }
-        
+        if(typeof(T) != ActiveState.GetType()  )
+        {
+            Debug.Log($"change {ActiveState.ToString()} -> {nextState.ToString()} ");
+        }
         ActiveState?.Exit();
         bufferinput = StateType.None;
         ActiveState = Statecaches[typeof(T)];
-        Debug.Log($"change {ActiveState.ToString()} ");
+        
         ActiveState?.Enter();
     }
     public bool CheckStateChange()
@@ -190,7 +208,6 @@ public class PlayerStateMachine : MonoBehaviour
 
             if (bufferinput != StateType.None)
             {
-                Debug.Log($"current Buffer = {bufferinput}");
                 BufferState();
                 return true;
             }
@@ -203,7 +220,7 @@ public class PlayerStateMachine : MonoBehaviour
             if (MoveInput != 0f)
             {
                 if (ActiveState is not Move) ChangeState<Move>();
-                
+    
                 return true;
             }
             if (ActiveState is not Idle)
@@ -299,6 +316,69 @@ public class PlayerStateMachine : MonoBehaviour
         action?.Disable();
     }
 
+#if UNITY_EDITOR
+    [SerializeField] private bool debugMode = false;
+
+    void Start()
+    {
+        if (debugMode) StartCoroutine(DebugStatusCoroutine());
+    }
+
+    private IEnumerator DebugStatusCoroutine()
+    {
+        var wait = new WaitForSeconds(1f);
+        while (true)
+        {
+            yield return wait;
+
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            bool inTransition = animator.IsInTransition(0);
+            string animName = inTransition
+                ? $"{GetDebugAnimName(info)} → {GetDebugAnimName(animator.GetNextAnimatorStateInfo(0))} (전환중)"
+                : GetDebugAnimName(info);
+            string passiveList = PassiveStates.Count > 0
+                ? string.Join(", ", PassiveStates.ConvertAll(s => s.GetType().Name))
+                : "없음";
+
+            string interactList = nearbyInteractables.Count > 0
+                ? string.Join(", ", nearbyInteractables.ConvertAll(i => ((MonoBehaviour)i).name))
+                : "없음";
+
+            Debug.Log(
+                $"[DEBUG STATUS]\n" +
+                $"  ActiveState  : {ActiveState?.GetType().Name ?? "null"}\n" +
+                $"  canChanged   : {ActiveState?.canChanged}\n" +
+                $"  Animation    : {animName}  (normalized: {info.normalizedTime:F2})\n" +
+                $"  PassiveStates: {passiveList}\n" +
+                $"  BufferInput  : {bufferinput}\n" +
+                $"  MoveInput    : {MoveInput}\n" +
+                $"  isGuard / isSprint / isCrunch : {isGuard} / {isSprint} / {isCrunch}\n" +
+                $"  NearbyInteractables ({nearbyInteractables.Count}): {interactList}"
+            );
+        }
+    }
+
+    private string GetDebugAnimName(AnimatorStateInfo info)
+    {
+        var map = new Dictionary<int, string>
+        {
+            { idle,       "idle"       }, { move,       "move"       },
+            { moveTurn,   "moveTurn"   }, { hit,        "hit"        },
+            { die,        "die"        }, { sprint,     "sprint"     },
+            { sprintTurn, "sprintTurn" }, { incrunch,   "incrunch"   },
+            { outcrunch,  "outcrunch"  }, { crunchTurn, "crunchTurn" },
+            { crunchIdle, "crunchIdle" }, { crunchMove, "crunchMove" },
+            { parrying,   "parrying"   }, { guard,      "guard"      },
+            { dodge,      "dodge"      }
+        };
+        foreach (var kv in map)
+            if (info.shortNameHash == kv.Key) return kv.Value;
+        for (int i = 0; i < attackHashes.Length; i++)
+            if (info.shortNameHash == attackHashes[i]) return $"attack{i + 1}";
+        return $"unknown(hash:{info.shortNameHash})";
+    }
+#endif
+
     //������ �̺�Ʈ ȣ�� �Լ�
     public void OnHit(float Damage)
     {
@@ -313,8 +393,15 @@ public class PlayerStateMachine : MonoBehaviour
     }
     public void EquipWeapon(Weapon weapon)
     {
+        if (currentWeapon != null)
+            Destroy(currentWeapon.gameObject);
+
         currentWeapon = weapon;
-        // ���� ���� �� �ʿ��� �߰� ������ ���⿡ �ۼ��� �� �ֽ��ϴ�.
+        weapon.SetPlayer(this);
+        weapon.transform.SetParent(weaponSlot, false);
+        weapon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        if (leftHandTarget != null && weapon.secondaryGrip != null)
+            leftHandTarget.SetPositionAndRotation(weapon.secondaryGrip.position, weapon.secondaryGrip.rotation);
     }
     public void EquipLight(Light newLight)
     {

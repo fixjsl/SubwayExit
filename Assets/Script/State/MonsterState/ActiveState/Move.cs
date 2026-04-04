@@ -2,13 +2,12 @@ using UnityEngine;
 
 namespace MonsterStates
 {
-    public class move : MonsterState
+    public class Move : MonsterState
     {
         private TimeManager Timer = new TimeManager();
         private float changeTime;
-        private float movebuffer;
-        private float moveDir;
-        public move(MonsterStateMachine monster) : base(monster)
+        private float MoveDir;
+        public Move(MonsterStateMachine monster) : base(monster)
         {
             
         }
@@ -38,10 +37,10 @@ namespace MonsterStates
                 float dot = Vector3.Dot(Monster.transform.forward, Vector3.right);
 
                 // �������� �� ���� ���� ������ 1, �����̸� -1
-                moveDir = (dot > 0) ? 1 : -1;
+                MoveDir = (dot > 0) ? 1 : -1;
 
-                // 2. ������ moveDir�� �ӵ� �ο�
-                Monster.Rb.linearVelocity = new Vector3(moveDir * Monster.status.speed, Monster.Rb.linearVelocity.y, 0f);
+                // 2. ������ MoveDir�� �ӵ� �ο�
+                Monster.Rb.linearVelocity = new Vector3(MoveDir * Monster.status.speed, Monster.Rb.linearVelocity.y, 0f);
             }
 
         }
