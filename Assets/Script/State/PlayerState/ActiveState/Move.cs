@@ -47,9 +47,9 @@ public class Move : PlayerState
         if (canChanged)
         {
             if (player.isSprint && curAni.shortNameHash != player.sprint)
-                player.animator.CrossFade(player.sprint, 0.15f);
+                player.animator.CrossFade(player.sprint, 0.15f,0);
             else if (!player.isSprint && curAni.shortNameHash != player.move)
-                player.animator.CrossFade(player.move, 0.15f);
+                player.animator.CrossFade(player.move, 0.15f,0);
         }
 
         if (!player.isSprint)

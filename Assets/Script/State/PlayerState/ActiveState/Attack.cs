@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class Attack : PlayerState
@@ -7,6 +8,7 @@ public class Attack : PlayerState
     private int ComboIndex = 0;
     private float comboPressTime = -99f;
     private const float comboMemory = 0.5f;
+    private int enterFrame;
 
     public Attack(PlayerStateMachine stateMachine) : base(stateMachine)
     {
@@ -17,6 +19,7 @@ public class Attack : PlayerState
 
     public override void Enter()
     {
+        enterFrame = Time.frameCount;
         canChanged = false;
         canCombo = false;
         comboPressed = false;
@@ -40,24 +43,34 @@ public class Attack : PlayerState
             comboPressTime = Time.time;
             comboPressed = true;
         }
+        if (comboPressed && canCombo)
+        {
+            Debug.Log($"combo! {ComboIndex}, canCombo: {canCombo}, comboPressed: {comboPressed}");
+            player.ChangeState<Attack>();
+        }
+            
         if (comboPressed && Time.time > comboPressTime + comboMemory)
             comboPressed = false;
     }
 
     public override void PhysicalUpdate()
     {
+                player.Rb.linearVelocity = new Vector3(
+                player.MoveInput * player.status.currentspeed,
+                player.Rb.linearVelocity.y,
+                0f);
     }
 
     public override void OnAnimationFinished()
     {
-        if (!comboPressed)
-            canChanged = true;
+        if (Time.frameCount <= enterFrame) return;
+        canChanged = true;
     }
 
     public override void OncanCombo()
     {
+        if (Time.frameCount <= enterFrame) return;
         canCombo = true;
-        if (comboPressed)
-            player.ChangeState<Attack>();
+        Debug.Log($"combo! {ComboIndex}, canCombo: {canCombo}, comboPressed: {comboPressed}");
     }
 }

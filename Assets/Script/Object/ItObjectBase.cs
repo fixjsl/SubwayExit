@@ -42,12 +42,9 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         var player = other.GetComponent<PlayerStateMachine>();
         if (player != null)
         {
-            if (!isInteracting)
-            {
-                player.ClearInteractable(this);
-                if (player == currentPlayer)
-                    currentPlayer = null;
-            }
+            player.ClearInteractable(this);
+            if (player == currentPlayer)
+                currentPlayer = null;
         }
     }
 

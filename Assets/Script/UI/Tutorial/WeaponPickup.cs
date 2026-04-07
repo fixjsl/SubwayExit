@@ -16,6 +16,6 @@ public class WeaponPickup : ItObjectBase
         if (weapon == null) return;
 
         PlayerStateMachine.Instance.EquipWeapon(weapon);
-        gameObject.SetActive(false);
+        GetComponent<Collider>().enabled = false;
     }
 }

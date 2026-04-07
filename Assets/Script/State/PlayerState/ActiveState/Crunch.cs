@@ -49,9 +49,9 @@ public class Crunch : PlayerState
         curAni = player.animator.GetCurrentAnimatorStateInfo(0);
     
         if (player.MoveInput != 0)
-            player.animator.CrossFade(player.crunchMove, 0.15f);  // 해시 추가 필요
+            player.animator.CrossFade(player.crunchMove, 0.15f, 0);  // 해시 추가 필요
         else
-            player.animator.CrossFade(player.crunchIdle, 0.15f);
+            player.animator.CrossFade(player.crunch, 0.15f, 0);
         if (!canChanged && (curAni.shortNameHash == player.crunchTurn))
         {
             canChanged = true;
@@ -77,7 +77,7 @@ public class Crunch : PlayerState
         float targetY = (movebuffer > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
-        player.animator.CrossFade(player.crunchIdle, 0.15f);
+        player.animator.CrossFade(player.crunch, 0.15f);
         canChanged = true;
     }
 

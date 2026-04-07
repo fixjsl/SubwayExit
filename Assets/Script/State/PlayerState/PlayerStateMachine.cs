@@ -57,7 +57,7 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int incrunch = Animator.StringToHash("incrunch");
     public readonly int outcrunch = Animator.StringToHash("outcrunch");
     public readonly int crunchTurn = Animator.StringToHash("crunchTurn");
-    public readonly int crunchIdle = Animator.StringToHash("crunchIdle");
+    public readonly int crunch = Animator.StringToHash("crunch");
     public readonly int crunchMove = Animator.StringToHash("crunchMove");
     public readonly int parrying = Animator.StringToHash("parrying");
     public readonly int guard = Animator.StringToHash("guard");
@@ -157,6 +157,7 @@ public class PlayerStateMachine : MonoBehaviour
         currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        animator.SetLayerWeight(1, 0f);
         stateInit();
     }
     void Update()
@@ -343,11 +344,19 @@ public class PlayerStateMachine : MonoBehaviour
         {
             yield return wait;
 
-            var info = animator.GetCurrentAnimatorStateInfo(0);
-            bool inTransition = animator.IsInTransition(0);
-            string animName = inTransition
-                ? $"{GetDebugAnimName(info)} → {GetDebugAnimName(animator.GetNextAnimatorStateInfo(0))} (전환중)"
-                : GetDebugAnimName(info);
+            var info0 = animator.GetCurrentAnimatorStateInfo(0);
+            bool inTransition0 = animator.IsInTransition(0);
+            string animName0 = inTransition0
+                ? $"{GetDebugAnimName(info0)} → {GetDebugAnimName(animator.GetNextAnimatorStateInfo(0))} (전환중)"
+                : GetDebugAnimName(info0);
+
+            var info1 = animator.GetCurrentAnimatorStateInfo(1);
+            bool inTransition1 = animator.IsInTransition(1);
+            float layer1Weight = animator.GetLayerWeight(1);
+            string animName1 = layer1Weight == 0f ? "꺼짐" : inTransition1
+                ? $"{GetDebugAnimName(info1)} → {GetDebugAnimName(animator.GetNextAnimatorStateInfo(1))} (전환중)"
+                : GetDebugAnimName(info1);
+
             string passiveList = PassiveStates.Count > 0
                 ? string.Join(", ", PassiveStates.ConvertAll(s => s.GetType().Name))
                 : "없음";
@@ -360,7 +369,8 @@ public class PlayerStateMachine : MonoBehaviour
                 $"[DEBUG STATUS]\n" +
                 $"  ActiveState  : {ActiveState?.GetType().Name ?? "null"}\n" +
                 $"  canChanged   : {ActiveState?.canChanged}\n" +
-                $"  Animation    : {animName}  (normalized: {info.normalizedTime:F2})\n" +
+                $"  Layer0 Anim  : {animName0}  (normalized: {info0.normalizedTime:F2})\n" +
+                $"  Layer1 Anim  : {animName1}  (weight: {layer1Weight:F2})\n" +
                 $"  PassiveStates: {passiveList}\n" +
                 $"  BufferInput  : {bufferinput}\n" +
                 $"  MoveInput    : {MoveInput}\n" +
@@ -379,7 +389,7 @@ public class PlayerStateMachine : MonoBehaviour
             { die,        "die"        }, { sprint,     "sprint"     },
             { sprintTurn, "sprintTurn" }, { incrunch,   "incrunch"   },
             { outcrunch,  "outcrunch"  }, { crunchTurn, "crunchTurn" },
-            { crunchIdle, "crunchIdle" }, { crunchMove, "crunchMove" },
+            { crunch, "crunch" }, { crunchMove, "crunchMove" },
             { parrying,   "parrying"   }, { guard,      "guard"      },
             { dodge,      "dodge"      }
         };
@@ -407,6 +417,8 @@ public class PlayerStateMachine : MonoBehaviour
     {
         if (currentWeapon != null)
             Destroy(currentWeapon.gameObject);
+        
+        animator.SetLayerWeight(1, 1f);
 
         currentWeapon = weapon;
         weapon.SetPlayer(this);
