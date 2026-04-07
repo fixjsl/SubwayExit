@@ -5,30 +5,21 @@ public class Interect : PlayerState
 
     private Object interectObject;
     public Interect(PlayerStateMachine stateMachine) : base(stateMachine) {
-    
     }
     public override void Enter()
     {
-        //°¨ÁöÇÑ ¹°Ã¼°¡ ¾ø´Ù¸é ¹Ù·Î exit;
-        player.nearbyInteractable?.Oninterect(player.transform.position);
-        //°¨ÁöÇÑ ¹°Ã¼°¡ ÀÖ´Ù¸é ÇØ´ç ½ºÅ©¸³Æ®·Î ÀÌµ¿
+        if (player.nearbyInteractable == null)
+        {
+            Debug.LogWarning("Interact: ìƒí˜¸ì‘ìš© ëŒ€ìƒì´ ì—†ìŠµë‹ˆë‹¤.");
+            canChanged = true;
+            return;
+        }
+        player.nearbyInteractable.Oninterect(player.transform.position);
     }
 
     public override void Exit()
     {
-        
+        canChanged = true;
     }
 
-
-
-
-    public override void LogicUpdate()
-    {
-        
-    }
-
-    public override void PhysicalUpdate()
-    {
-        
-    }
 }

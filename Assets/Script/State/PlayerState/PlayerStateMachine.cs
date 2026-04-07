@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public enum StateType
 {
@@ -23,9 +24,12 @@ public class PlayerStateMachine : MonoBehaviour
     public Inventory inventory;
     public Weapon currentWeapon;
     [SerializeField] public Transform weaponSlot;
+    [SerializeField] private Transform rightHandTarget;
     [SerializeField] private Transform leftHandTarget;
+    [SerializeField] private TwoBoneIKConstraint leftHandIK;
+    [SerializeField] private TwoBoneIKConstraint rightHandIK;
     
-    // ���� �÷��̾��� ����
+    //÷
     public float MoveInput;
     float lastMoveInput;
     public Light currentLight {get; private set; }
@@ -47,6 +51,7 @@ public class PlayerStateMachine : MonoBehaviour
     Animator.StringToHash("attack2"),
     Animator.StringToHash("attack3")
     };
+    public readonly int excution = Animator.StringToHash("execution");
     public readonly int sprint = Animator.StringToHash("sprint");
     public readonly int sprintTurn = Animator.StringToHash("sprintTurn");
     public readonly int incrunch = Animator.StringToHash("incrunch");
@@ -88,7 +93,7 @@ public class PlayerStateMachine : MonoBehaviour
         action = new InputSystem_Actions();
         action.PlayerAction.Attack.performed += _ => { if (currentWeapon != null) SetBuffer(StateType.Attack); };
         action.PlayerAction.Dodge.performed += _ => SetBuffer(StateType.Dodge);
-        action.PlayerAction.Interact.performed += _ => SetBuffer(StateType.interect);
+        action.PlayerAction.Interact.performed += _ => { Debug.Log("Interact input received"); SetBuffer(StateType.interect); };
         action.PlayerAction.LightTogle.performed += _ => {  
            if(currentLight != null)
             {
@@ -122,6 +127,7 @@ public class PlayerStateMachine : MonoBehaviour
         };
         action.PlayerAction.Sprint.canceled += _ => isSprint = false;
         action.PlayerAction.Guard.canceled += _ => isGuard = false;
+        action.Enable();
         var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract);
         Debug.Log($"�߰ߵ� ���� ����: {StateT.Count()}");
         foreach (var type in StateT)
@@ -138,7 +144,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         AddpassiveStat<NoiseABright>();
         status.OnDie += () => ChangeState<Die>();
-        status.StaminaEmpty += () => { if (ActiveState is not Move && ActiveState is not Idle) ChangeState<Move>(); };
+        status.StaminaEmpty += () => { if (ActiveState is not Move && ActiveState is not Idle && ActiveState is not Dodge) ChangeState<Move>(); };
         ActiveState = Statecaches[typeof(Idle)];
         ActiveState.Enter();
     }
@@ -273,6 +279,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         bufferinput = buffertag;
         bufferTimer.Reset();
+        Debug.Log($"Buffer set: {buffertag}");
     }
     public bool ConsumeBuffer(StateType buffertag)
     {
@@ -403,10 +410,38 @@ public class PlayerStateMachine : MonoBehaviour
 
         currentWeapon = weapon;
         weapon.SetPlayer(this);
-        weapon.transform.SetParent(weaponSlot, false);
-        weapon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        weapon.transform.SetParent(weaponSlot, true);
+        if (weapon.primaryGrip != null)
+        {
+            // primaryGrip이 weaponSlot 위치/방향에 오도록 월드 공간에서 계산
+            weapon.transform.rotation = weaponSlot.rotation * Quaternion.Inverse(weapon.primaryGrip.localRotation);
+            weapon.transform.position += weaponSlot.position - weapon.transform.TransformPoint(weapon.primaryGrip.localPosition);
+            if (rightHandIK != null) {
+                rightHandIK.weight = 1f;
+                Debug.Log(rightHandIK.weight);
+            }
+        }
+        else
+        {
+            if (rightHandIK != null) rightHandIK.weight = 0f;
+        }
         if (leftHandTarget != null && weapon.secondaryGrip != null)
-            leftHandTarget.SetPositionAndRotation(weapon.secondaryGrip.position, weapon.secondaryGrip.rotation);
+        {
+            leftHandTarget.SetParent(weapon.secondaryGrip);
+            leftHandTarget.localPosition = Vector3.zero;
+            leftHandTarget.localRotation = Quaternion.identity;
+            if (leftHandIK != null) leftHandIK.weight = 1f;
+        }
+        else
+        {
+            if (leftHandIK != null) leftHandIK.weight = 0f;
+        }
+        
+        // 오버라이드 애니메이터 적용
+        if (weapon.status.WeaponAnimations != null)
+        {
+            animator.runtimeAnimatorController = weapon.status.WeaponAnimations;
+        }
     }
     public void EquipLight(Light newLight)
     {

@@ -2,56 +2,62 @@ using UnityEngine;
 
 public class Attack : PlayerState
 {
-
-    private AnimatorStateInfo curAni;
     private bool canCombo;
+    private bool comboPressed;
     private int ComboIndex = 0;
+    private float comboPressTime = -99f;
+    private const float comboMemory = 0.5f;
+
     public Attack(PlayerStateMachine stateMachine) : base(stateMachine)
     {
         canChanged = false;
         canCombo = false;
+        comboPressed = false;
     }
+
     public override void Enter()
     {
-        //Idle Animation code
-        
         canChanged = false;
         canCombo = false;
-        player.Rb.linearVelocity = Vector3.zero; // �߰�
-        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f,1);
+        comboPressed = false;
+        player.Rb.linearVelocity = Vector3.zero;
+        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
     }
 
     public override void Exit()
     {
-        if(player.bufferinput == StateType.Attack && ComboIndex <2)
-        {
+        if (comboPressed && ComboIndex < 2)
             ComboIndex++;
-        }
         else
-        {
             ComboIndex = 0;
-        }
     }
- 
+
     public override void LogicUpdate()
     {
-        // �ִϸ��̼��� ������ 70�� ���º��� �������� ����
-        if (canCombo && player.bufferinput == StateType.Attack)
+        if (player.bufferinput == StateType.Attack)
         {
-            canChanged = true;
-        }       
-
-
+            comboPressTime = Time.time;
+            comboPressed = true;
+        }
+        if (comboPressed && Time.time > comboPressTime + comboMemory)
+            comboPressed = false;
     }
 
     public override void PhysicalUpdate()
     {
-        //�� ���¿��� ó���Ҹ��� ������ �ֳ�? �������� Ʈ���ŷ� ó���Ҳ���
-        
     }
+
+    public override void OnAnimationFinished()
+    {
+        if (!comboPressed)
+            canChanged = true;
+    }
+
     public override void OncanCombo()
     {
         canCombo = true;
+        if (comboPressed)
+            player.ChangeState<Attack>();
     }
 }

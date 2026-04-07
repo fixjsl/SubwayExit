@@ -1,3 +1,5 @@
+
+using System.Security;
 using Unity.VisualScripting;
 using UnityEngine;
 public class Dodge : PlayerState
@@ -24,6 +26,8 @@ public class Dodge : PlayerState
         canChanged = false;
         player.gameObject.layer = LayerMask.NameToLayer("Dodge");
         player.status.UseStamina(player.status.DodgeCost);
+        player.animator.applyRootMotion = false;
+        player.Rb.isKinematic = false;
         player.animator.CrossFade(player.dodge, 0.15f);
 
     }
@@ -32,12 +36,12 @@ public class Dodge : PlayerState
     {
         // Ȥ�� �� ��� ��� Exit������ ����
         player.gameObject.layer = LayerMask.NameToLayer("Player");
+        player.Rb.linearVelocity = new Vector3(0f, player.Rb.linearVelocity.y, 0f);
     }
 
 
     public override void LogicUpdate()
     {
-        // input Logic
 
     }
 
@@ -49,5 +53,10 @@ public class Dodge : PlayerState
             player.Rb.linearVelocity.y,
             0f);
 
+    }
+    public override void OnAnimationFinished()
+    {
+        Debug.Log("Dodge animation finished");
+        canChanged = true;
     }
 }

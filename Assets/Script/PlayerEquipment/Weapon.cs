@@ -8,6 +8,7 @@ public class Weapon : MonoBehaviour, ICreatable
     [SerializeField] private Collider weaponCollider;
     [SerializeField] private ItemBase _iteminfo;
     public ItemBase iteminfo => _iteminfo;
+    public Transform primaryGrip;
     public Transform secondaryGrip;
     private HashSet<MonsterStateMachine> hitTargets = new HashSet<MonsterStateMachine>();
 

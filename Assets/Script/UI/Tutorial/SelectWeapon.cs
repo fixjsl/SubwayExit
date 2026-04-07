@@ -6,20 +6,26 @@ using UnityEngine.UI;
 public class SelectWeapon : MonoBehaviour
 {
 
-[SerializeField] private GameObject WeaponP;
-[SerializeField] private Transform WeaponSpawnPoint;
-[SerializeField] private Button WeaponSelectButton;
+    [SerializeField] private GameObject WeaponP;
+    [SerializeField] private Transform WeaponSpawnPoint;
+    [SerializeField] private GameObject WeaponCardContainer;
+    private WeaponPickup weaponPickup;
+    [SerializeField] private Button WeaponSelectButton;
 
     void Awake()
     {
         WeaponSelectButton.onClick.AddListener(() => spawnWeapon(WeaponP));
+        weaponPickup = WeaponSpawnPoint.GetComponent<WeaponPickup>();
     }
 
     public void spawnWeapon(GameObject weapon)
     {
         GameObject sweapon = Instantiate(weapon, WeaponSpawnPoint.position, WeaponSpawnPoint.rotation);
-        WeaponSpawnPoint.GetComponent<WeaponPickup>().SetWeapon(sweapon.GetComponent<Weapon>());
+        weaponPickup.SetWeapon(sweapon.GetComponent<Weapon>());
+
+        if (WeaponCardContainer != null)
+        {
+            WeaponCardContainer.SetActive(false);
+        }
     }
-
-
 }

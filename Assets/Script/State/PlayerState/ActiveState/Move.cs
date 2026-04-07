@@ -60,10 +60,6 @@ public class Move : PlayerState
         {
             player.status.Stamina -= player.status.SprintCost * Time.deltaTime;
         }
-        if (!canChanged && (curAni.shortNameHash == player.moveTurn|| curAni.shortNameHash==player.sprintTurn))
-        {
-            canChanged = true;
-        }
     }
 
     public override void PhysicalUpdate()
@@ -86,7 +82,7 @@ public class Move : PlayerState
     public override void OnTurnAnimationFinished()
     {
         
-        float targetY = (player.MoveInput > 0) ? 90f : -90f;
+        float targetY = (movebuffer > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
         Debug.Log("Turn Animation Finished");
         if (player.isSprint) 

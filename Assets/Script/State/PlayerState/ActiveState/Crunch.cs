@@ -74,7 +74,7 @@ public class Crunch : PlayerState
     }
     public override void OnTurnAnimationFinished()
     {
-        float targetY = (player.MoveInput > 0) ? 90f : -90f;
+        float targetY = (movebuffer > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
         player.animator.CrossFade(player.crunchIdle, 0.15f);
