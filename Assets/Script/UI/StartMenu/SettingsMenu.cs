@@ -33,6 +33,8 @@ public class SettingsMenu : MonoBehaviour
         InitWindowMode();
         InitQuality();
         InitAudio();
+        //설정 종료 버튼
+
     }
 
     // ===================== 그래픽 =====================

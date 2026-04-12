@@ -17,6 +17,8 @@ public class PlayerStatus
         } 
     }
     public int MaxStamina;
+
+    public int curMaxStamina;
     private float stamina;
     public float Stamina
     {
@@ -36,8 +38,41 @@ public class PlayerStatus
 
     [Header("Player Status")]
     public float parryduration;
-    public float hungry;
-    public float water;
+    public readonly int MaxHungry = 100;
+    private int hungry; 
+    public int Hungry
+    {
+        get => hungry; 
+        set
+        {
+           hungry = Mathf.Clamp(value, 0, MaxHungry);
+           ChangeHungry?.Invoke(hungry);
+           if(hungry <= 30)
+            {
+                curMaxCarryWeight = curMaxCarryWeight * 0.4f;
+            }
+            else
+            {
+                curMaxCarryWeight = maxCarryWeight;
+            }
+        }
+    }
+    public readonly int MaxWater = 100;
+    private int water;
+    public int Water
+    {
+        get => water;
+        set
+        {
+            water = Mathf.Clamp(value, 0 , MaxWater);
+            ChangeWater?.Invoke(water);
+            if(water<= 30)
+            {
+                curMaxStamina = (int)((float)curMaxStamina * 0.4f);
+            }
+            else curMaxStamina = MaxStamina;
+        }   
+    }
     public float DodgeCooldown;
     [Header("Stamina Cost")]
     public float parryCost;
@@ -78,6 +113,8 @@ public class PlayerStatus
 
     [Header("Inventory Status")]
     public float maxCarryWeight;
+
+    public float curMaxCarryWeight;
     public float maxSlots;
     //Event
     //base Stat event
@@ -85,10 +122,12 @@ public class PlayerStatus
     public event Action OnDie;
     public event Action<float> ChangeStamina;
     public event Action StaminaEmpty;
+    public event Action<int> ChangeHungry;
+    public event Action<int> ChangeWater;
     //Noise stat event
     public event Action ChangeNoiseStat;
     public void UseStamina(float amount)
     {
-        Stamina -= amount; // �׳� ����, Stamina ������Ƽ���� Clamp + �̺�Ʈ ó��
+        Stamina -= amount; 
     }
 }

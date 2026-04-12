@@ -1,28 +1,25 @@
-
 using UnityEngine;
 
 public class Attack : PlayerState
 {
-    private bool canCombo;
-    private bool comboPressed;
     private int ComboIndex = 0;
-    private float comboPressTime = -99f;
-    private const float comboMemory = 0.5f;
-    private int enterFrame;
+    private float lastCombo3FinishTime = float.MinValue;
 
     public Attack(PlayerStateMachine stateMachine) : base(stateMachine)
     {
         canChanged = false;
-        canCombo = false;
-        comboPressed = false;
+    }
+
+    // 3타 이후 쿨다운 체크 (BufferState에서 신규 공격 진입 시 사용)
+    public override bool CanEnter()
+    {
+        if (player.currentWeapon == null) return false;
+        return Time.time - lastCombo3FinishTime >= player.currentWeapon.status.attackSpeed;
     }
 
     public override void Enter()
     {
-        enterFrame = Time.frameCount;
         canChanged = false;
-        canCombo = false;
-        comboPressed = false;
         player.Rb.linearVelocity = Vector3.zero;
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
@@ -30,47 +27,41 @@ public class Attack : PlayerState
 
     public override void Exit()
     {
-        if (comboPressed && ComboIndex < 2)
-            ComboIndex++;
-        else
-            ComboIndex = 0;
+        ComboIndex = 0;
+        player.CloseAllAttackWindows();
     }
 
-    public override void LogicUpdate()
+    // PlayerStateMachine의 콤보 윈도우에서 호출
+    public void DoCombo()
     {
-        if (player.bufferinput == StateType.Attack)
-        {
-            comboPressTime = Time.time;
-            comboPressed = true;
-        }
-        if (comboPressed && canCombo)
-        {
-            Debug.Log($"combo! {ComboIndex}, canCombo: {canCombo}, comboPressed: {comboPressed}");
-            player.ChangeState<Attack>();
-        }
-            
-        if (comboPressed && Time.time > comboPressTime + comboMemory)
-            comboPressed = false;
+        ComboIndex++;
+        canChanged = false;
+        player.Rb.linearVelocity = Vector3.zero;
+        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
+        player.status.UseStamina(player.currentWeapon.status.attackStamina);
     }
 
     public override void PhysicalUpdate()
     {
-                player.Rb.linearVelocity = new Vector3(
-                player.MoveInput * player.status.currentspeed,
-                player.Rb.linearVelocity.y,
-                0f);
+        player.Rb.linearVelocity = new Vector3(
+            player.MoveInput * player.status.currentspeed,
+            player.Rb.linearVelocity.y,
+            0f);
     }
 
-    public override void OnAnimationFinished()
-    {
-        if (Time.frameCount <= enterFrame) return;
-        canChanged = true;
-    }
-
+    // 애니메이션 이벤트: 캔슬/콤보 허용 구간 시작
     public override void OncanCombo()
     {
-        if (Time.frameCount <= enterFrame) return;
-        canCombo = true;
-        Debug.Log($"combo! {ComboIndex}, canCombo: {canCombo}, comboPressed: {comboPressed}");
+        player.OpenAttackCancelWindow(withCombo: ComboIndex < 2);
+    }
+
+    // 애니메이션 이벤트: 현재 공격 애니메이션 종료
+    public override void OnAnimationFinished()
+    {
+        if (ComboIndex >= 2)
+            lastCombo3FinishTime = Time.time;
+
+        player.OnAttackAnimFinished(ComboIndex);
+        canChanged = true;
     }
 }

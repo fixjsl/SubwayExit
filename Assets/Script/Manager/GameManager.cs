@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
+
 using UnityEngine.Audio;
 
-[System.Serializable]
+[Serializable]
 public class GameSettings
 {
     public int resolutionIndex  = -1;   // -1 = 현재 해상도 사용
@@ -22,6 +25,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioMixer audioMixer;
 
+    public int Day{get; private set;} = 1;  //진행 일
+    public int Hour{get; private set;}  = 0; // 시간
+    public int Minute{get; private set;} = 0; //분
+
+    public event Action<int, int> ChangeTime; // hour, minute
+    public event Action<int, int> ChangeDay; // hour, day
     private string savePath => Path.Combine(Application.persistentDataPath, "settings.json");
 
     void Awake()
@@ -82,5 +91,33 @@ public class GameManager : MonoBehaviour
     void SetMixerVolume(string param, float value)
     {
         audioMixer.SetFloat(param, Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f);
+    }
+
+    public void TutorialStart()
+    {
+        StartCoroutine(Clock());
+    }
+
+    IEnumerator Clock()
+    {
+        while (true)
+        {
+            yield return YeildCache.GetIntervals(2.5f);
+            Minute += 1;
+            if (Minute >= 60)
+            {
+                Minute = 0;
+                Hour += 1;
+            }
+            if (Hour >= 24)
+            {
+                Hour = 0;
+                Day += 1;
+                ChangeDay?.Invoke(Day, Hour);
+            }
+            ChangeTime?.Invoke(Hour, Minute);
+
+        }
+        
     }
 }

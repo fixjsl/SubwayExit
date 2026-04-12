@@ -2,14 +2,13 @@ using UnityEngine;
 using System.Collections.Generic;
 public class Weapon : MonoBehaviour, ICreatable
 {
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private PlayerStateMachine player;
     [SerializeField]
     public WeaponStatus status;
     [SerializeField] private Collider weaponCollider;
     [SerializeField] private ItemBase _iteminfo;
     public ItemBase iteminfo => _iteminfo;
-    public Transform primaryGrip;
-    public Transform secondaryGrip;
     private HashSet<MonsterStateMachine> hitTargets = new HashSet<MonsterStateMachine>();
 
 
@@ -17,11 +16,6 @@ public class Weapon : MonoBehaviour, ICreatable
     {
         status = Instantiate(status);
         weaponCollider.enabled = false;
-    }
-
-    public void SetPlayer(PlayerStateMachine stateMachine)
-    {
-        player = stateMachine;
     }
 
     public void OnAttackColider() 
@@ -48,8 +42,7 @@ public class Weapon : MonoBehaviour, ICreatable
     {
         foreach (var material in iteminfo.materials)
         {
-            int key = material.item.iteminfo.itemcode;
-            if (!inventory.slots.TryGetValue(key, out int count)) return false;
+            if (!inventory.slots.TryGetValue(material.item.iteminfo.itemcode, out int count)) return false;
             if (count < material.amount) return false;
         }
         return true;
@@ -62,5 +55,10 @@ public class Weapon : MonoBehaviour, ICreatable
         foreach (var material in iteminfo.materials)
             inventory.RemoveItem(material.item, material.amount);
         player.EquipWeapon(this);
+    }
+    public void Equip()
+    {
+        player = GetComponentInParent<PlayerStateMachine>();
+        //장비 위치 조정 코드 아마? 
     }
 }

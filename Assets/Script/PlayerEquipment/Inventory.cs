@@ -4,44 +4,35 @@ using UnityEngine;
 
 public class Inventory
 {
-    private PlayerStatus status;
-    public Dictionary<int, int> slots { get; private set; } = new Dictionary<int, int>();
-    public float currentWeight { get; private set; }
-
-    public Inventory(PlayerStatus status)
+    private int maxSlots;
+    private float maxWeight;
+    public  Dictionary<int, int> slots { get; private set; } = new Dictionary<int, int>();
+    
+    public Inventory(int maxSlots)
     {
-        this.status = status;
+        this.maxSlots = maxSlots;
     }
 
     public bool AddItem(Item item, int num = 1)
     {
-        int key = item.iteminfo.itemcode;
-        float addWeight = item.iteminfo.weight * num;
-        if (currentWeight + addWeight > status.maxCarryWeight) return false;
-
-        if (slots.TryGetValue(key, out int count))
+        if (slots.TryGetValue(item.iteminfo.itemcode, out int count))
         {
-            slots[key] = num + count;
-            currentWeight += addWeight;
+            slots[item.iteminfo.itemcode] = num + count;
             return true;
         }
-        if (slots.Count >= (int)status.maxSlots) return false;
-        slots[key] = num;
-        currentWeight += addWeight;
+        if (slots.Count >= maxSlots) return false;
+        slots[item.iteminfo.itemcode] = num;
         return true;
     }
-
     public bool RemoveItem(Item item, int num = 1)
     {
-        int key = item.iteminfo.itemcode;
-        if (!slots.TryGetValue(key, out int count)) return false;
+        if (!slots.TryGetValue(item.iteminfo.itemcode, out int count)) return false;
         if (count < num) return false;
 
         if (count == num)
-            slots.Remove(key);
+            slots.Remove(item.iteminfo.itemcode);
         else
-            slots[key] = count - num;
-        currentWeight -= item.iteminfo.weight * num;
+            slots[item.iteminfo.itemcode] = count - num;
         return true;
     }
 
