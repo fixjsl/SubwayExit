@@ -20,9 +20,10 @@ public class Execution : PlayerState
         player.gameObject.layer = Layercache.Dodge; // ����
         player.Rb.linearVelocity = Vector3.zero;
     }
-    public override void Exit() 
+    public override void Exit()
     {
         player.gameObject.layer = Layercache.Player;
+        player.animator.CrossFade(player.idle, 0.25f, 1);
     }
 
     public void OnDamage()

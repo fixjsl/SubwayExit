@@ -24,5 +24,6 @@ public abstract class PlayerState : State
     }
     public virtual void OnTurnAnimationFinished() { }
     public virtual void OncanCombo() { }
-    
+    public virtual void OnAnimationFinishedAt(int attackIndex) { }
+
 }
