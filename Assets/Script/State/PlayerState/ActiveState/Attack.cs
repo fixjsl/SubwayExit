@@ -23,22 +23,27 @@ public class Attack : PlayerState
         player.Rb.linearVelocity = Vector3.zero;
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
+        Debug.Log($"[Attack] Enter - ComboIndex: {ComboIndex}");
     }
 
     public override void Exit()
     {
+        Debug.Log($"[Attack] Exit - ComboIndex: {ComboIndex}");
         ComboIndex = 0;
         player.CloseAllAttackWindows();
+        player.animator.CrossFade(player.idle, 0.25f, 1);
     }
 
     // PlayerStateMachine의 콤보 윈도우에서 호출
     public void DoCombo()
     {
         ComboIndex++;
+        Debug.Log($"[Attack] DoCombo - ComboIndex: {ComboIndex}");
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
+        
     }
 
     public override void PhysicalUpdate()
@@ -52,12 +57,27 @@ public class Attack : PlayerState
     // 애니메이션 이벤트: 캔슬/콤보 허용 구간 시작
     public override void OncanCombo()
     {
+        Debug.Log($"[Attack] OncanCombo - ComboIndex: {ComboIndex}, withCombo: {ComboIndex < 2}");
         player.OpenAttackCancelWindow(withCombo: ComboIndex < 2);
     }
 
-    // 애니메이션 이벤트: 현재 공격 애니메이션 종료
+    // OnAnimationFinished 기본 구현(canChanged=true)을 막음 - OnAnimationFinishedAt만 사용
     public override void OnAnimationFinished()
     {
+        Debug.LogWarning($"[Attack] OnAnimationFinished 차단됨 (ComboIndex: {ComboIndex}) - 애니메이터 이벤트를 OnAnimationFinishedAt으로 교체하세요");
+    }
+
+    // 애니메이션 이벤트: 현재 공격 애니메이션 종료 (파라미터로 어떤 어택인지 식별)
+    public override void OnAnimationFinishedAt(int attackIndex)
+    {
+        if (attackIndex != ComboIndex)
+        {
+            Debug.Log($"[Attack] OnAnimationFinishedAt 무시 - attackIndex: {attackIndex}, ComboIndex: {ComboIndex}");
+            return;
+        }
+
+        Debug.Log($"[Attack] OnAnimationFinishedAt 처리 - attackIndex: {attackIndex}");
+
         if (ComboIndex >= 2)
             lastCombo3FinishTime = Time.time;
 

@@ -504,10 +504,20 @@ public class PlayerStateMachine : MonoBehaviour
             leftHandTarget.localPosition = Vector3.zero;
             leftHandTarget.localRotation = Quaternion.identity;
             if (leftHandIK != null) leftHandIK.weight = 1f;
+            Debug.Log($"[EquipWeapon] leftHandIK weight → 1 (secondaryGrip: {weapon.secondaryGrip.name})");
         }
         else
         {
-            if (leftHandIK != null) leftHandIK.weight = 0f;
+            Debug.Log($"[EquipWeapon] secondaryGrip 없음 → leftHandIK weight 0 시도. leftHandTarget={leftHandTarget != null}, leftHandIK={leftHandIK != null}");
+            if (leftHandIK != null)
+            {
+                leftHandIK.weight = 0f;
+                Debug.Log($"[EquipWeapon] leftHandIK.weight 설정 완료: {leftHandIK.weight}");
+            }
+            else
+            {
+                Debug.LogWarning("[EquipWeapon] leftHandIK가 null입니다! 인스펙터에서 할당해주세요.");
+            }
         }
         if (weapon.status.WeaponAnimations != null)
             animator.runtimeAnimatorController = weapon.status.WeaponAnimations;

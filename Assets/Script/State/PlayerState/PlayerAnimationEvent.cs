@@ -21,6 +21,10 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         player.ActiveState?.OncanCombo();
     }
+    public void OnAnimationFinishedAt(int attackIndex)
+    {
+        player.ActiveState?.OnAnimationFinishedAt(attackIndex);
+    }
     public void OnAttackCollider()
     {
         player.currentWeapon?.OnAttackColider();

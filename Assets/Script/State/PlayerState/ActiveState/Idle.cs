@@ -15,7 +15,6 @@ public class Idle : PlayerState
         player.Rb.linearVelocity = Vector3.zero;
         //Idle Animation code
         player.animator.CrossFade(player.idle, 0.2f); // 0번 레이어
-        player.animator.CrossFade(player.idle, 0.2f, 1); // 1번 레이어, idle이 있다면
 
     }
 

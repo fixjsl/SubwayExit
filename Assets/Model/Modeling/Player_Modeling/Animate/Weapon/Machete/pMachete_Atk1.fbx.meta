@@ -69,15 +69,15 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.96883124
+      - time: 0.9297922
         functionName: OffAttackCollider
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.98441553
-        functionName: OnAnimationFinished
+      - time: 0.9694005
+        functionName: OnAnimationFinishedAt
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
