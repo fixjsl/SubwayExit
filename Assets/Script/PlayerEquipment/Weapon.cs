@@ -9,6 +9,8 @@ public class Weapon : MonoBehaviour, ICreatable
     [SerializeField] private Collider weaponCollider;
     [SerializeField] private ItemBase _iteminfo;
     public ItemBase iteminfo => _iteminfo;
+    public Transform primaryGrip;
+    public Transform secondaryGrip;
     private HashSet<MonsterStateMachine> hitTargets = new HashSet<MonsterStateMachine>();
 
 
@@ -56,9 +58,8 @@ public class Weapon : MonoBehaviour, ICreatable
             inventory.RemoveItem(material.item, material.amount);
         player.EquipWeapon(this);
     }
-    public void Equip()
+    public void SetPlayer(PlayerStateMachine stateMachine)
     {
-        player = GetComponentInParent<PlayerStateMachine>();
-        //장비 위치 조정 코드 아마? 
+        player = stateMachine;
     }
 }
