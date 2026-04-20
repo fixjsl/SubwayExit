@@ -22,7 +22,16 @@ public class MonsterStatus : ScriptableObject
     public float atkdelay;
 
     public float detect_range;
-    public float detection_gauge;
+    private float _detection_gauge;
+    public float detection_gauge
+    {
+        get => _detection_gauge;
+        set
+        {
+            _detection_gauge = Mathf.Clamp(value, 0, 100);
+            ChangeDetectionGauge?.Invoke(_detection_gauge);
+        }
+    }
     public float recovery;
 
     public float battle_range;
@@ -30,5 +39,6 @@ public class MonsterStatus : ScriptableObject
 
     public float knockbackForce;
     public event Action<float> ChangeHP;
+    public event Action<float> ChangeDetectionGauge;
     public event Action OnDie;
 }

@@ -13,6 +13,7 @@ namespace MonsterStates
         {
             //�߰� �ִϸ��̼�
             Monster.StopDetection();
+            Monster.animator.CrossFade(Monster.sprint, 0.01f);
             isTurning = false;
             CheckDirection();
         }
@@ -43,18 +44,15 @@ namespace MonsterStates
         }
         public override void LogicUpdate()
         {
-            //��ǥ������ �Ÿ����
-            //��ǥ���� �Ÿ��� �����̻� ������ ����
             if(Monster.Targetplayer == null)
             {
                 Monster.ChangeState<Return>();
                 return;
             }
-            if (Vector3.Distance(Monster.Targetplayer.transform.position, Monster.transform.position) < Monster.status.atk_range)
+            if (Vector3.Distance(Monster.Targetplayer.transform.position, Monster.transform.position) < Monster.status.battle_range)
             {
-                Monster.ChangeState<Attack>();
+                Monster.ChangeState<Battle>();
             }
-            
         }
         public override void PhysicalUpdate()
         {
@@ -70,16 +68,16 @@ namespace MonsterStates
            
 
             if (isTurning) return;
-                // �÷��̾� �������� �̵� ����
-            Vector3 direction = (Monster.Targetplayer.transform.position - Monster.transform.position).normalized;
-            Monster.Rb.linearVelocity = direction * Monster.status.speed;
+            float dirX = Monster.Targetplayer.transform.position.x - Monster.transform.position.x;
+            float moveDir = dirX > 0 ? 1f : -1f;
+            Monster.Rb.linearVelocity = new Vector3(moveDir * Monster.status.chasespeed, Monster.Rb.linearVelocity.y, 0f);
             
         }
         public override void OnTurnAnimationFinished()
         {
-            Vector3 currentEuler = Monster.Rb.rotation.eulerAngles;
-            float snappedY = Mathf.Round(currentEuler.y / 90f) * 90f;
-            Monster.Rb.rotation = Quaternion.Euler(0, snappedY, 0);
+            float dirToPlayer = Monster.Targetplayer.transform.position.x - Monster.transform.position.x;
+            float targetY = dirToPlayer > 0 ? 90f : 270f;
+            Monster.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
             isTurning = false;
 

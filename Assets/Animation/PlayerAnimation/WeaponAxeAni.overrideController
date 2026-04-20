@@ -8,4 +8,22 @@ AnimatorOverrideController:
   m_PrefabAsset: {fileID: 0}
   m_Name: WeaponAxeAni
   m_Controller: {fileID: 9100000, guid: e2335bdd2f3937747be7e85bf41ec46c, type: 2}
-  m_Clips: []
+  m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 74800453b98efef48be189a6a7890194, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: d04ededd40c09bb4d832150c29bf8e29, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: e56bda0d7e73c624987d56b2439de2b1, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: bdf5a5ce3169e3444914f66f91c3dc73, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: a3a10db75760e8f458a888ea67511598, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 17a092042449f9341a63ff1559ced2ff, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: bddb482d582f9f747a7e141535c39ac9, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 2c8ae229c0731df488e8a736f2b9b4c6, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 1b5b2acaad684c3459855ea9e9eba7cd, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: a253502f214a19e4582ce499b49de4d4, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: e402396bc4b298543bf88c36fe999bab, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 1f346347860063143990d828587a3041, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: c1fe387aa443f0448ad57cb175fdb0ae, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 392c18aa419377144a75ab8798dbfb5d, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 4fe01ca410cf75a4dbc63fdec2f81718, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 541e967994d0e114191dc720e795e409, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 68a1c0d13e0da5844aef11409e07c444, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 2f31fcd0c8a5d5241a231f6a2a3b82f8, type: 3}

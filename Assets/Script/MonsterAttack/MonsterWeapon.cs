@@ -13,8 +13,7 @@ public class MonsterWeapon : MonoBehaviour
 
     }
 
-    public void OnAttackCollider() => hitbox.enabled = true;
-    public void OffAttackCollider() => hitbox.enabled = false;
+
 
     private void OnTriggerEnter(Collider other)
     {

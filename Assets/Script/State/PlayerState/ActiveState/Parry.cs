@@ -22,7 +22,6 @@ public class Parry: PlayerState
     public override void Exit()
     {
         IsInParryWindow = false;
-        player.animator.CrossFade(player.idle, 0.25f, 1);
     }
 
     public override void HandleDamage(float Damage)
@@ -32,7 +31,8 @@ public class Parry: PlayerState
 
     public override void LogicUpdate()
     {
-        // input Logic
+        IsInParryWindow = player.isGuard;
+
         if (parryTimer.Timer(player.status.parryduration))
         {
             IsInParryWindow = false;

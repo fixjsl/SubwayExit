@@ -56,9 +56,9 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int sprintTurn = Animator.StringToHash("sprintTurn");
     public readonly int incrunch = Animator.StringToHash("incrunch");
     public readonly int outcrunch = Animator.StringToHash("outcrunch");
-    public readonly int crunchTurn = Animator.StringToHash("crunchTurn");
+    public readonly int crunchturn = Animator.StringToHash("crunchturn");
     public readonly int crunch = Animator.StringToHash("crunch");
-    public readonly int crunchMove = Animator.StringToHash("crunchMove");
+    public readonly int crunchmove = Animator.StringToHash("crunchmove");
     public readonly int parrying = Animator.StringToHash("parrying");
     public readonly int guard = Animator.StringToHash("guard");
     public readonly int dodge = Animator.StringToHash("dodge");
@@ -165,6 +165,14 @@ public class PlayerStateMachine : MonoBehaviour
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         animator.SetLayerWeight(1, 0f);
+
+        // 스탯 초기화
+        status.curMaxStamina = status.MaxStamina;
+        status.Hp      = status.Maxhp;
+        status.Stamina = status.MaxStamina;
+        status.Hungry  = status.MaxHungry;
+        status.Water   = status.MaxWater;
+
         stateInit();
     }
     void Update()
@@ -262,7 +270,7 @@ public class PlayerStateMachine : MonoBehaviour
                 ChangeState<Idle>();
                 return true ;
             }
-            if (ActiveState is Crunch) return false;
+            if (ActiveState is Crunch && isCrunch) return false;
             if (MoveInput != 0f)
             {
                 if (ActiveState is not Move) ChangeState<Move>();
@@ -440,7 +448,11 @@ public class PlayerStateMachine : MonoBehaviour
                 $"  BufferInput  : {bufferinput}\n" +
                 $"  MoveInput    : {MoveInput}\n" +
                 $"  isGuard / isSprint / isCrunch : {isGuard} / {isSprint} / {isCrunch}\n" +
-                $"  NearbyInteractables ({nearbyInteractables.Count}): {interactList}"
+                $"  NearbyInteractables ({nearbyInteractables.Count}): {interactList}\n" +
+                $"  HP           : {status.Hp:F0} / {status.Maxhp}\n" +
+                $"  Stamina      : {status.Stamina:F0} / {status.curMaxStamina}\n" +
+                $"  Hungry       : {status.Hungry} / {status.MaxHungry}\n" +
+                $"  Water        : {status.Water} / {status.MaxWater}"
             );
         }
     }
@@ -453,8 +465,8 @@ public class PlayerStateMachine : MonoBehaviour
             { moveTurn,   "moveTurn"   }, { hit,        "hit"        },
             { die,        "die"        }, { sprint,     "sprint"     },
             { sprintTurn, "sprintTurn" }, { incrunch,   "incrunch"   },
-            { outcrunch,  "outcrunch"  }, { crunchTurn, "crunchTurn" },
-            { crunch, "crunch" }, { crunchMove, "crunchMove" },
+            { outcrunch,  "outcrunch"  }, { crunchturn, "crunchturn" },
+            { crunch, "crunch" }, { crunchmove, "crunchmove" },
             { parrying,   "parrying"   }, { guard,      "guard"      },
             { dodge,      "dodge"      }
         };
@@ -486,6 +498,8 @@ public class PlayerStateMachine : MonoBehaviour
 
         currentWeapon = weapon;
         weapon.SetPlayer(this);
+        if (weapon.status.WeaponAnimations != null)
+            animator.runtimeAnimatorController = weapon.status.WeaponAnimations;
         weapon.transform.SetParent(weaponSlot, true);
         if (weapon.primaryGrip != null)
         {
@@ -498,29 +512,7 @@ public class PlayerStateMachine : MonoBehaviour
         {
             if (rightHandIK != null) rightHandIK.weight = 0f;
         }
-        if (leftHandTarget != null && weapon.secondaryGrip != null)
-        {
-            leftHandTarget.SetParent(weapon.secondaryGrip);
-            leftHandTarget.localPosition = Vector3.zero;
-            leftHandTarget.localRotation = Quaternion.identity;
-            if (leftHandIK != null) leftHandIK.weight = 1f;
-            Debug.Log($"[EquipWeapon] leftHandIK weight → 1 (secondaryGrip: {weapon.secondaryGrip.name})");
-        }
-        else
-        {
-            Debug.Log($"[EquipWeapon] secondaryGrip 없음 → leftHandIK weight 0 시도. leftHandTarget={leftHandTarget != null}, leftHandIK={leftHandIK != null}");
-            if (leftHandIK != null)
-            {
-                leftHandIK.weight = 0f;
-                Debug.Log($"[EquipWeapon] leftHandIK.weight 설정 완료: {leftHandIK.weight}");
-            }
-            else
-            {
-                Debug.LogWarning("[EquipWeapon] leftHandIK가 null입니다! 인스펙터에서 할당해주세요.");
-            }
-        }
-        if (weapon.status.WeaponAnimations != null)
-            animator.runtimeAnimatorController = weapon.status.WeaponAnimations;
+        if (leftHandIK != null) leftHandIK.weight = 0f;
     }
     public void EquipLight(Light newLight)
     {
@@ -531,6 +523,21 @@ public class PlayerStateMachine : MonoBehaviour
     void OnAnimatorMove()
     {
         Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
+    }
+
+    void OnAnimatorIK(int layerIndex)
+    {
+        if (currentWeapon != null && currentWeapon.secondaryGrip != null)
+        {
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, currentWeapon.secondaryGrip.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, currentWeapon.secondaryGrip.rotation);
+        }
+        else
+        {
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
+        }
     }
     // ========== 애니메이션 이벤트 ==========
 

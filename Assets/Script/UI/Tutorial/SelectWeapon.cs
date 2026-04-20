@@ -22,11 +22,9 @@ public class SelectWeapon : MonoBehaviour
     {
         GameObject sweapon = Instantiate(weapon, WeaponSpawnPoint.position, WeaponSpawnPoint.rotation, WeaponSpawnPoint);
         weaponPickup.SetWeapon(sweapon.GetComponent<Weapon>());
-        TutorialManager.Instance.OnTrigger(TutorialTriggerType.WeaponSelected);
         if (WeaponCardContainer != null)
-        {
             WeaponCardContainer.SetActive(false);
-
-        }
+        Time.timeScale = 1f;
+        TutorialManager.Instance.OnTrigger(TutorialTriggerType.WeaponSelected);
     }
 }

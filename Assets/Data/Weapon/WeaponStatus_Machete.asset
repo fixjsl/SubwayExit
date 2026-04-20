@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f2288420f19d54ea1c77da3bbe37eb, type: 3}
   m_Name: WeaponStatus_Machete
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStatus
-  attack: 0
-  attackSpeed: 0
-  attackRange: 0
-  execution_m: 0
-  bloodStrenth: 0
-  stunStrength: 0
-  GuardStrength: 0
-  attackStamina: 0
-  guardStamina: 0
-  parryStamina: 0
+  attack: 10
+  attackSpeed: 1
+  attackRange: 5
+  execution_m: 2
+  bloodStrenth: 50
+  stunStrength: 10
+  GuardStrength: 10
+  attackStamina: 3
+  guardStamina: 2
+  parryStamina: 3
   WeaponAnimations: {fileID: 22100000, guid: 9315de2875b26334fab73823f73f2553, type: 2}
   holdPosition: {x: 0, y: 0, z: 0}
   holdRotation: {x: 0, y: 0, z: 0, w: 0}

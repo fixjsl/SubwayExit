@@ -23,7 +23,7 @@ public class TutorialTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer != Layercache.Player) return;
+        Debug.Log("실행됨");
         TutorialManager.Instance.OnTrigger(triggerType);
-        gameObject.SetActive(false);
     }
 }

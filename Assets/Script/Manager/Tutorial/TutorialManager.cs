@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,15 @@ public class TutorialManager : MonoBehaviour
 
     private TutorialTriggerType? pendingTrigger = null;
 
+    [SerializeField] private GameObject targetPlayer;
+    [SerializeField] private GameObject targetMonster;
+    [SerializeField] private GameObject moveKeyUI;
+    [SerializeField] private GameObject sprintKeyUI;
+    [SerializeField] private GameObject interactKeyUI;
+    [SerializeField] private GameObject attackKeyUI;
+    [SerializeField] private GameObject weaponCardContainer;
+    [SerializeField] private GameObject monsterPrefab;
+    [SerializeField] private Transform monsterSpawnPoint;
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -28,7 +38,7 @@ public class TutorialManager : MonoBehaviour
     IEnumerator WaitForTrigger(TutorialTriggerType type)
     {
         while (pendingTrigger != type)
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.05f);
         pendingTrigger = null;
     }
 
@@ -48,27 +58,46 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator TutorialSequence()
     {
-        // 1단계: 이동키 튜토리얼 및 첫 대사
-        yield return WaitForTrigger(TutorialTriggerType.ShowMoveKeyNdialogue);
-        // TODO: 대사 출력, 이동키 UI 표시
+        GameManager.Instance.TutorialStart();
 
-        // 2단계: 늑대 등장 및 대사
+        // 1단계: 이동키 튜토리얼
+        yield return WaitForTrigger(TutorialTriggerType.ShowMoveKeyNdialogue);
+        if (moveKeyUI != null) moveKeyUI.SetActive(true);
+
+        // 2단계: 늑대 등장
         yield return WaitForTrigger(TutorialTriggerType.WolfFearNdialogue);
-        // TODO: 늑대 추격 시작, 대사 출력
+        if (moveKeyUI != null) moveKeyUI.SetActive(false);
+        if (targetMonster != null)
+        {
+            var wolf = targetMonster.GetComponent<MonsterStateMachine>();
+            if (wolf != null)
+            {
+                wolf.SetTarget(PlayerStateMachine.Instance);
+                wolf.ChangeState<MonsterStates.Chase>();
+            }
+        }
 
         // 3단계: 달리기 키 튜토리얼
         yield return WaitForTrigger(TutorialTriggerType.ShowSprintKey);
-        // TODO: 달리기 키 UI 표시
+        if (sprintKeyUI != null) sprintKeyUI.SetActive(true);
 
-        // 4단계: 상호작용 키 튜토리얼 및 대사
+        // 4단계: 상호작용 키 튜토리얼
         yield return WaitForTrigger(TutorialTriggerType.DialogueNShowInteractKey);
-        // TODO: 대사 출력, 상호작용 키 UI 표시
+        if (sprintKeyUI != null) sprintKeyUI.SetActive(false);
+        if (interactKeyUI != null) interactKeyUI.SetActive(true);
 
-        // 5단계: 무기 선택방
+        // 5단계: 무기 선택방 진입
         yield return WaitForTrigger(TutorialTriggerType.WeaponRoom);
-        // TODO: 무기 선택 UI 표시, 문 닫기
+        if (interactKeyUI != null) interactKeyUI.SetActive(false);
+        if (weaponCardContainer != null) weaponCardContainer.SetActive(true);
+        Time.timeScale = 0f;
+
+        // 카드 선택 대기 (SelectWeapon에서 timeScale 1로 복구 + OnTrigger 호출)
         yield return WaitForTrigger(TutorialTriggerType.WeaponSelected);
-        // TODO: 문 열기
+
+        // 몬스터 소환
+        if (monsterPrefab != null && monsterSpawnPoint != null)
+            Instantiate(monsterPrefab, monsterSpawnPoint.position, monsterSpawnPoint.rotation);
 
         // 6단계: 전투 시작
         yield return WaitForTrigger(TutorialTriggerType.CombatStart);

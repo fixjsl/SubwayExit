@@ -4,25 +4,18 @@ namespace MonsterStates
 {
     public class Attack : MonsterState
     {
-        private int comboindex;
-        private bool isAnimationFinished;
         public Attack(MonsterStateMachine monster) : base(monster)
         {
         }
         public override void Enter()
         {
-            //���� �ִϸ��̼�
-            isAnimationFinished = false;
-            Monster.animator.CrossFade(Monster.attackHashes[comboindex], 0.01f);
-
+            Monster.Rb.linearVelocity = Vector3.zero;
+            Monster.Rb.AddForce(Monster.transform.forward * 20f, ForceMode.Impulse);
+            int randomIndex = Random.Range(0, Monster.attackHashes.Length);
+            Monster.animator.CrossFade(Monster.attackHashes[randomIndex], 0.01f);
         }
         public override void Exit()
         {
-            //�ִϸ��̼��� ������ �ʾ����� ������ȯ�� �Ǹ�
-            if (!isAnimationFinished)
-            {
-                comboindex = 0;
-            }
             
         }
 
@@ -36,17 +29,7 @@ namespace MonsterStates
         }
         public override void OnAnimationFinished()
         {
-            isAnimationFinished = true;
-            if (comboindex < 2)
-            {
-                comboindex++;
-                Monster.ChangeState<Attack>();
-            }
-            else if (comboindex == 2)
-            {
-                comboindex = 0;
-                Monster.ChangeState<Battle>();
-            }
+            Monster.ChangeState<Battle>();
         }
 
     }

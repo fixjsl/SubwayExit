@@ -6,6 +6,7 @@ public class PlayerUI : MonoBehaviour
 {
     [Header("HP")]
     [SerializeField] private Image hpFill;
+    [SerializeField] private TMP_Text hpText;
 
     [Header("Stamina")]
     [SerializeField] private Image staminaFillLeft;
@@ -17,8 +18,8 @@ public class PlayerUI : MonoBehaviour
     [Header("Water")]
     [SerializeField] private Image waterFill;
 
-    [SerializeField] private TextMeshPro HourMinute;
-    [SerializeField] private TextMeshPro Day;
+    [SerializeField] private TMP_Text HourMinute;
+    [SerializeField] private TMP_Text Day;
 
 
     private PlayerStatus status;
@@ -36,6 +37,7 @@ public class PlayerUI : MonoBehaviour
 
         // 초기값 반영
         SetFill(hpFill,      status.Hp,      status.Maxhp);
+        hpText.text = $"{(int)status.Hp} / {(int)status.Maxhp}";
         SetStaminaFill(status.Stamina, status.curMaxStamina);
         SetFill(hungryFill,  status.Hungry,   status.MaxHungry);
         SetFill(waterFill,   status.Water,    status.MaxWater);
@@ -43,7 +45,13 @@ public class PlayerUI : MonoBehaviour
         Day.text = $"Day - {GameManager.Instance.Day}";
     }
 
-    void OnHPChanged(float val)      => SetFill(hpFill,      val, status.Maxhp);
+    void OnHPChanged(float val)
+    {
+        SetFill(hpFill,      val, status.Maxhp);
+        hpText.text = $"{(int)val} / {(int)status.Maxhp}";
+    }  
+        
+    
     void OnStaminaChanged(float val) => SetStaminaFill(val, status.curMaxStamina);
     void OnHungryChanged(int val)    => SetFill(hungryFill,  val, status.MaxHungry);
     void OnWaterChanged(int val)     => SetFill(waterFill,   val, status.MaxWater);

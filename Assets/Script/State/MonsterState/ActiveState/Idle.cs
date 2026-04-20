@@ -14,7 +14,9 @@ namespace MonsterStates
         {
             //idle�ִϸ��̼� ���
             changeTime = Random.Range(3, 5);
+            Monster.Rb.linearVelocity = Vector3.zero;
             Monster.StartDetection();
+            Monster.animator.CrossFade(Monster.idle, 0.01f);
             Timer.Reset();
         }
         public override void Exit()

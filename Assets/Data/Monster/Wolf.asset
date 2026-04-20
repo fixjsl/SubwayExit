@@ -12,15 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34925a5307c197429fd457354d17afa, type: 3}
   m_Name: Wolf
   m_EditorClassIdentifier: Assembly-CSharp::MonsterStatus
-  Maxhp: 100
-  speed: 5
-  chasespeed: 5
+  Maxhp: 20
+  speed: 10
+  chasespeed: 35
   atk: 5
-  atk_range: 100
+  atk_range: 0
   atkdelay: 3
-  detect_range: 100
-  detection_gauge: 0
-  recovery: 0
+  detect_range: 200
+  recovery: 3
   battle_range: 50
   stunTime: 0
   knockbackForce: 0

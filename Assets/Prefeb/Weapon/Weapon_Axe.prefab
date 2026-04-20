@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5517571072564948076
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8604153058191738263}
+  m_Layer: 7
+  m_Name: LeftHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8604153058191738263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5517571072564948076}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.036210664, y: -0.035497483, z: 0.9379108, w: 0.34315023}
+  m_LocalPosition: {x: 0.06, y: 0.41, z: 0.06}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1127526308753880036}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!1 &7087835355155155628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7151608344277361304}
+  m_Layer: 7
+  m_Name: RightHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7151608344277361304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7087835355155155628}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.35355344, z: -0.70710677, w: 0.61237234}
+  m_LocalPosition: {x: -0.36, y: -1.59, z: 0.09}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1127526308753880036}
+  m_LocalEulerAnglesHint: {x: 30, y: 30, z: -90}
 --- !u!1001 &589828929457738767
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60,13 +122,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5597582817851404094, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
       propertyPath: m_Name
       value: Weapon_Axe
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071963930070466410, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3884170839396117792, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7151608344277361304}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8604153058191738263}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
       insertIndex: -1
@@ -94,8 +178,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   status: {fileID: 11400000, guid: b411719e11ce0304b8d302587b095101, type: 2}
   weaponCollider: {fileID: 3724913846107356631}
-  _iteminfo: {fileID: 0}
-  secondaryGrip: {fileID: 0}
+  _iteminfo: {fileID: 11400000, guid: 66a3fe4145fe7ae4d92dfaae3fc9bd61, type: 2}
+  primaryGrip: {fileID: 7151608344277361304}
+  secondaryGrip: {fileID: 8604153058191738263}
 --- !u!65 &3724913846107356631
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -115,5 +200,10 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.5, y: 5, z: 5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.6596465, y: 5, z: 5}
+  m_Center: {x: 0.0025200448, y: 0, z: 0}
+--- !u!4 &1127526308753880036 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
+  m_PrefabInstance: {fileID: 589828929457738767}
+  m_PrefabAsset: {fileID: 0}

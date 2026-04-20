@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
         // 오디오
         SetMixerVolume("Master",  settings.masterVolume);
         SetMixerVolume("BGM",     settings.bgmVolume);
-        SetMixerVolume("SFX",     settings.sfxVolume);
+        SetMixerVolume("SE",     settings.sfxVolume);
         SetMixerVolume("Ambient", settings.ambientVolume);
     }
 

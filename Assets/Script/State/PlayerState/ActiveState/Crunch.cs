@@ -1,4 +1,5 @@
 
+using System.Security;
 using UnityEngine;
 
 public class Crunch : PlayerState
@@ -15,9 +16,7 @@ public class Crunch : PlayerState
         //Move animation
         float dot = Vector3.Dot(player.transform.forward, Vector3.right);
         movebuffer = (dot > 0) ? 1f : -1f;
-        canChanged = false;
-        
-        player.animator.CrossFade(player.incrunch, 0.15f);
+        player.animator.CrossFade(player.crunch, 0.15f);
     }
 
     public override void Exit()
@@ -26,9 +25,10 @@ public class Crunch : PlayerState
     }
     public override void LogicUpdate()
     {
+        curAni = player.animator.GetCurrentAnimatorStateInfo(0);
         if (!player.isCrunch)
         {
-            if (curAni.shortNameHash != player.outcrunch)
+            if (curAni.shortNameHash != player.outcrunch && !player.animator.IsInTransition(0) )
             {
                 canChanged = false;
                 player.animator.CrossFade(player.outcrunch, 0.15f);
@@ -40,21 +40,29 @@ public class Crunch : PlayerState
             float targetY = (movebuffer > 0) ? 90f : -90f;
             player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
             canChanged = false;
-            player.animator.CrossFade(player.crunchTurn, 0.15f);
+            player.animator.CrossFade(player.crunchturn, 0.15f);
             movebuffer = player.MoveInput;
         }
-
-        if (player.animator.IsInTransition(0)) return;
-
-        curAni = player.animator.GetCurrentAnimatorStateInfo(0);
-    
-        if (player.MoveInput != 0)
-            player.animator.CrossFade(player.crunchMove, 0.15f, 0);  // 해시 추가 필요
-        else
-            player.animator.CrossFade(player.crunch, 0.15f, 0);
-        if (!canChanged && (curAni.shortNameHash == player.crunchTurn))
+        if(player.animator.IsInTransition(0)) return;
+        
+        if (canChanged)
         {
-            canChanged = true;
+            if(player.MoveInput != 0)
+            {
+                if (curAni.shortNameHash != player.crunchmove)
+                    player.animator.CrossFade(player.crunchmove, 0.15f,0);
+            }
+            else if (curAni.shortNameHash != player.crunch)
+                player.animator.CrossFade(player.crunch, 0.15f,0);
+        }
+
+        if (!player.isSprint)
+        {
+            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime; 
+        }
+        else
+        {
+            player.status.Stamina -= player.status.SprintCost * Time.deltaTime;
         }
     }
 
@@ -65,6 +73,8 @@ public class Crunch : PlayerState
 
             if (player.status.currentspeed != player.status.crunchspeed)
                 player.status.currentspeed = player.status.crunchspeed;
+            if (player.isSprint && player.status.currentspeed != player.status.sprintspeed)
+                player.status.currentspeed = player.status.sprintspeed - 0.5f;
 
             player.Rb.linearVelocity = new Vector3(
                 player.MoveInput * player.status.currentspeed,
@@ -76,7 +86,7 @@ public class Crunch : PlayerState
     {
         float targetY = (movebuffer > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
-
+        Debug.Log("Turn Animation Finished");
         player.animator.CrossFade(player.crunch, 0.15f);
         canChanged = true;
     }

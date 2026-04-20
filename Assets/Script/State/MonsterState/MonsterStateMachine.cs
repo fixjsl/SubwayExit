@@ -25,7 +25,7 @@ public class MonsterStateMachine : MonoBehaviour
     public readonly int hit = Animator.StringToHash("hit");
     public readonly int die = Animator.StringToHash("die");
     public readonly int moveTurn = Animator.StringToHash("moveTurn");
-    public readonly int Stun = Animator.StringToHash("Stun");
+    public readonly int stun = Animator.StringToHash("stun");
     public readonly int[] attackHashes = {
     Animator.StringToHash("attack1"),
     Animator.StringToHash("attack2"),
@@ -34,7 +34,9 @@ public class MonsterStateMachine : MonoBehaviour
     [Header("��������Ʈ �����ٶ�")]
     [SerializeField]
     public Vector3 spawnpoint;
-
+    [SerializeField] private MonsterUI monsterUIPrefab;
+    [SerializeField] private Transform hpUIPoint;
+    [SerializeField] private Transform detectionUIPoint;
     public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
     [SerializeField] private Collider attackCollider; // �ν����� �Ҵ��
 
@@ -63,12 +65,18 @@ public class MonsterStateMachine : MonoBehaviour
     {
         
         status = Instantiate(status);
-        
+
         status.Hp = status.Maxhp;
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         status.OnDie += () => ChangeState<MonsterStates.Die>();
         stateInit();
+
+        if (monsterUIPrefab != null)
+        {
+            var ui = Instantiate(monsterUIPrefab);
+            ui.Init(this, hpUIPoint, detectionUIPoint);
+        }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -214,9 +222,6 @@ public class MonsterStateMachine : MonoBehaviour
     }
     float CalculateLightAwareness(PlayerStateMachine player)
     {
-        Vector3 dirToPlayer = (player.transform.position - transform.position).normalized;
-        if (Vector3.Dot(transform.forward, dirToPlayer) <= 0f) return 0f;
-
         if (Physics.Linecast(transform.position, player.transform.position, obstacleMask))
             return 0f;
 
@@ -240,5 +245,63 @@ public class MonsterStateMachine : MonoBehaviour
         ChangeState<Stun>();
     }
 
+    void OnAnimatorMove()
+    {
+        Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
+    }
+
+#if UNITY_EDITOR
+    [SerializeField] private bool debugMode = false;
+
+    void Start()
+    {
+        if (debugMode) StartCoroutine(DebugStatusCoroutine());
+    }
+
+    private IEnumerator DebugStatusCoroutine()
+    {
+        var wait = new WaitForSeconds(0.5f);
+        while (true)
+        {
+            yield return wait;
+
+            string targetName = Targetplayer != null ? Targetplayer.name : "없음";
+            float dist = Targetplayer != null
+                ? Vector3.Distance(transform.position, Targetplayer.transform.position)
+                : -1f;
+
+            Debug.Log(
+                $"[MONSTER DEBUG] {gameObject.name}\n" +
+                $"  ActiveState     : {ActiveState?.GetType().Name ?? "null"}\n" +
+                $"  HP              : {status.Hp:F0} / {status.Maxhp}\n" +
+                $"  DetectionGauge  : {status.detection_gauge:F1} / 100\n" +
+                $"  Target          : {targetName}\n" +
+                $"  TargetDist      : {(dist >= 0 ? dist.ToString("F1") : "N/A")}\n" +
+                $"  DetectRange     : {status.detect_range}\n" +
+                $"  BattleRange     : {status.battle_range}\n" +
+                $"  --- 물리 ---\n" +
+                $"  Velocity        : {Rb.linearVelocity}\n" +
+                $"  Position        : {Rb.position}\n" +
+                $"  IsKinematic     : {Rb.isKinematic}\n" +
+                $"  Constraints     : {Rb.constraints}\n" +
+                $"  Rotation(Y)     : {Rb.rotation.eulerAngles.y:F1}"
+            );
+        }
+    }
+    void OnDrawGizmos()
+    {
+        // 감지 범위 (노랑)
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, status != null ? status.detect_range : 0f);
+
+        // 전투 범위 (빨강)
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, status != null ? status.battle_range : 0f);
+
+        // 공격 범위 (마젠타)
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, status != null ? status.atk_range : 0f);
+    }
+#endif
 
 }

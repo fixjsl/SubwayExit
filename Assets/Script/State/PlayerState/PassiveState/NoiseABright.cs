@@ -4,7 +4,7 @@ public class NoiseABright : PassiveState
 {
     public Light light;
 
-    [Header("¼ÒÀ½ ¼öÄ¡")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡")]
     private float noiseIdle;
     private float noiseWalk;
     private float noiseSprint;
@@ -60,6 +60,7 @@ public class NoiseABright : PassiveState
     private void UpdateBrighten()
     {
         if (light == null) return;
+        light.transform.position = player.transform.position;
         player.status.currentbrighten = light.enabled ? light.intensity : 0f;
     }
 }

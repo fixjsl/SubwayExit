@@ -21,7 +21,8 @@ public class MonsterAnimationEvent : MonoBehaviour
     {
         monster.ActiveState?.OnTurnAnimationFinished();
     }
-
+    public void OnAttackCollider() => monster.AttackCollider.enabled = true;
+    public void OffAttackCollider() => monster.AttackCollider.enabled = false;
 
 
 }

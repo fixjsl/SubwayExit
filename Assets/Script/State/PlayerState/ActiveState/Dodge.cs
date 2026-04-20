@@ -26,7 +26,7 @@ public class Dodge : PlayerState
         canChanged = false;
         player.gameObject.layer = LayerMask.NameToLayer("Dodge");
         player.status.UseStamina(player.status.DodgeCost);
-        player.animator.applyRootMotion = false;
+        player.animator.applyRootMotion = true;
         player.Rb.isKinematic = false;
         player.animator.CrossFade(player.dodge, 0.15f);
 
@@ -34,8 +34,8 @@ public class Dodge : PlayerState
 
     public override void Exit()
     {
-        // Ȥ�� �� ��� ��� Exit������ ����
         player.gameObject.layer = LayerMask.NameToLayer("Player");
+        player.animator.applyRootMotion = false;
         player.Rb.linearVelocity = new Vector3(0f, player.Rb.linearVelocity.y, 0f);
     }
 
@@ -47,12 +47,6 @@ public class Dodge : PlayerState
 
     public override void PhysicalUpdate()
     {
-        float dir = Vector3.Dot(player.transform.forward, Vector3.right);
-        player.Rb.linearVelocity = new Vector3(
-            dir * player.status.dodgeSpeed,
-            player.Rb.linearVelocity.y,
-            0f);
-
     }
     public override void OnAnimationFinished()
     {
