@@ -403,7 +403,7 @@ Transform:
   m_GameObject: {fileID: 195605845}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.000000026341777, w: 1}
-  m_LocalPosition: {x: -0.0023012538, y: 0.8454214, z: -0.007488551}
+  m_LocalPosition: {x: -0.0023012548, y: 0.8454214, z: -0.0074869804}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2042,17 +2042,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3e698f680adf4248867bb9a365d92d7, type: 3}
---- !u!114 &681000526 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8743339735791539074, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
-  m_PrefabInstance: {fileID: 1541195250}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.TwoBoneIKConstraint
 --- !u!1 &738813040
 GameObject:
   m_ObjectHideFlags: 0
@@ -3931,7 +3920,7 @@ PrefabInstance:
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: leftHandIK
       value: 
-      objectReference: {fileID: 681000526}
+      objectReference: {fileID: 0}
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: weaponSlot
       value: 
@@ -3939,7 +3928,7 @@ PrefabInstance:
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: rightHandIK
       value: 
-      objectReference: {fileID: 2069958896}
+      objectReference: {fileID: 0}
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: status.Maxhp
       value: 100
@@ -3955,7 +3944,7 @@ PrefabInstance:
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: leftHandTarget
       value: 
-      objectReference: {fileID: 1982602916}
+      objectReference: {fileID: 0}
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: status.walkspeed
       value: 15
@@ -4020,8 +4009,10 @@ PrefabInstance:
       propertyPath: m_Weight
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedComponents:
+    - {fileID: 239723860027180797, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 2694170037156780654, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6713760344430523654, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       insertIndex: 0
@@ -4858,11 +4849,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951290853}
   m_CullTransparentMesh: 1
---- !u!4 &1982602916 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6055383120841007965, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
-  m_PrefabInstance: {fileID: 1541195250}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1984687099
 GameObject:
   m_ObjectHideFlags: 0
@@ -4971,7 +4957,7 @@ MonoBehaviour:
   interactKeyUI: {fileID: 1710317320}
   attackKeyUI: {fileID: 0}
   weaponCardContainer: {fileID: 1486858744}
-  monsterPrefab: {fileID: 0}
+  monsterPrefab: {fileID: 4988243617428578412, guid: 6423f4f66b256e14e88cb426c40c58e3, type: 3}
   monsterSpawnPoint: {fileID: 0}
 --- !u!4 &2028681695
 Transform:
@@ -4993,17 +4979,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3294861063253619175, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
   m_PrefabInstance: {fileID: 1541195250}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2069958896 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9044470779277763023, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
-  m_PrefabInstance: {fileID: 1541195250}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.TwoBoneIKConstraint
 --- !u!1001 &4313842618036264698
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5123,7 +5098,7 @@ PrefabInstance:
       objectReference: {fileID: 1486858744}
     - target: {fileID: 3886653428931158438, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5593540984159591571, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_Name
@@ -5251,7 +5226,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7854658640708036606, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8131521357382908545, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: WeaponSpawnPoint

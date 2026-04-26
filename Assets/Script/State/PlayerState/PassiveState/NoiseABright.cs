@@ -11,7 +11,7 @@ public class NoiseABright : PassiveState
     private float noiseCrouch;
     public NoiseABright(PlayerStateMachine player) : base(player)  
     {
-        interval = 0.1f;
+        interval = 0f;
         light = player.currentLight;
         RefreshNoiseStats();
     }

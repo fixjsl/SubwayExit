@@ -31,6 +31,9 @@ public class MonsterStateMachine : MonoBehaviour
     Animator.StringToHash("attack2"),
     Animator.StringToHash("attack3")
     };
+    [SerializeField] private LootTable lootTable;
+    [SerializeField] private ItemPickup itemPickupPrefab;
+
     [Header("��������Ʈ �����ٶ�")]
     [SerializeField]
     public Vector3 spawnpoint;
@@ -38,6 +41,8 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private Transform hpUIPoint;
     [SerializeField] private Transform detectionUIPoint;
     public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
+    [SerializeField] private float hitAnimLength = 0.5f;
+    public float HitAnimLength => hitAnimLength;
     [SerializeField] private Collider attackCollider; // �ν����� �Ҵ��
 
     public Collider AttackCollider => attackCollider; // �ܺο��� �б� ����
@@ -70,6 +75,7 @@ public class MonsterStateMachine : MonoBehaviour
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         status.OnDie += () => ChangeState<MonsterStates.Die>();
+        status.OnDie += SpawnLoot;
         stateInit();
 
         if (monsterUIPrefab != null)
@@ -243,6 +249,18 @@ public class MonsterStateMachine : MonoBehaviour
     public void ChangeStun()
     {
         ChangeState<Stun>();
+    }
+
+    private void SpawnLoot()
+    {
+        if (lootTable == null || itemPickupPrefab == null) return;
+        var drops = lootTable.Roll();
+        for (int i = 0; i < drops.Count; i++)
+        {
+            var pos = transform.position + Vector3.up * 0.5f + Vector3.right * (i * 0.5f);
+            var pickup = Instantiate(itemPickupPrefab, pos, Quaternion.identity);
+            pickup.Setup(drops[i].item, drops[i].count);
+        }
     }
 
     void OnAnimatorMove()

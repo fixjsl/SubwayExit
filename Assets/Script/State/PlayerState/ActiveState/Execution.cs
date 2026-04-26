@@ -23,7 +23,6 @@ public class Execution : PlayerState
     public override void Exit()
     {
         player.gameObject.layer = Layercache.Player;
-        player.animator.CrossFade(player.idle, 0.25f, 1);
     }
 
     public void OnDamage()

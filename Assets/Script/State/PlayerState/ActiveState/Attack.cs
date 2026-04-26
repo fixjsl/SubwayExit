@@ -14,6 +14,7 @@ public class Attack : PlayerState
     public override bool CanEnter()
     {
         if (player.currentWeapon == null) return false;
+        if (player.isTired) return false;
         return Time.time - lastCombo3FinishTime >= player.currentWeapon.status.attackSpeed;
     }
 
@@ -31,7 +32,6 @@ public class Attack : PlayerState
         Debug.Log($"[Attack] Exit - ComboIndex: {ComboIndex}");
         ComboIndex = 0;
         player.CloseAllAttackWindows();
-        player.animator.CrossFade(player.idle, 0.25f, 1);
     }
 
     // PlayerStateMachine의 콤보 윈도우에서 호출

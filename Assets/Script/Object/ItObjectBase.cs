@@ -1,14 +1,43 @@
 
+using TMPro;
 using UnityEngine;
 
 public abstract class ItObjectBase : MonoBehaviour, Iinterectable
 {
     public abstract bool isStuck { get; }
+    public abstract string InteractMessage { get; }
+
+    [SerializeField] private GameObject interactPrompt;
+    private TextMeshPro promptText;
+
     protected bool isInteracting = false;
     private PlayerStateMachine currentPlayer;
     private float lastInteractTime = -Mathf.Infinity;
 
     protected virtual float interactCooldown => 0f;
+
+    protected virtual void Start()
+    {
+        if (interactPrompt != null)
+        {
+            interactPrompt.TryGetComponent(out promptText);
+            if (promptText == null)
+                promptText = interactPrompt.GetComponentInChildren<TextMeshPro>();
+            interactPrompt.SetActive(false);
+        }
+    }
+
+    private void ShowPrompt()
+    {
+        if (interactPrompt == null) return;
+        if (promptText != null) promptText.text = InteractMessage;
+        interactPrompt.SetActive(true);
+    }
+
+    private void HidePrompt()
+    {
+        if (interactPrompt != null) interactPrompt.SetActive(false);
+    }
 
     public void Oninterect(Vector3 interacterPosition)
     {
@@ -19,7 +48,9 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         lastInteractTime = Time.time;
         OnInteractInternal(interacterPosition);
 
-        // 상호작용 대상이 비활성화되거나 파괴되면 자동으로 리스트에서 제거
+        if (promptText != null && interactPrompt.activeSelf)
+            promptText.text = InteractMessage;
+
         if (currentPlayer != null && !gameObject.activeInHierarchy)
         {
             currentPlayer.ClearInteractable(this);
@@ -30,22 +61,18 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
 
     private void OnTriggerEnter(Collider other)
     {
-        var player = other.GetComponent<PlayerStateMachine>();
-        if (player != null)
-        {
-            currentPlayer = player;
-            player.SetInteractable(this);
-        }
+        if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
+        currentPlayer = player;
+        player.SetInteractable(this);
+        ShowPrompt();
     }
+
     protected virtual void OnTriggerExit(Collider other)
     {
-        var player = other.GetComponent<PlayerStateMachine>();
-        if (player != null)
-        {
-            player.ClearInteractable(this);
-            if (player == currentPlayer)
-                currentPlayer = null;
-        }
+        if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
+        player.ClearInteractable(this);
+        if (player == currentPlayer) currentPlayer = null;
+        HidePrompt();
     }
 
     private void OnDisable()
@@ -55,5 +82,6 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
             currentPlayer.ClearInteractable(this);
             currentPlayer = null;
         }
+        HidePrompt();
     }
 }

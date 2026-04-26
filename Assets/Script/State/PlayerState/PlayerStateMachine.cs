@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
 public enum StateType
 {
@@ -24,10 +23,6 @@ public class PlayerStateMachine : MonoBehaviour
     public Inventory inventory;
     public Weapon currentWeapon;
     public Transform weaponSlot;
-    [SerializeField] private Transform rightHandTarget;
-    [SerializeField] private Transform leftHandTarget;
-    [SerializeField] private TwoBoneIKConstraint leftHandIK;
-    [SerializeField] private TwoBoneIKConstraint rightHandIK;
 
     //현재 플레이어의 상태
     public float MoveInput;
@@ -38,6 +33,9 @@ public class PlayerStateMachine : MonoBehaviour
     public bool isGuard { get; private set; }
     public bool isSprint {  get; private set; }
     public bool isCrunch { get; private set; }
+    public bool isTired { get; private set; }
+    public bool isMovementLocked { get; private set; }
+    public void SetMovementLocked(bool locked) => isMovementLocked = locked;
     //플레이어 상태 캐시
     public Dictionary<System.Type, PlayerState> Statecaches = new Dictionary<System.Type, PlayerState>();
     //애니메이션 상태 해시
@@ -46,6 +44,7 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int moveTurn = Animator.StringToHash("moveTurn");
     public readonly int hit  = Animator.StringToHash("hit");
     public readonly int die = Animator.StringToHash("die");
+    public readonly int tired = Animator.StringToHash("tired");
     public readonly int[] attackHashes = {
     Animator.StringToHash("attack1"),
     Animator.StringToHash("attack2"),
@@ -151,7 +150,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         AddpassiveStat<NoiseABright>();
         status.OnDie += () => ChangeState<Die>();
-        status.StaminaEmpty += () => { if (ActiveState is not Move && ActiveState is not Idle && ActiveState is not Dodge) ChangeState<Move>(); };
+        status.StaminaEmpty += () => { isTired = true; };
         ActiveState = Statecaches[typeof(Idle)];
         ActiveState.Enter();
     }
@@ -178,6 +177,9 @@ public class PlayerStateMachine : MonoBehaviour
     void Update()
     {
         CheckStateChange();
+
+        if (isTired && status.Stamina >= status.MaxStamina * 0.3f)
+            isTired = false;
 
         if (bufferinput != StateType.None)
         {
@@ -224,6 +226,8 @@ public class PlayerStateMachine : MonoBehaviour
     }
     public bool CheckStateChange()
     {
+        if (isMovementLocked) return false;
+
         // 캔슬 윈도우: canChanged 무관하게 Dodge/Parry 즉시 전환
         if (isInCancelWindow && bufferinput != StateType.None)
         {
@@ -253,7 +257,7 @@ public class PlayerStateMachine : MonoBehaviour
                 return true;
             }
 
-            if(ActiveState is Parry && isGuard)
+            if((ActiveState is Parry || ActiveState is Guard) && isGuard)
             {
                 ChangeState<Guard>();
                 return true ;
@@ -302,7 +306,7 @@ public class PlayerStateMachine : MonoBehaviour
                     else ChangeState<Attack>();
                     break;
                 }
-            case StateType.Parry: ChangeState<Parry>(); break;
+            case StateType.Parry: if (Statecaches[typeof(Parry)].CanEnter()) ChangeState<Parry>(); break;
             case StateType.Dodge:
                 {
                     if (Statecaches[typeof(Dodge)].CanEnter())
@@ -503,16 +507,9 @@ public class PlayerStateMachine : MonoBehaviour
         weapon.transform.SetParent(weaponSlot, true);
         if (weapon.primaryGrip != null)
         {
-            // primaryGrip이 weaponSlot 위치/방향에 오도록 월드 공간에서 계산
             weapon.transform.rotation = weaponSlot.rotation * Quaternion.Inverse(weapon.primaryGrip.localRotation);
             weapon.transform.position += weaponSlot.position - weapon.transform.TransformPoint(weapon.primaryGrip.localPosition);
-            if (rightHandIK != null) rightHandIK.weight = 1f;
         }
-        else
-        {
-            if (rightHandIK != null) rightHandIK.weight = 0f;
-        }
-        if (leftHandIK != null) leftHandIK.weight = 0f;
     }
     public void EquipLight(Light newLight)
     {

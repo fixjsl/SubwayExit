@@ -17,9 +17,8 @@ public class Guard : PlayerState
 
     public override void Exit()
     {
-        player.animator.CrossFade(player.idle, 0.25f, 1);
     }
-
+    
     public override void HandleDamage(float Damage)
     {
 

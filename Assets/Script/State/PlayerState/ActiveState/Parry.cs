@@ -11,6 +11,8 @@ public class Parry: PlayerState
     {
         isBlock = true;
     }
+    public override bool CanEnter() => !player.isTired;
+
     public override void Enter()
     {
         canChanged = false;

@@ -17,7 +17,8 @@ public class Dodge : PlayerState
 
     public override bool CanEnter()
     {
-        return Time.time >= lastTime + cooltime && player.status.Stamina >= player.status.DodgeCost; ;
+        if (player.isTired) return false;
+        return Time.time >= lastTime + cooltime && player.status.Stamina >= player.status.DodgeCost;
     }
     public override void Enter()
     {
@@ -28,6 +29,7 @@ public class Dodge : PlayerState
         player.status.UseStamina(player.status.DodgeCost);
         player.animator.applyRootMotion = true;
         player.Rb.isKinematic = false;
+        player.animator.SetLayerWeight(1, 0f);
         player.animator.CrossFade(player.dodge, 0.15f);
 
     }
@@ -36,6 +38,7 @@ public class Dodge : PlayerState
     {
         player.gameObject.layer = LayerMask.NameToLayer("Player");
         player.animator.applyRootMotion = false;
+        player.animator.SetLayerWeight(1, 1f);
         player.Rb.linearVelocity = new Vector3(0f, player.Rb.linearVelocity.y, 0f);
     }
 
@@ -51,6 +54,7 @@ public class Dodge : PlayerState
     public override void OnAnimationFinished()
     {
         Debug.Log("Dodge animation finished");
+        
         canChanged = true;
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Net.NetworkInformation;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,14 +9,19 @@ public class TutorialManager : MonoBehaviour
     public static TutorialManager Instance { get; private set; }
 
     private TutorialTriggerType? pendingTrigger = null;
+    private MonsterStateMachine tutorialWolf;
 
     [SerializeField] private GameObject targetPlayer;
-    [SerializeField] private GameObject targetMonster;
     [SerializeField] private GameObject moveKeyUI;
     [SerializeField] private GameObject sprintKeyUI;
     [SerializeField] private GameObject interactKeyUI;
     [SerializeField] private GameObject attackKeyUI;
+
+    [SerializeField] private Doorcs weaponRoomDoor;
+    [SerializeField] private Transform playerStopPoint;
     [SerializeField] private GameObject weaponCardContainer;
+    [SerializeField] private GameObject wolfPrefab;
+    [SerializeField] private Transform wolfSpawnPoint;
     [SerializeField] private GameObject monsterPrefab;
     [SerializeField] private Transform monsterSpawnPoint;
     void Awake()
@@ -67,11 +73,12 @@ public class TutorialManager : MonoBehaviour
         // 2단계: 늑대 등장
         yield return WaitForTrigger(TutorialTriggerType.WolfFearNdialogue);
         if (moveKeyUI != null) moveKeyUI.SetActive(false);
-        if (targetMonster != null)
+        if (wolfPrefab != null && wolfSpawnPoint != null)
         {
-            var wolf = targetMonster.GetComponent<MonsterStateMachine>();
-            if (wolf != null)
+            var wolfObj = Instantiate(wolfPrefab, wolfSpawnPoint.position, wolfPrefab.transform.rotation);
+            if (wolfObj.TryGetComponent<MonsterStateMachine>(out var wolf))
             {
+                tutorialWolf = wolf;
                 wolf.SetTarget(PlayerStateMachine.Instance);
                 wolf.ChangeState<MonsterStates.Chase>();
             }
@@ -89,19 +96,44 @@ public class TutorialManager : MonoBehaviour
         // 5단계: 무기 선택방 진입
         yield return WaitForTrigger(TutorialTriggerType.WeaponRoom);
         if (interactKeyUI != null) interactKeyUI.SetActive(false);
+
+        // 문 자동 닫기 + 플레이어 천천히 멈추기
+        if (weaponRoomDoor != null) weaponRoomDoor.ForceClose();
+        var player = PlayerStateMachine.Instance;
+        var rb = player.Rb;
+
+        player.SetMovementLocked(true);
+        rb.linearVelocity = Vector3.zero;
+
+        if (playerStopPoint != null)
+        {
+            Vector3 target = new Vector3(playerStopPoint.position.x, rb.position.y, rb.position.z);
+            yield return rb.DOMove(target, 1.5f).SetEase(Ease.InOutSine).WaitForCompletion();
+        }
+        else
+            yield return new WaitForSecondsRealtime(1.5f);
+
+        player.ChangeState<Idle>();
+        yield return new WaitForSecondsRealtime(0.3f);
+
+        // 카드 표시 + 시간 정지
         if (weaponCardContainer != null) weaponCardContainer.SetActive(true);
         Time.timeScale = 0f;
 
         // 카드 선택 대기 (SelectWeapon에서 timeScale 1로 복구 + OnTrigger 호출)
         yield return WaitForTrigger(TutorialTriggerType.WeaponSelected);
+        PlayerStateMachine.Instance.SetMovementLocked(false);
 
-        // 몬스터 소환
-        if (monsterPrefab != null && monsterSpawnPoint != null)
-            Instantiate(monsterPrefab, monsterSpawnPoint.position, monsterSpawnPoint.rotation);
+        // 무기 선택 후 장착하면서 전투시작
 
         // 6단계: 전투 시작
         yield return WaitForTrigger(TutorialTriggerType.CombatStart);
-        // TODO: 문 부수기 연출, 몬스터 등장
+        if (weaponRoomDoor != null) weaponRoomDoor.Break();
+        if (tutorialWolf != null)
+        {
+            tutorialWolf.SetTarget(PlayerStateMachine.Instance);
+            tutorialWolf.ChangeState<MonsterStates.Chase>();
+        }
 
         // 7단계: 공격 튜토리얼
         yield return WaitForTrigger(TutorialTriggerType.AttackTutorial);
@@ -127,7 +159,7 @@ public class TutorialManager : MonoBehaviour
         EndTutorial();
     }
 
-    IEnumerator Phase_ParryTutorial()
+IEnumerator Phase_ParryTutorial()
     {
         Time.timeScale = 0f;
         // TODO: 패링 키 UI 표시

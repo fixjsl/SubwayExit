@@ -4,7 +4,9 @@ public class Move : PlayerState
 {
 
     private float movebuffer;
+    bool canSprint;
     private AnimatorStateInfo curAni;
+    private AnimatorStateInfo curUpperAni;
     public Move(PlayerStateMachine stateMachine) : base(stateMachine)
     {
 
@@ -12,12 +14,20 @@ public class Move : PlayerState
     public override void Enter()
     {
         curAni = player.animator.GetCurrentAnimatorStateInfo(0);
+        curUpperAni = player.animator.GetCurrentAnimatorStateInfo(1);
         //Move animation
         float dot = Vector3.Dot(player.transform.forward, Vector3.right);
         movebuffer = (dot > 0) ? 1f : -1f;
         if(curAni.shortNameHash != player.move  && !player.animator.IsInTransition(0))
         {
             player.animator.CrossFade(player.move, 0.15f);
+        }
+        if (player.isTired)
+        {
+            if(curUpperAni.shortNameHash != player.tired && !player.animator.IsInTransition(0))
+            {
+                player.animator.CrossFade(player.tired,0.15f,1);
+            }
         }
     }
 
@@ -26,13 +36,13 @@ public class Move : PlayerState
     }
     public override void LogicUpdate()
     {
-        
+        canSprint = player.isSprint && !player.isTired;
         if (player.MoveInput != 0 && player.MoveInput != movebuffer)
         {
             float targetY = (movebuffer > 0) ? 90f : -90f;
             player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
             canChanged = false;
-            if (player.isSprint)
+            if (canSprint)
             {
                 player.animator.CrossFade(player.sprintTurn, 0.15f);
             }
@@ -44,17 +54,21 @@ public class Move : PlayerState
         }
         if(player.animator.IsInTransition(0)) return;
         curAni = player.animator.GetCurrentAnimatorStateInfo(0);
+        curUpperAni = player.animator.GetCurrentAnimatorStateInfo(1);
         if (canChanged)
         {
-            if (player.isSprint && curAni.shortNameHash != player.sprint)
+            if (canSprint && curAni.shortNameHash != player.sprint)
                 player.animator.CrossFade(player.sprint, 0.15f,0);
-            else if (!player.isSprint && curAni.shortNameHash != player.move)
+            else if (!canSprint && curAni.shortNameHash != player.move)
                 player.animator.CrossFade(player.move, 0.15f,0);
+
+            if (player.isTired && curUpperAni.shortNameHash != player.tired && !player.animator.IsInTransition(1))
+                player.animator.CrossFade(player.tired, 0.15f, 1);
         }
 
-        if (!player.isSprint)
+        if (!player.isSprint || player.isTired)
         {
-            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime; 
+            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime;
         }
         else
         {
@@ -64,12 +78,14 @@ public class Move : PlayerState
 
     public override void PhysicalUpdate()
     {
+        if (player.isMovementLocked) return;
+
         if (canChanged)
         {
             
             if (player.status.currentspeed != player.status.walkspeed)
                 player.status.currentspeed = player.status.walkspeed;
-            if (player.isSprint && player.status.currentspeed != player.status.sprintspeed)
+            if (canSprint && player.status.currentspeed != player.status.sprintspeed)
                 player.status.currentspeed = player.status.sprintspeed;
 
             player.Rb.linearVelocity = new Vector3(
@@ -85,7 +101,7 @@ public class Move : PlayerState
         float targetY = (movebuffer > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
         Debug.Log("Turn Animation Finished");
-        if (player.isSprint) 
+        if (canSprint) 
         {
             player.animator.CrossFade(player.sprint, 0.15f);
         }

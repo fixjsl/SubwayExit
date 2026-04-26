@@ -13,12 +13,12 @@ namespace MonsterStates
         public override void Enter()
         {
             Timer.Reset();
-            //�ǰ� �ִϸ��̼� ��� 
+            Monster.animator.speed = Monster.HitAnimLength / Mathf.Max(hitduration, 0.01f);
             Monster.animator.CrossFade(Monster.hit, 0.01f);
         }
         public override void Exit()
         {
-
+            Monster.animator.speed = 1f;
         }
 
         public void SetHitduration(float duration)

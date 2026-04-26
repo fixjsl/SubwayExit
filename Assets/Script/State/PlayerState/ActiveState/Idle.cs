@@ -11,12 +11,14 @@ public class Idle : PlayerState
     }
     public override void Enter()
     {
-         //speed init
         player.Rb.linearVelocity = Vector3.zero;
-        //Idle Animation code
-        player.animator.CrossFade(player.idle, 0.2f); // 0번 레이어
-        player.animator.CrossFade(player.idle, 0.2f, 1); // 1번 레이어
-
+        player.animator.CrossFade(player.idle, 0.2f);
+        if (player.isTired)
+        {
+            player.animator.CrossFade(player.tired, 0.2f, 1);
+        }
+        else
+            player.animator.CrossFade(player.idle, 0.2f, 1);
     }
 
     public override void Exit()
@@ -29,10 +31,19 @@ public class Idle : PlayerState
 
     public override void LogicUpdate()
     {
-        //���⵵ �� ���ڳ� ���߿� �����Ǹ� �ִϸ��̼� �߰��� �� ����
         if(player.status.Stamina != player.status.MaxStamina)
-        {
             player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime;
+
+        if (!player.animator.IsInTransition(1))
+        {
+            var l1 = player.animator.GetCurrentAnimatorStateInfo(1);
+            if (player.isTired && l1.shortNameHash != player.tired)
+                player.animator.CrossFade(player.tired, 0.15f, 1);
+            else if (!player.isTired && l1.shortNameHash == player.tired)
+            {
+                if (player.currentWeapon == null) player.animator.SetLayerWeight(1, 0f);
+                else player.animator.CrossFade(player.idle, 0.15f, 1);
+            }
         }
     }
 

@@ -55,28 +55,28 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.25171039
+      - time: 0.2487906
         functionName: OnAttackCollider
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.70964754
+      - time: 0.7067278
         functionName: OncanCombo
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.88718593
+      - time: 0.8842662
         functionName: OffAttackCollider
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9683571
+      - time: 0.959598
         functionName: OnAnimationFinishedAt
         data: 
         objectReferenceParameter: {instanceID: 0}
