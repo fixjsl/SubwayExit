@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraFollow : MonoBehaviour
 {
     [Header("Target Settings")]
@@ -13,27 +14,38 @@ public class CameraFollow : MonoBehaviour
     public bool lookAtTarget = true; // 대상 바라보기 여부
     public float rotationSpeed = 5f; // 회전 속도
 
-    [Header("Auto Offset")]
-    public bool useCurrentAsOffset = true; // 현재 위치를 오프셋으로 사용
+    [Header("Look Ahead")]
+    [Range(0f, 1f)]
+    public float screenThird = 0.333f;    // 0.333 = 1/3 지점, 0 = 중앙
+    public float lookAheadSpeed = 3f;     // 오프셋 전환 속도
 
+    private float currentLookAhead = 0f;
+    private Camera cam;
+
+    void Awake() => cam = GetComponent<Camera>();
+
+    float CalcLookAhead()
+    {
+        float dist = Mathf.Abs(transform.position.z - target.position.z);
+        float halfWidth = Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * dist * cam.aspect;
+        return halfWidth * screenThird * 2f;
+    }
 
     void LateUpdate()
     {
         if (target == null) return;
 
-        // 목표 위치 계산 (x, y만 플레이어 따라감, z는 고정)
+        float facingSign = Mathf.Sign(target.forward.x);
+        float targetLookAhead = facingSign * CalcLookAhead();
+        currentLookAhead = Mathf.Lerp(currentLookAhead, targetLookAhead, lookAheadSpeed * Time.deltaTime);
+
         Vector3 desiredPosition = new Vector3(
-            target.position.x + offset.x,
+            target.position.x + offset.x + currentLookAhead,
             target.position.y + offset.y,
-            transform.position.z  // z는 현재 카메라 위치 유지
+            transform.position.z
         );
 
-        // 부드럽게 위치 이동
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-        transform.position = smoothedPosition;
-
-        // 대상 바라보기
-
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
     }
 
     // 런타임에 대상 설정

@@ -72,15 +72,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 3
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f09703bb72e106d4dbf11218ca0c12b8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -174,7 +174,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   status: {fileID: 11400000, guid: b411719e11ce0304b8d302587b095101, type: 2}
-  weaponCollider: {fileID: 0}
   _iteminfo: {fileID: 11400000, guid: 66a3fe4145fe7ae4d92dfaae3fc9bd61, type: 2}
   primaryGrip: {fileID: 7151608344277361304}
   secondaryGrip: {fileID: 8604153058191738263}

@@ -1,38 +1,16 @@
 using UnityEngine;
-using System.Collections.Generic;
 public class Weapon : MonoBehaviour, ICreatable
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private PlayerStateMachine player;
-    [SerializeField]
     public WeaponStatus status;
-    [SerializeField] private Collider weaponCollider;
     [SerializeField] private ItemBase _iteminfo;
     public ItemBase iteminfo => _iteminfo;
     public Transform primaryGrip;
     public Transform secondaryGrip;
-    private HashSet<MonsterStateMachine> hitTargets = new HashSet<MonsterStateMachine>();
-
 
     private void Awake()
     {
         status = Instantiate(status);
-        weaponCollider.enabled = false;
-    }
-
-    public void OnAttackColider() 
-    {
-    hitTargets.Clear(); // 공격 시작 시 초기화
-    weaponCollider.enabled = true;
-    }
-    public void OffAttackColider() => weaponCollider.enabled = false;
-
-    private void OnTriggerEnter(Collider other)
-    {
-        var monster = other.GetComponentInParent<MonsterStateMachine>();
-        if (monster == null) return;
-        if (!hitTargets.Add(monster)) return; // 이미 맞은 대상이면 스킵
-        OnHit(monster);
     }
 
     public virtual void OnHit(MonsterStateMachine monster)

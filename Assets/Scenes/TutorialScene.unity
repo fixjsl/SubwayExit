@@ -267,7 +267,8 @@ MonoBehaviour:
   smoothSpeed: 0.125
   lookAtTarget: 1
   rotationSpeed: 5
-  useCurrentAsOffset: 1
+  screenThird: 0.333
+  lookAheadSpeed: 3
 --- !u!114 &173867872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -846,7 +847,8 @@ MonoBehaviour:
   smoothSpeed: 0.125
   lookAtTarget: 1
   rotationSpeed: 5
-  useCurrentAsOffset: 1
+  screenThird: 0.333
+  lookAheadSpeed: 3
 --- !u!1 &367576894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,11 +1117,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &440062035 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4988243617428578412, guid: 6423f4f66b256e14e88cb426c40c58e3, type: 3}
-  m_PrefabInstance: {fileID: 4313842618036264698}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &446882209
 GameObject:
   m_ObjectHideFlags: 0
@@ -3967,7 +3964,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: status.sprintspeed
-      value: 30
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: status.curMaxStamina
@@ -4009,8 +4006,7 @@ PrefabInstance:
       propertyPath: m_Weight
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 239723860027180797, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2694170037156780654, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
     m_AddedGameObjects:
@@ -4663,6 +4659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694f851b3e342da4eb0d15a6fff33206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponPickup
+  interactPrompt: {fileID: 0}
 --- !u!65 &1826811118
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4696,6 +4693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694f851b3e342da4eb0d15a6fff33206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponPickup
+  interactPrompt: {fileID: 0}
 --- !u!4 &1826811120
 Transform:
   m_ObjectHideFlags: 0
@@ -4951,12 +4949,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
   targetPlayer: {fileID: 1428418650}
-  targetMonster: {fileID: 440062035}
   moveKeyUI: {fileID: 1553678316}
   sprintKeyUI: {fileID: 557017134}
   interactKeyUI: {fileID: 1710317320}
   attackKeyUI: {fileID: 0}
+  weaponRoomDoor: {fileID: 0}
+  playerStopPoint: {fileID: 0}
   weaponCardContainer: {fileID: 1486858744}
+  wolfPrefab: {fileID: 0}
+  wolfSpawnPoint: {fileID: 0}
   monsterPrefab: {fileID: 4988243617428578412, guid: 6423f4f66b256e14e88cb426c40c58e3, type: 3}
   monsterSpawnPoint: {fileID: 0}
 --- !u!4 &2028681695
@@ -5082,7 +5083,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1136962065222833878, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_Spacing
-      value: 400
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2893993008891133145, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: WeaponSpawnPoint
@@ -5138,7 +5139,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6124519880724491288, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 850
+      value: 950
       objectReference: {fileID: 0}
     - target: {fileID: 6124519880724491288, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -5206,7 +5207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6688437521901435991, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -430
+      value: -682
       objectReference: {fileID: 0}
     - target: {fileID: 6688437521901435991, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -5228,6 +5229,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8131521357382908545, guid: dd415ce565d330a46aa620b852aec706, type: 3}
+      propertyPath: WeaponP
+      value: 
+      objectReference: {fileID: 7371440590904009653, guid: 6282a68bbbdba9544a289bbadbc35b58, type: 3}
     - target: {fileID: 8131521357382908545, guid: dd415ce565d330a46aa620b852aec706, type: 3}
       propertyPath: WeaponSpawnPoint
       value: 

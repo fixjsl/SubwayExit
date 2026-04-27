@@ -91,6 +91,72 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &3223582619933632532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5173685034372786010}
+  - component: {fileID: 347754349982900556}
+  - component: {fileID: 691597902775006012}
+  m_Layer: 7
+  m_Name: AttackColider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5173685034372786010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223582619933632532}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.21, y: 0.859, z: 0.244}
+  m_LocalScale: {x: 0.07692305, y: 0.07692307, z: 0.07692305}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6713760344430523654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &347754349982900556
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223582619933632532}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 16.967228, z: 7.706443}
+  m_Center: {x: 2.3826073e-14, y: -2.106764, z: 3.3532214}
+--- !u!114 &691597902775006012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223582619933632532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df80e701297dcf4eb613a6b10ba7b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
 --- !u!1001 &6532093075456512749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -285,13 +351,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0137f6694280fb24687f032ac1712512, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3068313303338042996}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0137f6694280fb24687f032ac1712512, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5173685034372786010}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0137f6694280fb24687f032ac1712512, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6002294577471725551}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0137f6694280fb24687f032ac1712512, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 239723860027180797}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0137f6694280fb24687f032ac1712512, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6821396560673209839}
@@ -339,22 +405,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 124
   m_CollisionDetection: 0
---- !u!114 &239723860027180797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6226158155371573180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.RigBuilder
-  m_RigLayers:
-  - m_Rig: {fileID: 0}
-    m_Active: 1
-  m_Effectors: []
 --- !u!114 &6821396560673209839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,6 +444,7 @@ MonoBehaviour:
     maxSlots: 0
   currentWeapon: {fileID: 0}
   weaponSlot: {fileID: 3294861063253619175}
+  attackHitbox: {fileID: 691597902775006012}
   MoveInput: 0
   debugMode: 0
 --- !u!114 &1522124790129944277

@@ -23,6 +23,7 @@ public class PlayerStateMachine : MonoBehaviour
     public Inventory inventory;
     public Weapon currentWeapon;
     public Transform weaponSlot;
+    [SerializeField] private AttackHitbox attackHitbox;
 
     //현재 플레이어의 상태
     public float MoveInput;
@@ -164,6 +165,7 @@ public class PlayerStateMachine : MonoBehaviour
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         animator.SetLayerWeight(1, 0f);
+        attackHitbox.Init(this);
 
         // 스탯 초기화
         status.curMaxStamina = status.MaxStamina;
@@ -502,6 +504,7 @@ public class PlayerStateMachine : MonoBehaviour
 
         currentWeapon = weapon;
         weapon.SetPlayer(this);
+        attackHitbox.SetupRange(weapon.status.attackRange);
         if (weapon.status.WeaponAnimations != null)
             animator.runtimeAnimatorController = weapon.status.WeaponAnimations;
         weapon.transform.SetParent(weaponSlot, true);
@@ -511,6 +514,17 @@ public class PlayerStateMachine : MonoBehaviour
             weapon.transform.position += weaponSlot.position - weapon.transform.TransformPoint(weapon.primaryGrip.localPosition);
         }
     }
+    void LateUpdate()
+{
+    if (currentWeapon != null && currentWeapon.primaryGrip != null)
+    {
+        currentWeapon.transform.rotation = weaponSlot.rotation * Quaternion.Inverse(currentWeapon.primaryGrip.localRotation);
+        currentWeapon.transform.position += weaponSlot.position - currentWeapon.transform.TransformPoint(currentWeapon.primaryGrip.localPosition);
+    }
+}
+    public void OnAttackColider() => attackHitbox.EnableHitbox();
+    public void OffAttackColider() => attackHitbox.DisableHitbox();
+
     public void EquipLight(Light newLight)
     {
         currentLight = newLight;

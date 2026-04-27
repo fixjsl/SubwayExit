@@ -22,7 +22,6 @@ MonoBehaviour:
   attackStamina: 0
   guardStamina: 0
   parryStamina: 0
-  attackAnimations:
-  - {fileID: 0}
+  WeaponAnimations: {fileID: 22100000, guid: 79a5c40a78d99ae4bba52ccfd392277c, type: 2}
   holdPosition: {x: 0, y: 0, z: 0}
   holdRotation: {x: 0, y: 0, z: 0, w: 0}
