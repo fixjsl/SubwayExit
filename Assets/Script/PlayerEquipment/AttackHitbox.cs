@@ -16,8 +16,8 @@ public class AttackHitbox : MonoBehaviour
 
     public void SetupRange(float attackRange)
     {
-        col.center = new Vector3(attackRange / 2f, col.center.y, col.center.z);
-        col.size = new Vector3(attackRange, col.size.y, col.size.z);
+        col.center = new Vector3((attackRange * 10) / 2f, col.center.y, col.center.z);
+        col.size = new Vector3(attackRange*10, col.size.y, col.size.z);
     }
 
     public void EnableHitbox()

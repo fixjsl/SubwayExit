@@ -7,6 +7,10 @@ public class Inventory
     private PlayerStatus status;
     public Dictionary<int, int> slots { get; private set; } = new Dictionary<int, int>();
     public float currentWeight { get; private set; }
+    public int[] QuickSlots { get; private set; } = new int[2];
+
+    public event Action OnInventoryChanged;
+    public event Action OnQuickSlotsChanged;
 
     public Inventory(PlayerStatus status)
     {
@@ -23,11 +27,13 @@ public class Inventory
         {
             slots[key] = count + num;
             currentWeight += addWeight;
+            OnInventoryChanged?.Invoke();
             return true;
         }
         if (slots.Count >= (int)status.maxSlots) return false;
         slots[key] = num;
         currentWeight += addWeight;
+        OnInventoryChanged?.Invoke();
         return true;
     }
 
@@ -40,10 +46,15 @@ public class Inventory
         if (count < num) return false;
 
         if (count == num)
+        {
             slots.Remove(key);
+            ClearQuickSlotIfEmpty(key);
+        }
         else
             slots[key] = count - num;
+
         currentWeight -= itemBase.weight * num;
+        OnInventoryChanged?.Invoke();
         return true;
     }
 
@@ -56,4 +67,34 @@ public class Inventory
         RemoveItem(itemBase, 1);
     }
 
+    public void DropItem(ItemBase itemBase, int num = 1) => RemoveItem(itemBase, num);
+
+    public void SetQuickSlot(int slotIndex, int itemCode)
+    {
+        if (slotIndex < 0 || slotIndex >= QuickSlots.Length) return;
+        QuickSlots[slotIndex] = itemCode;
+        OnQuickSlotsChanged?.Invoke();
+    }
+
+    public void UseQuickSlot(int slotIndex, PlayerStateMachine player)
+    {
+        if (slotIndex < 0 || slotIndex >= QuickSlots.Length) return;
+        int code = QuickSlots[slotIndex];
+        if (code == 0 || !slots.ContainsKey(code)) { QuickSlots[slotIndex] = 0; return; }
+        if (!ItemManager.itemDB.TryGetValue(code, out var item)) return;
+        UseItem(item, player);
+        OnQuickSlotsChanged?.Invoke();
+    }
+
+    private void ClearQuickSlotIfEmpty(int itemCode)
+    {
+        for (int i = 0; i < QuickSlots.Length; i++)
+        {
+            if (QuickSlots[i] == itemCode)
+            {
+                QuickSlots[i] = 0;
+                OnQuickSlotsChanged?.Invoke();
+            }
+        }
+    }
 }

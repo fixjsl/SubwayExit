@@ -31,17 +31,11 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         player.gameObject.layer = LayerMask.NameToLayer("Player");
     }
-    public void OnParry()
-    {
-        if(player.ActiveState is Parry)
-        {
-            ((Parry)player.ActiveState).OnParryWindow();
-        }
-    }
     public void OnDamage()
     {
         if(player.ActiveState is Execution)
         {
+            Debug.Log("ParryingEnd");
             ((Execution)player.ActiveState).OnDamage();
         }
     }

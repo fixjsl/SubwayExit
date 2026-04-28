@@ -417,6 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7887c99f4c0abc7419d0d07abc329f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStateMachine
+  crouchHeight: 1
   status:
     Name: 
     Maxhp: 100
@@ -426,6 +427,7 @@ MonoBehaviour:
     walkspeed: 15
     crunchspeed: 10
     sprintspeed: 30
+    crunchsprintspeed: 0
     parryduration: 0
     DodgeCooldown: 3
     parryCost: 0

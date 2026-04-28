@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ContainerUI : MonoBehaviour
 {
+    public static ContainerUI Instance { get; private set; }
+
     [SerializeField] private GameObject panel;
     [SerializeField] private Transform slotParent;
     [SerializeField] private ContainerSlotUI slotPrefab;
@@ -14,6 +16,7 @@ public class ContainerUI : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         panel.SetActive(false);
     }
 
@@ -23,6 +26,7 @@ public class ContainerUI : MonoBehaviour
         this.onContentsChanged = onContentsChanged;
         Refresh();
         panel.SetActive(true);
+        InventoryUI.Instance.Open();
     }
 
     public void Close()
@@ -30,6 +34,7 @@ public class ContainerUI : MonoBehaviour
         panel.SetActive(false);
         currentContents = null;
         onContentsChanged = null;
+        InventoryUI.Instance.Close();
     }
 
     public void TakeItem(int index)
@@ -53,7 +58,8 @@ public class ContainerUI : MonoBehaviour
         for (int i = 0; i < currentContents.Count; i++)
         {
             var slot = Instantiate(slotPrefab, slotParent);
-            slot.Setup(currentContents[i].item, currentContents[i].count, i, this);
+            int idx = i;
+            slot.Setup(currentContents[i].item, currentContents[i].count, () => TakeItem(idx));
             activeSlots.Add(slot);
         }
     }

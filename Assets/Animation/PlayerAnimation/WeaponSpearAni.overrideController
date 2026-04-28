@@ -9,5 +9,21 @@ AnimatorOverrideController:
   m_Name: WeaponSpearAni
   m_Controller: {fileID: 9100000, guid: e2335bdd2f3937747be7e85bf41ec46c, type: 2}
   m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: e56bda0d7e73c624987d56b2439de2b1, type: 3}
+    m_OverrideClip: {fileID: -1322142674529002090, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: a3a10db75760e8f458a888ea67511598, type: 3}
+    m_OverrideClip: {fileID: -6665454103709153353, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: bddb482d582f9f747a7e141535c39ac9, type: 3}
+    m_OverrideClip: {fileID: -3586169449741052835, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
   - m_OriginalClip: {fileID: -203655887218126122, guid: 74800453b98efef48be189a6a7890194, type: 3}
-    m_OverrideClip: {fileID: -623603649343465320, guid: 8cc1ff1535edf154c917ae615ea95863, type: 3}
+    m_OverrideClip: {fileID: 8166569614872745267, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 68a1c0d13e0da5844aef11409e07c444, type: 3}
+    m_OverrideClip: {fileID: 5982536459057097547, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
+  - m_OriginalClip: {fileID: -4572650651892053679, guid: c5beae40503fc4248a93bcd1ae3e32fa, type: 3}
+    m_OverrideClip: {fileID: 5073127580993357353, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
+  - m_OriginalClip: {fileID: -2586153252359250863, guid: ad38aabe8fea5ff4eabeef6286f668f8, type: 3}
+    m_OverrideClip: {fileID: -4904109288556885805, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 4fe01ca410cf75a4dbc63fdec2f81718, type: 3}
+    m_OverrideClip: {fileID: -4358102863094688741, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 1b5b2acaad684c3459855ea9e9eba7cd, type: 3}
+    m_OverrideClip: {fileID: -4095771828560132683, guid: f70c9bb70e0b576469cd5faf9fbd94b1, type: 3}

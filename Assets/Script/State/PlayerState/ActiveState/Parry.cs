@@ -16,14 +16,23 @@ public class Parry: PlayerState
     public override void Enter()
     {
         canChanged = false;
+        IsInParryWindow = true;
         parryTimer.Reset();
         player.animator.CrossFade(player.parrying, 0.02f);
         player.status.UseStamina(player.currentWeapon.status.parryStamina);
+        player.ParrySuccess += OnParrySuccess;
     }
 
     public override void Exit()
     {
         IsInParryWindow = false;
+        player.ParrySuccess -= OnParrySuccess;
+    }
+
+    private void OnParrySuccess()
+    {
+        // TODO: 패링 성공 애니메이션 재생
+        // player.animator.CrossFade(player.parrySuccess, 0.02f);
     }
 
     public override void HandleDamage(float Damage)
@@ -33,8 +42,6 @@ public class Parry: PlayerState
 
     public override void LogicUpdate()
     {
-        IsInParryWindow = player.isGuard;
-
         if (parryTimer.Timer(player.status.parryduration))
         {
             IsInParryWindow = false;
@@ -46,9 +53,5 @@ public class Parry: PlayerState
     {
 
 
-    }
-    public void OnParryWindow()
-    {
-        IsInParryWindow = true;
     }
 }

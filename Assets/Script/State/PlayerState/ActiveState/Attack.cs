@@ -22,6 +22,8 @@ public class Attack : PlayerState
     {
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
+        player.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
+        player.animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0f);
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
         Debug.Log($"[Attack] Enter - ComboIndex: {ComboIndex}");

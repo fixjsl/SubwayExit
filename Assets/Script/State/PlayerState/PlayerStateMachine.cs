@@ -10,6 +10,7 @@ public enum StateType
 {
     None, idle, Dodge, Attack, interect,Parry, crunch
 }
+[RequireComponent(typeof(BoxCollider))]
 public class PlayerStateMachine : MonoBehaviour
 {
 
@@ -19,6 +20,10 @@ public class PlayerStateMachine : MonoBehaviour
     //플레이어 객체 및 상태
     public Rigidbody Rb { get; private set; }
     public Animator animator{  get; private set; }
+    public BoxCollider Col { get; private set; }
+    public Vector3 StandSize { get; private set; }
+    public Vector3 StandCenter { get; private set; }
+    public float crouchHeight = 1f;
     public PlayerStatus status = new PlayerStatus();
     public Inventory inventory;
     public Weapon currentWeapon;
@@ -59,9 +64,12 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int crunchturn = Animator.StringToHash("crunchturn");
     public readonly int crunch = Animator.StringToHash("crunch");
     public readonly int crunchmove = Animator.StringToHash("crunchmove");
+    public readonly int parrysucess = Animator.StringToHash("parrysucess");
     public readonly int parrying = Animator.StringToHash("parrying");
     public readonly int guard = Animator.StringToHash("guard");
     public readonly int dodge = Animator.StringToHash("dodge");
+    public event Action ParrySuccess;
+    public void InvokeParrySuccess() => ParrySuccess?.Invoke();
     //플레이어 버퍼입력
     public StateType bufferinput { get; private set; }
     public float buffertime { get; private set; } = 0.2f;
@@ -76,6 +84,8 @@ public class PlayerStateMachine : MonoBehaviour
     //파리 관련 상태
     public bool isParrying => ActiveState is Parry parry && parry.IsInParryWindow;
 
+    [SerializeField] private ItemBase startItem;
+    [SerializeField] private int startItemCount = 1;
     private List<Iinterectable> nearbyInteractables = new List<Iinterectable>();
     public Iinterectable nearbyInteractable => GetClosest();
     public void SetInteractable(Iinterectable interactable)
@@ -100,7 +110,7 @@ public class PlayerStateMachine : MonoBehaviour
         action = new InputSystem_Actions();
         action.PlayerAction.Attack.performed += _ => { if (currentWeapon != null) SetBuffer(StateType.Attack); };
         action.PlayerAction.Dodge.performed += _ => SetBuffer(StateType.Dodge);
-        action.PlayerAction.Interact.performed += _ => { Debug.Log("Interact input received"); SetBuffer(StateType.interect); };
+        action.PlayerAction.Interact.performed += _ => SetBuffer(StateType.interect);
         action.PlayerAction.LightTogle.performed += _ => {
            if(currentLight != null)
             {
@@ -161,8 +171,12 @@ public class PlayerStateMachine : MonoBehaviour
     void Awake() {
         if(Instance == null) Instance = this;
         inventory = new Inventory(status);
+        inventory.AddItem(startItem, startItemCount);
         currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
+        Col = GetComponent<BoxCollider>();
+        StandSize = Col.size;
+        StandCenter = Col.center;
         animator = GetComponent<Animator>();
         animator.SetLayerWeight(1, 0f);
         attackHitbox.Init(this);
@@ -175,10 +189,26 @@ public class PlayerStateMachine : MonoBehaviour
         status.Water   = status.MaxWater;
 
         stateInit();
+        InputBindings.Init(action);
     }
     void Update()
     {
         CheckStateChange();
+
+#if UNITY_EDITOR
+        if (UnityEngine.InputSystem.Keyboard.current.iKey.wasPressedThisFrame)
+        {
+            if (inventory.slots.Count == 0) { Debug.Log("[인벤토리] 비어있음"); }
+            else
+            {
+                foreach (var (code, count) in inventory.slots)
+                {
+                    string name = ItemManager.itemDB.TryGetValue(code, out var item) ? item.name : $"코드:{code}";
+                    Debug.Log($"[인벤토리] {name} x{count}");
+                }
+            }
+        }
+#endif
 
         if (isTired && status.Stamina >= status.MaxStamina * 0.3f)
             isTired = false;
@@ -212,14 +242,10 @@ public class PlayerStateMachine : MonoBehaviour
     {
         System.Type type = typeof(T);
 
-        if (!Statecaches.TryGetValue(type, out PlayerState nextState))
+        if (!Statecaches.ContainsKey(type))
         {
             Debug.LogError($"{type.Name} 상태가 캐시에 없습니다!");
             return;
-        }
-        if(typeof(T) != ActiveState.GetType())
-        {
-            Debug.Log($"change {ActiveState.ToString()} -> {nextState.ToString()} ");
         }
         ActiveState?.Exit();
         bufferinput = StateType.None;
@@ -267,7 +293,6 @@ public class PlayerStateMachine : MonoBehaviour
 
             if (bufferinput != StateType.None)
             {
-                Debug.Log($"current Buffer = {bufferinput}");
                 BufferState();
                 return true;
             }
@@ -328,7 +353,6 @@ public class PlayerStateMachine : MonoBehaviour
     {
         bufferinput = buffertag;
         bufferTimer.Reset();
-        Debug.Log($"Buffer set: {buffertag}");
     }
     public bool ConsumeBuffer(StateType buffertag)
     {
@@ -418,7 +442,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private IEnumerator DebugStatusCoroutine()
     {
-        var wait = new WaitForSeconds(1f);
+        var wait = new WaitForSeconds(5f);
         while (true)
         {
             yield return wait;
@@ -514,14 +538,6 @@ public class PlayerStateMachine : MonoBehaviour
             weapon.transform.position += weaponSlot.position - weapon.transform.TransformPoint(weapon.primaryGrip.localPosition);
         }
     }
-    void LateUpdate()
-{
-    if (currentWeapon != null && currentWeapon.primaryGrip != null)
-    {
-        currentWeapon.transform.rotation = weaponSlot.rotation * Quaternion.Inverse(currentWeapon.primaryGrip.localRotation);
-        currentWeapon.transform.position += weaponSlot.position - currentWeapon.transform.TransformPoint(currentWeapon.primaryGrip.localPosition);
-    }
-}
     public void OnAttackColider() => attackHitbox.EnableHitbox();
     public void OffAttackColider() => attackHitbox.DisableHitbox();
 

@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Net.NetworkInformation;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -16,6 +14,10 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject sprintKeyUI;
     [SerializeField] private GameObject interactKeyUI;
     [SerializeField] private GameObject attackKeyUI;
+    [SerializeField] private GameObject dodgeKeyUI;
+    [SerializeField] private GameObject parryKeyUI;
+    [SerializeField] private GameObject crunchKeyUI;
+    [SerializeField] private float keyUIDisplayTime = 3f;
 
     [SerializeField] private Doorcs weaponRoomDoor;
     [SerializeField] private Transform playerStopPoint;
@@ -46,18 +48,6 @@ public class TutorialManager : MonoBehaviour
         while (pendingTrigger != type)
             yield return new WaitForSecondsRealtime(0.05f);
         pendingTrigger = null;
-    }
-
-    // 특정 입력이 들어올 때까지 대기
-    IEnumerator WaitForInput(string actionName)
-    {
-        var action = PlayerStateMachine.Instance.GetComponent<PlayerInput>()
-            .actions.FindAction(actionName);
-        bool pressed = false;
-        action.performed += _ => pressed = true;
-        while (!pressed)
-            yield return null;
-        action.performed -= _ => pressed = true;
     }
 
     // ===================== 메인 시퀀스 =====================
@@ -135,37 +125,35 @@ public class TutorialManager : MonoBehaviour
             tutorialWolf.ChangeState<MonsterStates.Chase>();
         }
 
-        // 7단계: 공격 튜토리얼
-        yield return WaitForTrigger(TutorialTriggerType.AttackTutorial);
-        // TODO: 공격 키 UI 표시
-        yield return WaitForInput("Attack");
-        // TODO: 공격 키 UI 숨김
+        // 7~9단계: 공격/회피/패링 키 순서대로 표시
+        yield return ShowKeyUI(attackKeyUI);
+        yield return ShowKeyUI(dodgeKeyUI);
+        yield return ShowKeyUI(parryKeyUI);
 
-        // 8단계: 회피 튜토리얼
-        yield return WaitForTrigger(TutorialTriggerType.DodgeTutorial);
-        // TODO: 회피 키 UI 표시
-        yield return WaitForInput("Dodge");
-        // TODO: 회피 키 UI 숨김
+        //10단계 : 아이템 획득, 사용 및 퀵슬롯 튜토리얼
+        yield return WaitForTrigger(TutorialTriggerType.GetItem);
+    
 
-        // 9단계: 패링 튜토리얼
-        yield return WaitForTrigger(TutorialTriggerType.ParryTutorial);
-        yield return Phase_ParryTutorial();
-
-        // 10단계: 웅크리기 튜토리얼 및 대사
+        // 11단계: 웅크리기 튜토리얼
         yield return WaitForTrigger(TutorialTriggerType.DialogeNShowCrunchKey);
-        // TODO: 대사 출력, 웅크리기 키 UI 표시
+        yield return ShowKeyUI(crunchKeyUI);
 
+        //12단계 : 곰 출몰 후 도망
+        yield return WaitForTrigger(TutorialTriggerType.ApperBear);
+        //13단계 : 도망치는 곳의 벽이 무너짐 ( 계단을 따라 지하로 도망침)
+
+        //14단계 : 기지 진입 후 진입한 곳의 벽이 무너짐(안전지대 진입 및 프롤로그, 튜토리얼 종료, 이후 스킵 가능 생성)
+        yield return WaitForTrigger(TutorialTriggerType.TutorialEnd);
         // 튜토리얼 종료
         EndTutorial();
     }
 
-IEnumerator Phase_ParryTutorial()
+    IEnumerator ShowKeyUI(GameObject ui)
     {
-        Time.timeScale = 0f;
-        // TODO: 패링 키 UI 표시
-        yield return WaitForInput("Guard");
-        // TODO: 패링 키 UI 숨김
-        Time.timeScale = 1f;
+        if (ui == null) yield break;
+        ui.SetActive(true);
+        yield return new WaitForSeconds(keyUIDisplayTime);
+        ui.SetActive(false);
     }
 
     void EndTutorial()

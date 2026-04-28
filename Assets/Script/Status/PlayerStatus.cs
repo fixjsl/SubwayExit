@@ -35,6 +35,7 @@ public class PlayerStatus
     public float walkspeed;
     public float crunchspeed;
     public float sprintspeed;
+    public float crunchsprintspeed;
 
     [Header("Player Status")]
     public float parryduration;
@@ -68,7 +69,7 @@ public class PlayerStatus
             ChangeWater?.Invoke(water);
             if(water<= 30)
             {
-                curMaxStamina = (int)((float)curMaxStamina * 0.4f);
+                curMaxStamina = (int)(MaxStamina * 0.4f);
             }
             else curMaxStamina = MaxStamina;
         }   

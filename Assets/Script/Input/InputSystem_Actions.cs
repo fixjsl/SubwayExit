@@ -172,6 +172,33 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""f3901b41-4767-461d-a0dd-18021b091b03"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Quick1"",
+                    ""type"": ""Button"",
+                    ""id"": ""efea7a90-1779-4a6c-bc8e-13b85d08148e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Quick2"",
+                    ""type"": ""Button"",
+                    ""id"": ""f08f5731-d81e-4602-a3b7-d35f45899232"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -381,6 +408,39 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""LightTogle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""954870a3-dc9c-426e-86c6-2c40fdc2764e"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b73dab0b-c007-44dd-956a-f9a840489432"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Quick1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7e0d093a-df64-4a05-bb44-adba8823383d"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Quick2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -977,6 +1037,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_PlayerAction_Dodge = m_PlayerAction.FindAction("Dodge", throwIfNotFound: true);
         m_PlayerAction_Reload = m_PlayerAction.FindAction("Reload", throwIfNotFound: true);
         m_PlayerAction_LightTogle = m_PlayerAction.FindAction("LightTogle", throwIfNotFound: true);
+        m_PlayerAction_Inventory = m_PlayerAction.FindAction("Inventory", throwIfNotFound: true);
+        m_PlayerAction_Quick1 = m_PlayerAction.FindAction("Quick1", throwIfNotFound: true);
+        m_PlayerAction_Quick2 = m_PlayerAction.FindAction("Quick2", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1079,6 +1142,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerAction_Dodge;
     private readonly InputAction m_PlayerAction_Reload;
     private readonly InputAction m_PlayerAction_LightTogle;
+    private readonly InputAction m_PlayerAction_Inventory;
+    private readonly InputAction m_PlayerAction_Quick1;
+    private readonly InputAction m_PlayerAction_Quick2;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerAction".
     /// </summary>
@@ -1126,6 +1192,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerAction/LightTogle".
         /// </summary>
         public InputAction @LightTogle => m_Wrapper.m_PlayerAction_LightTogle;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerAction/Inventory".
+        /// </summary>
+        public InputAction @Inventory => m_Wrapper.m_PlayerAction_Inventory;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerAction/Quick1".
+        /// </summary>
+        public InputAction @Quick1 => m_Wrapper.m_PlayerAction_Quick1;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerAction/Quick2".
+        /// </summary>
+        public InputAction @Quick2 => m_Wrapper.m_PlayerAction_Quick2;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1179,6 +1257,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @LightTogle.started += instance.OnLightTogle;
             @LightTogle.performed += instance.OnLightTogle;
             @LightTogle.canceled += instance.OnLightTogle;
+            @Inventory.started += instance.OnInventory;
+            @Inventory.performed += instance.OnInventory;
+            @Inventory.canceled += instance.OnInventory;
+            @Quick1.started += instance.OnQuick1;
+            @Quick1.performed += instance.OnQuick1;
+            @Quick1.canceled += instance.OnQuick1;
+            @Quick2.started += instance.OnQuick2;
+            @Quick2.performed += instance.OnQuick2;
+            @Quick2.canceled += instance.OnQuick2;
         }
 
         /// <summary>
@@ -1217,6 +1304,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @LightTogle.started -= instance.OnLightTogle;
             @LightTogle.performed -= instance.OnLightTogle;
             @LightTogle.canceled -= instance.OnLightTogle;
+            @Inventory.started -= instance.OnInventory;
+            @Inventory.performed -= instance.OnInventory;
+            @Inventory.canceled -= instance.OnInventory;
+            @Quick1.started -= instance.OnQuick1;
+            @Quick1.performed -= instance.OnQuick1;
+            @Quick1.canceled -= instance.OnQuick1;
+            @Quick2.started -= instance.OnQuick2;
+            @Quick2.performed -= instance.OnQuick2;
+            @Quick2.canceled -= instance.OnQuick2;
         }
 
         /// <summary>
@@ -1580,6 +1676,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLightTogle(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Inventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInventory(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Quick1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuick1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Quick2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuick2(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

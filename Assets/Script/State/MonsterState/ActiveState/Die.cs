@@ -10,21 +10,21 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            //»ç¸Á¾Ö´Ï¸ÞÀÌ¼Ç
+            //ï¿½ï¿½ï¿½ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
             Monster.animator.CrossFade(Monster.die, 0.001f);
             Monster.Rb.linearVelocity = Vector3.zero;
             Monster.enabled = false;
-            Monster.GetComponent<Collider>().enabled = false;
+            Monster.GetComponent<Collider>().enabled = true;
         }
         public override void Exit()
         {
-            //¸ó½ºÅÍ HPÈ¸º¹
+            //ï¿½ï¿½ï¿½ï¿½ HPÈ¸ï¿½ï¿½
             Monster.status.Hp = Monster.status.Maxhp;
         }
 
         public override void LogicUpdate()
         {
-            //¸ó½ºÅÍ ºñÈ°¼ºÈ­ ¹× ¸ó½ºÅÍ Ç®·Î µÇµ¹¸²
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç®ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½
         }
         public override void PhysicalUpdate()
         {

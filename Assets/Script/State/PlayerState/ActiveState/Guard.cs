@@ -22,7 +22,7 @@ public class Guard : PlayerState
     public override void HandleDamage(float Damage)
     {
 
-        player.status.Hp -= (Damage*0.8f);
+        player.status.Hp -= Damage * player.currentWeapon.status.GuardStrength;
         player.status.UseStamina(player.currentWeapon.status.guardStamina);
     }
 

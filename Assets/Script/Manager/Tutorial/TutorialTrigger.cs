@@ -11,7 +11,11 @@ public enum TutorialTriggerType
     AttackTutorial, // 공격 키 튜토리얼
     DodgeTutorial, // 회피 키 튜토리얼
     ParryTutorial, // 패링 키 튜토리얼
-    DialogeNShowCrunchKey, // 대사 및 웅크리기 키 튜토리얼
+    GetItem,
+    DialogeNShowCrunchKey, //웅크리기 키 튜토리얼
+    ApperBear, // 흉포한 곰 등장 
+    CollapseWall, // 벽이 무너지거나 부셔져서 길이 막히는 이벤트
+    TutorialEnd// 임시기지로 쓰일 수 있는 안전지대 도착
 }
 
 
@@ -22,8 +26,6 @@ public class TutorialTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer != Layercache.Player) return;
-        Debug.Log("실행됨");
         TutorialManager.Instance.OnTrigger(triggerType);
     }
 }

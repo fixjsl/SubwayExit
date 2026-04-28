@@ -2051,12 +2051,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   status: {fileID: 11400000, guid: 77ed31d1a27dda349973178adb913470, type: 2}
+  lootTable: {fileID: 0}
+  itemPickupPrefab: {fileID: 0}
   spawnpoint: {x: 0, y: 0, z: 0}
   monsterUIPrefab: {fileID: 6762878744632319702, guid: df499373c10683647897c610d7be268b, type: 3}
   hpUIPoint: {fileID: 5249418745695858743}
   detectionUIPoint: {fileID: 6559890950210638439}
+  hitAnimLength: 0.5
   attackCollider: {fileID: 3317776381566185302}
-  debugMode: 1
+  debugMode: 0
 --- !u!4 &5652612955464858326 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}

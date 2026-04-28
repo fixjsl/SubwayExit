@@ -8,6 +8,8 @@ public class ContainerObject : ItObjectBase
     private bool looted = false;
     private List<(ItemBase item, int count)> contents;
 
+    [SerializeField] private Transform RotatePivot;
+
     public override bool isStuck => false;
     public override string InteractMessage => looted ? "빈 상자" : "상자 열기  [F]";
 

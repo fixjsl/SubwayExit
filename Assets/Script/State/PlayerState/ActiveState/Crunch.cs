@@ -15,18 +15,20 @@ public class Crunch : PlayerState
     }
     public override void Enter()
     {
-
-        //Move animation
         float dot = Vector3.Dot(player.transform.forward, Vector3.right);
         movebuffer = (dot > 0) ? 1f : -1f;
         player.animator.CrossFade(player.crunch, 0.15f);
         if (player.isTired && !player.animator.IsInTransition(1))
             player.animator.CrossFade(player.tired, 0.15f, 1);
+
+        player.Col.size = new Vector3(player.Col.size.x, player.crouchHeight, player.Col.size.z);
+        player.Col.center = new Vector3(player.Col.center.x, player.crouchHeight / 2f, player.Col.center.z);
     }
 
     public override void Exit()
     {
-        Debug.Log($"curMovebuffer = {movebuffer.ToString()}");
+        player.Col.size = player.StandSize;
+        player.Col.center = player.StandCenter;
     }
     public override void LogicUpdate()
     {
@@ -83,8 +85,8 @@ public class Crunch : PlayerState
 
             if (player.status.currentspeed != player.status.crunchspeed)
                 player.status.currentspeed = player.status.crunchspeed;
-            if (canSprint && player.status.currentspeed != player.status.sprintspeed)
-                player.status.currentspeed = player.status.sprintspeed - 0.5f;
+            if (canSprint && player.status.currentspeed != player.status.crunchsprintspeed)
+                player.status.currentspeed = player.status.crunchsprintspeed;
 
             player.Rb.linearVelocity = new Vector3(
                 player.MoveInput * player.status.currentspeed,

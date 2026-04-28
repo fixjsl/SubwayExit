@@ -22,6 +22,8 @@ public class MonsterWeapon : MonoBehaviour
         if(player.isParrying)
         {
             monster.ChangeStun();
+            player.InvokeParrySuccess();
+            Debug.Log("ParryingSucess");
             return;
         }
         player.OnHit(monster.status.atk);
