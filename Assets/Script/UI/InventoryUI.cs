@@ -87,7 +87,7 @@ public class InventoryUI : MonoBehaviour
             if (!ItemManager.itemDB.TryGetValue(code, out var item)) continue;
             var slot = Instantiate(slotPrefab, slotParent);
             var capturedItem = item;
-            slot.Setup(item, count, () => ShowContextMenu(capturedItem));
+            slot.Setup(item, count, null, () => ShowContextMenu(capturedItem));
             activeSlots.Add(slot);
         }
 

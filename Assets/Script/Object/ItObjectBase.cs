@@ -1,14 +1,14 @@
 
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class ItObjectBase : MonoBehaviour, Iinterectable
 {
     public abstract bool isStuck { get; }
     public abstract string InteractMessage { get; }
-
-    [SerializeField] private GameObject interactPrompt;
-    private TextMeshPro promptText;
+    [SerializeField] private GameObject TextObject;
+    [SerializeField] private TextMeshPro promptText;
 
     protected bool isInteracting = false;
     private PlayerStateMachine currentPlayer;
@@ -18,26 +18,9 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
 
     protected virtual void Start()
     {
-        if (interactPrompt != null)
-        {
-            interactPrompt.TryGetComponent(out promptText);
-            if (promptText == null)
-                promptText = interactPrompt.GetComponentInChildren<TextMeshPro>();
-            interactPrompt.SetActive(false);
-        }
+        TextObject.SetActive(false);
     }
 
-    private void ShowPrompt()
-    {
-        if (interactPrompt == null) return;
-        if (promptText != null) promptText.text = InteractMessage;
-        interactPrompt.SetActive(true);
-    }
-
-    private void HidePrompt()
-    {
-        if (interactPrompt != null) interactPrompt.SetActive(false);
-    }
 
     public void Oninterect(Vector3 interacterPosition)
     {
@@ -48,7 +31,7 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         lastInteractTime = Time.time;
         OnInteractInternal(interacterPosition);
 
-        if (promptText != null && interactPrompt.activeSelf)
+   
             promptText.text = InteractMessage;
 
         if (currentPlayer != null && !gameObject.activeInHierarchy)
@@ -64,7 +47,8 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
         currentPlayer = player;
         player.SetInteractable(this);
-        ShowPrompt();
+        promptText.text = InteractMessage;
+        TextObject.SetActive(true);
     }
 
     protected virtual void OnTriggerExit(Collider other)
@@ -72,7 +56,7 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
         player.ClearInteractable(this);
         if (player == currentPlayer) currentPlayer = null;
-        HidePrompt();
+        TextObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -82,6 +66,6 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
             currentPlayer.ClearInteractable(this);
             currentPlayer = null;
         }
-        HidePrompt();
+        TextObject.SetActive(false);
     }
 }

@@ -10,13 +10,13 @@ public static class InputBindings
     private static InputAction _crouch;
     private static InputAction _inventory;
 
-    public static string Interact  => _interact?.GetBindingDisplayString() ?? "?";
-    public static string Sprint    => _sprint?.GetBindingDisplayString() ?? "?";
-    public static string Attack    => _attack?.GetBindingDisplayString() ?? "?";
-    public static string Dodge     => _dodge?.GetBindingDisplayString() ?? "?";
-    public static string Guard     => _guard?.GetBindingDisplayString() ?? "?";
-    public static string Crouch    => _crouch?.GetBindingDisplayString() ?? "?";
-    public static string Inventory => _inventory?.GetBindingDisplayString() ?? "?";
+    public static string Interact  => _interact?.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions) ?? "?";
+    public static string Sprint    => _sprint?.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions) ?? "?";
+    public static string Attack    => _attack?.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions) ?? "?";
+    public static string Dodge     => _dodge?.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions) ?? "?";
+    public static string Guard     => _guard?.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions) ?? "?";
+    public static string Crouch    => _crouch?.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions) ?? "?";
+    public static string Inventory => _inventory?.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions) ?? "?";
 
     public static InputAction GetAction(string actionName) => actionName switch
     {

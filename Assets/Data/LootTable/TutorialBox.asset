@@ -15,5 +15,5 @@ MonoBehaviour:
   itemPool:
   - {fileID: 11400000, guid: 9600646672be4d84c863ea6673ada15f, type: 2}
   pickCount: 1
-  minCount: 1
-  maxCount: 1
+  minCount: 3
+  maxCount: 3

@@ -11,7 +11,7 @@ public class ContainerUI : MonoBehaviour
     [SerializeField] private ContainerSlotUI slotPrefab;
 
     private List<(ItemBase item, int count)> currentContents;
-    private Action onContentsChanged;
+    
     private readonly List<ContainerSlotUI> activeSlots = new();
 
     void Awake()
@@ -20,10 +20,9 @@ public class ContainerUI : MonoBehaviour
         panel.SetActive(false);
     }
 
-    public void Open(List<(ItemBase item, int count)> contents, Action onContentsChanged)
+    public void Open(List<(ItemBase item, int count)> contents)
     {
         currentContents = contents;
-        this.onContentsChanged = onContentsChanged;
         Refresh();
         panel.SetActive(true);
         InventoryUI.Instance.Open();
@@ -33,7 +32,6 @@ public class ContainerUI : MonoBehaviour
     {
         panel.SetActive(false);
         currentContents = null;
-        onContentsChanged = null;
         InventoryUI.Instance.Close();
     }
 
@@ -45,7 +43,6 @@ public class ContainerUI : MonoBehaviour
         if (!PlayerStateMachine.Instance.inventory.AddItem(item, count)) return;
 
         currentContents.RemoveAt(index);
-        onContentsChanged?.Invoke();
         Refresh();
     }
 
@@ -59,7 +56,13 @@ public class ContainerUI : MonoBehaviour
         {
             var slot = Instantiate(slotPrefab, slotParent);
             int idx = i;
-            slot.Setup(currentContents[i].item, currentContents[i].count, () => TakeItem(idx));
+            var capturedItem = currentContents[i].item;
+            slot.Setup(
+                currentContents[i].item,
+                currentContents[i].count,
+                () => TakeItem(idx),
+                () => InventoryUI.Instance.ShowContextMenu(capturedItem)
+            );
             activeSlots.Add(slot);
         }
     }

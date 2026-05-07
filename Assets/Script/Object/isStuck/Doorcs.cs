@@ -5,7 +5,7 @@ using UnityEngine;
 public class Doorcs : ItObjectBase
 {
     public override bool isStuck => false;
-    public override string InteractMessage => isOpen ? "닫기  [F]" : "열기  [F]";
+    public override string InteractMessage => isOpen ? $"닫기  [{InputBindings.Interact}]" : $"열기  [{InputBindings.Interact}]";
 
     protected override float interactCooldown => 0.5f;
 

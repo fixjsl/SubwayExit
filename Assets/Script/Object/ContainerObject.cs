@@ -5,23 +5,22 @@ public class ContainerObject : ItObjectBase
 {
     [SerializeField] private LootTable lootTable;
     [SerializeField] private ContainerUI containerUI;
-    private bool looted = false;
+    private bool open = false;
     private List<(ItemBase item, int count)> contents;
 
     [SerializeField] private Transform RotatePivot;
 
     public override bool isStuck => false;
-    public override string InteractMessage => looted ? "빈 상자" : "상자 열기  [F]";
+    public override string InteractMessage => open ? $"닫기 [{InputBindings.Interact}]" : $"상자 열기 [{InputBindings.Interact}]";
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        if (looted) return;
 
         if (contents == null)
             contents = lootTable != null ? lootTable.Roll() : new List<(ItemBase, int)>();
 
         isInteracting = false;
-        containerUI.Open(contents, OnContentsChanged);
+        containerUI.Open(contents);
     }
 
     protected override void OnTriggerExit(Collider other)
@@ -31,9 +30,5 @@ public class ContainerObject : ItObjectBase
             containerUI.Close();
     }
 
-    private void OnContentsChanged()
-    {
-        if (contents.Count == 0)
-            looted = true;
-    }
+
 }
