@@ -7,6 +7,7 @@ public class ContainerSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 {
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI countText;
+    [SerializeField] private ContextMenuUI contextMenu;
 
     [Header("Item Info Panel")]
     [SerializeField] private GameObject infoPanel;
@@ -14,29 +15,30 @@ public class ContainerSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
     [SerializeField] private TextMeshProUGUI infoTypeText;
     [SerializeField] private TextMeshProUGUI infoWeightText;
 
-    private System.Action onLeftClick;
-    private System.Action onRightClick;
-    private ItemBase currentItem;
+    private System.Action onBeforeShow;
 
-    public void Setup(ItemBase item, int count, System.Action onLeft, System.Action onRight = null)
+    public void Setup(ItemBase item, int count, Inventory inventory, System.Action onBeforeShow)
     {
-        currentItem = item;
+        this.onBeforeShow = onBeforeShow;
         icon.sprite = item.icon;
+        icon.color = Color.white;
         countText.text = count.ToString();
-        onLeftClick = onLeft;
-        onRightClick = onRight;
+        contextMenu.Init(item, inventory);
 
         if (infoNameText != null) infoNameText.text = item.name;
         if (infoTypeText != null) infoTypeText.text = item.itemType.ToString();
         if (infoWeightText != null) infoWeightText.text = $"무게: {item.weight}";
     }
 
+    public void HideContextMenu() => contextMenu.Hide();
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
-            onLeftClick?.Invoke();
-        else if (eventData.button == PointerEventData.InputButton.Right)
-            onRightClick?.Invoke();
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            onBeforeShow?.Invoke();
+            contextMenu.Toggle();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)

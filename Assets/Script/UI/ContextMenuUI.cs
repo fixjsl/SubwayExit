@@ -21,19 +21,18 @@ public class ContextMenuUI : MonoBehaviour
         dropBtn.onClick.AddListener(Drop);
     }
 
-    public void Show(ItemBase item, Vector2 screenPos, Inventory inv)
+    public void Init(ItemBase item, Inventory inv)
     {
         currentItem = item;
         inventory = inv;
-        ((RectTransform)panel.transform).position = screenPos;
 
         bool isConsumable = item.itemType == ItemType.Consumable;
         quickSlot1Btn.gameObject.SetActive(isConsumable);
         quickSlot2Btn.gameObject.SetActive(isConsumable);
         useBtn.gameObject.SetActive(isConsumable);
-
-        panel.SetActive(true);
     }
+
+    public void Toggle() => panel.SetActive(!panel.activeSelf);
 
     public void Hide()
     {

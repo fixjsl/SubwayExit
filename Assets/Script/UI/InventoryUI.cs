@@ -13,8 +13,6 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private ContainerSlotUI slotPrefab;
     [SerializeField] private Image weightFill;
     [SerializeField] private TMP_Text weightText;
-    [SerializeField] private ContextMenuUI contextMenu;
-
     private Inventory inventory;
     private readonly List<ContainerSlotUI> activeSlots = new();
     private InputAction _inventoryAction;
@@ -53,7 +51,6 @@ public class InventoryUI : MonoBehaviour
         PositionByPlayerSide();
         panel.SetActive(true);
         Refresh();
-        contextMenu.Hide();
     }
 
     [SerializeField] private float inventorySideOffset = 635f;
@@ -73,7 +70,7 @@ public class InventoryUI : MonoBehaviour
     public void Close()
     {
         panel.SetActive(false);
-        contextMenu.Hide();
+        foreach (var slot in activeSlots) slot.HideContextMenu();
     }
 
     void Refresh()
@@ -86,8 +83,10 @@ public class InventoryUI : MonoBehaviour
         {
             if (!ItemManager.itemDB.TryGetValue(code, out var item)) continue;
             var slot = Instantiate(slotPrefab, slotParent);
-            var capturedItem = item;
-            slot.Setup(item, count, null, () => ShowContextMenu(capturedItem));
+            slot.Setup(item, count, inventory, () =>
+            {
+                foreach (var s in activeSlots) s.HideContextMenu();
+            });
             activeSlots.Add(slot);
         }
 
@@ -96,12 +95,6 @@ public class InventoryUI : MonoBehaviour
         float current = inventory.currentWeight;
         if (weightFill != null) weightFill.fillAmount = max > 0 ? current / max : 0f;
         if (weightText != null) weightText.text = $"{current:F1} / {max:F1}";
-    }
-
-    public void ShowContextMenu(ItemBase item)
-    {
-        Vector2 pos = Mouse.current.position.ReadValue();
-        contextMenu.Show(item, pos, inventory);
     }
 
     void OnDestroy()
