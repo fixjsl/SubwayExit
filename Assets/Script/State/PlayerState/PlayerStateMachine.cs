@@ -233,9 +233,14 @@ public class PlayerStateMachine : MonoBehaviour
         ActiveState?.LogicUpdate();
     }
 
+    [SerializeField] private float fallMultiplier = 3f;
+
     void FixedUpdate()
     {
         ActiveState?.PhysicalUpdate();
+
+        if (Rb.linearVelocity.y < 0)
+            Rb.AddForce(Vector3.down * fallMultiplier, ForceMode.Acceleration);
     }
     //현재 상태에서 다른 상태로 전환 하는 함수
     public void ChangeState<T>() where T : PlayerState

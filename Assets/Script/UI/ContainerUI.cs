@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ContainerUI : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class ContainerUI : MonoBehaviour
         Refresh();
         panel.SetActive(true);
         InventoryUI.Instance.Open();
+        SetCombatInput(false);
     }
 
     public void Close()
@@ -33,6 +35,30 @@ public class ContainerUI : MonoBehaviour
         panel.SetActive(false);
         currentContents = null;
         InventoryUI.Instance.Close();
+        SetCombatInput(true);
+    }
+
+    private void SetCombatInput(bool enabled)
+    {
+        var toggle = enabled
+            ? (Action<InputAction>)(a => a.Enable())
+            : (a => a.Disable());
+
+        toggle(InputBindings.GetAction("Attack"));
+        toggle(InputBindings.GetAction("Dodge"));
+        toggle(InputBindings.GetAction("Guard"));
+    }
+
+    private void UseFromContainer(int index)
+    {
+        if (currentContents == null || index >= currentContents.Count) return;
+        var (item, count) = currentContents[index];
+        item.OnUse(PlayerStateMachine.Instance);
+        if (count <= 1)
+            currentContents.RemoveAt(index);
+        else
+            currentContents[index] = (item, count - 1);
+        Refresh();
     }
 
     public void TakeItem(int index)
@@ -61,7 +87,7 @@ public class ContainerUI : MonoBehaviour
                 currentContents[i].item,
                 currentContents[i].count,
                 () => TakeItem(idx),
-                () => InventoryUI.Instance.ShowContextMenu(capturedItem)
+                pos => InventoryUI.Instance.ShowContextMenu(capturedItem, pos, () => UseFromContainer(idx))
             );
             activeSlots.Add(slot);
         }

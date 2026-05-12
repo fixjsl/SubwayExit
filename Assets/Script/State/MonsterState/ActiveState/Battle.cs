@@ -29,7 +29,7 @@ public class Battle : MonsterState
                 Monster.ChangeState<Return>();
                 return;
             }
-            Monster.animator.CrossFade("battle",0.01f);
+            Monster.animator.CrossFade(Monster.sprint,0.01f);
             delay = Mathf.Max(0.5f, Monster.status.atkdelay + Random.Range(-1f, 1f));
             Timer.Reset();
 

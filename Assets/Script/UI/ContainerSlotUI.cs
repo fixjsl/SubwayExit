@@ -7,28 +7,19 @@ public class ContainerSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 {
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI countText;
-
-    [Header("Item Info Panel")]
-    [SerializeField] private GameObject infoPanel;
-    [SerializeField] private TextMeshProUGUI infoNameText;
-    [SerializeField] private TextMeshProUGUI infoTypeText;
-    [SerializeField] private TextMeshProUGUI infoWeightText;
+    [SerializeField] private Transform infoAnchor;
 
     private System.Action onLeftClick;
-    private System.Action onRightClick;
+    private System.Action<Vector2> onRightClick;
     private ItemBase currentItem;
 
-    public void Setup(ItemBase item, int count, System.Action onLeft, System.Action onRight = null)
+    public void Setup(ItemBase item, int count, System.Action onLeft, System.Action<Vector2> onRight = null)
     {
         currentItem = item;
         icon.sprite = item.icon;
         countText.text = count.ToString();
         onLeftClick = onLeft;
         onRightClick = onRight;
-
-        if (infoNameText != null) infoNameText.text = item.name;
-        if (infoTypeText != null) infoTypeText.text = item.itemType.ToString();
-        if (infoWeightText != null) infoWeightText.text = $"무게: {item.weight}";
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -36,16 +27,22 @@ public class ContainerSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (eventData.button == PointerEventData.InputButton.Left)
             onLeftClick?.Invoke();
         else if (eventData.button == PointerEventData.InputButton.Right)
-            onRightClick?.Invoke();
+            onRightClick?.Invoke(GetSlotRightScreenPos());
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        infoPanel?.SetActive(true);
+        if (currentItem != null)
+            ItemInfoUI.Instance.Show(currentItem, GetSlotRightScreenPos());
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        infoPanel?.SetActive(false);
+        ItemInfoUI.Instance.Hide();
+    }
+
+    private Vector2 GetSlotRightScreenPos()
+    {
+        return RectTransformUtility.WorldToScreenPoint(null, infoAnchor.position);
     }
 }

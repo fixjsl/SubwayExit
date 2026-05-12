@@ -74,6 +74,7 @@ public class InventoryUI : MonoBehaviour
     {
         panel.SetActive(false);
         contextMenu.Hide();
+        ItemInfoUI.Instance.Hide();
     }
 
     void Refresh()
@@ -87,7 +88,7 @@ public class InventoryUI : MonoBehaviour
             if (!ItemManager.itemDB.TryGetValue(code, out var item)) continue;
             var slot = Instantiate(slotPrefab, slotParent);
             var capturedItem = item;
-            slot.Setup(item, count, null, () => ShowContextMenu(capturedItem));
+            slot.Setup(item, count, null, pos => ShowContextMenu(capturedItem, pos));
             activeSlots.Add(slot);
         }
 
@@ -98,10 +99,10 @@ public class InventoryUI : MonoBehaviour
         if (weightText != null) weightText.text = $"{current:F1} / {max:F1}";
     }
 
-    public void ShowContextMenu(ItemBase item)
+    public void ShowContextMenu(ItemBase item, Vector2 screenPos, System.Action onUse = null)
     {
-        Vector2 pos = Mouse.current.position.ReadValue();
-        contextMenu.Show(item, pos, inventory);
+        ItemInfoUI.Instance.Hide();
+        contextMenu.Show(item, screenPos, inventory, onUse);
     }
 
     void OnDestroy()

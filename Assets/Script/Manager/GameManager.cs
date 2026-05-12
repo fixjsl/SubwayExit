@@ -8,7 +8,8 @@ using UnityEngine.Audio;
 [Serializable]
 public class GameSettings
 {
-    public int resolutionIndex  = -1;   // -1 = 현재 해상도 사용
+    public int resolutionWidth  = -1;
+    public int resolutionHeight = -1;
     public int windowMode       = 0;    // 0=전체화면, 1=보더리스, 2=창모드
     public int qualityLevel     = 2;    // 0=낮음, 1=중간, 2=높음
     public float masterVolume   = 1f;
@@ -65,10 +66,8 @@ public class GameManager : MonoBehaviour
     public void ApplySettings()
     {
         // 해상도 & 창모드
-        Resolution[] resolutions = Screen.resolutions;
-        int index = settings.resolutionIndex >= 0 && settings.resolutionIndex < resolutions.Length
-            ? settings.resolutionIndex
-            : resolutions.Length - 1;
+        int w = settings.resolutionWidth  > 0 ? settings.resolutionWidth  : Screen.currentResolution.width;
+        int h = settings.resolutionHeight > 0 ? settings.resolutionHeight : Screen.currentResolution.height;
 
         FullScreenMode mode = settings.windowMode switch
         {
@@ -76,7 +75,7 @@ public class GameManager : MonoBehaviour
             1 => FullScreenMode.FullScreenWindow,
             _ => FullScreenMode.Windowed
         };
-        Screen.SetResolution(resolutions[index].width, resolutions[index].height, mode);
+        Screen.SetResolution(w, h, mode);
 
         // 품질
         QualitySettings.SetQualityLevel(settings.qualityLevel);

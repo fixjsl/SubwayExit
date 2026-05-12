@@ -49,7 +49,10 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         player.SetInteractable(this);
         promptText.text = InteractMessage;
         TextObject.SetActive(true);
+        OnPlayerEntered(player);
     }
+
+    protected virtual void OnPlayerEntered(PlayerStateMachine player) { }
 
     protected virtual void OnTriggerExit(Collider other)
     {
