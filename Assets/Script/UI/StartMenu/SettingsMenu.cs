@@ -68,9 +68,12 @@ public class SettingsMenu : MonoBehaviour
                 currentIndex = i;
         }
 
-        int saved = GameManager.Instance.settings.resolutionIndex;
         resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = saved >= 0 && saved < supportedResolutions.Count ? saved : currentIndex;
+
+        int savedW = GameManager.Instance.settings.resolutionWidth;
+        int savedH = GameManager.Instance.settings.resolutionHeight;
+        int savedIndex = supportedResolutions.FindIndex(r => r.w == savedW && r.h == savedH);
+        resolutionDropdown.value = savedIndex >= 0 ? savedIndex : currentIndex;
         resolutionDropdown.RefreshShownValue();
         resolutionDropdown.onValueChanged.AddListener(SetResolution);
     }
@@ -93,7 +96,9 @@ public class SettingsMenu : MonoBehaviour
 
     public void SetResolution(int index)
     {
-        GameManager.Instance.settings.resolutionIndex = index;
+        var (w, h) = supportedResolutions[index];
+        GameManager.Instance.settings.resolutionWidth  = w;
+        GameManager.Instance.settings.resolutionHeight = h;
         GameManager.Instance.ApplySettings();
         GameManager.Instance.SaveSettings();
     }

@@ -16,6 +16,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject attackKeyUI;
     [SerializeField] private GameObject dodgeKeyUI;
     [SerializeField] private GameObject parryKeyUI;
+    [SerializeField] private GameObject GetItemUI;
     [SerializeField] private GameObject crunchKeyUI;
     [SerializeField] private float keyUIDisplayTime = 3f;
 
@@ -132,7 +133,7 @@ public class TutorialManager : MonoBehaviour
 
         //10단계 : 아이템 획득, 사용 및 퀵슬롯 튜토리얼
         yield return WaitForTrigger(TutorialTriggerType.GetItem);
-    
+        if (GetItemUI != null) GetItemUI.SetActive(true);
 
         // 11단계: 웅크리기 튜토리얼
         yield return WaitForTrigger(TutorialTriggerType.DialogeNShowCrunchKey);

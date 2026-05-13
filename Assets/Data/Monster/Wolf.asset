@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wolf
   m_EditorClassIdentifier: Assembly-CSharp::MonsterStatus
   Maxhp: 20
-  speed: 10
+  speed: 25
   chasespeed: 35
   atk: 5
   atk_range: 0

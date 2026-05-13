@@ -11,6 +11,7 @@ public class ContextMenuUI : MonoBehaviour
 
     private ItemBase currentItem;
     private Inventory inventory;
+    private System.Action onUseOverride;
 
     void Awake()
     {
@@ -21,18 +22,20 @@ public class ContextMenuUI : MonoBehaviour
         dropBtn.onClick.AddListener(Drop);
     }
 
-    public void Init(ItemBase item, Inventory inv)
+    public void Show(ItemBase item, Vector2 screenPos, Inventory inv, System.Action onUse = null)
     {
         currentItem = item;
         inventory = inv;
+        onUseOverride = onUse;
+        ((RectTransform)panel.transform).position = screenPos;
 
         bool isConsumable = item.itemType == ItemType.Consumable;
         quickSlot1Btn.gameObject.SetActive(isConsumable);
         quickSlot2Btn.gameObject.SetActive(isConsumable);
         useBtn.gameObject.SetActive(isConsumable);
-    }
 
-    public void Toggle() => panel.SetActive(!panel.activeSelf);
+        panel.SetActive(true);
+    }
 
     public void Hide()
     {
@@ -48,7 +51,10 @@ public class ContextMenuUI : MonoBehaviour
 
     void Use()
     {
-        inventory.UseItem(currentItem, PlayerStateMachine.Instance);
+        if (onUseOverride != null)
+            onUseOverride.Invoke();
+        else
+            inventory.UseItem(currentItem, PlayerStateMachine.Instance);
         Hide();
     }
 
