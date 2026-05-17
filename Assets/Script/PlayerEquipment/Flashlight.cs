@@ -12,6 +12,10 @@ public class Flashlight : MonoBehaviour
     [SerializeField] private float heightOffset = 1.5f;
     [SerializeField] private float nearRange    = 1.8f;
     [SerializeField] private Color lightColor   = new Color(1f, 0.95f, 0.8f);
+    [Header("바닥/천장 반사")]
+    [SerializeField] private float floorWorldY   = -1f;  // 바닥 월드 Y 좌표
+    [SerializeField] private float ceilingWorldY =  3f;  // 천장 월드 Y 좌표
+    [SerializeField] private float surfaceBlur   =  0.03f; // 반사 하이라이트 두께
     [SerializeField] private Light spotLight;
 
     private float facingSign = 1f;
@@ -23,6 +27,10 @@ public class Flashlight : MonoBehaviour
         player.EquipLight(spotLight);
         player.OnLightToggle += SetEnabled;
     }
+    void Update()
+    {
+        UpdateShaderGlobals();       
+    }
 
     void OnDestroy()
     {
@@ -30,34 +38,49 @@ public class Flashlight : MonoBehaviour
             PlayerStateMachine.Instance.OnLightToggle -= SetEnabled;
     }
 
-    public void UpdateShaderGlobals()
-    {
-        bool isOn = spotLight != null && spotLight.enabled;
-        Shader.SetGlobalFloat("_FlashlightEnabled", isOn ? 1f : 0f);
+public void UpdateShaderGlobals()
+{
+    bool isOn = spotLight != null && spotLight.enabled;
+    Shader.SetGlobalFloat("_FlashlightEnabled", isOn ? 1f : 0f);
 
-        float moveInput = PlayerStateMachine.Instance.MoveInput;
-        if (Mathf.Abs(moveInput) > 0.01f) facingSign = Mathf.Sign(moveInput);
+    float moveInput = PlayerStateMachine.Instance.MoveInput;
+    if (Mathf.Abs(moveInput) > 0.01f) facingSign = Mathf.Sign(moveInput);
 
-        // 플레이어는 X축 이동 → 콘 방향을 XY 평면으로 계산
-        Vector3 dir = new Vector3(
-            facingSign * Mathf.Cos(tiltDown * Mathf.Deg2Rad),
-            -Mathf.Sin(tiltDown * Mathf.Deg2Rad),
-            0f
-        ).normalized;
-        Vector3 shaderPos =  spotLight.transform.position ;
+    // 1. 플레이어의 3D 월드 위치를 '화면 2D Viewport 좌표 (0~1)'로 안전하게 변환
+    Vector3 playerWorldPos = spotLight.transform.position;
+    Vector3 playerScreenPos = Camera.main.WorldToViewportPoint(playerWorldPos);
 
-        if (Time.frameCount % 90 == 0)
-            Debug.Log($"[Flash] pos={shaderPos:F2}  dir={dir:F2}  range={range}  facing={facingSign}");
+    // 2. 캐릭터의 90도 회전에 방해받지 않는 무결한 2.5D 조준 끝점(3D 월드) 설정
+    float cosAngle = Mathf.Cos(tiltDown * Mathf.Deg2Rad);
+    float sinAngle = Mathf.Sin(tiltDown * Mathf.Deg2Rad);
+    Vector3 lookDirWorld = new Vector3(facingSign * cosAngle, -sinAngle, 0f).normalized;
+    Vector3 targetWorldPos = playerWorldPos + lookDirWorld;
 
-        Shader.SetGlobalVector("_FlashlightPos",        shaderPos);
-        Shader.SetGlobalVector("_FlashlightDir",        dir);
-        Shader.SetGlobalFloat ("_FlashlightRange",      range);
-        Shader.SetGlobalFloat ("_FlashlightOuterAngle", Mathf.Cos(outerAngle * Mathf.Deg2Rad));
-        Shader.SetGlobalFloat ("_FlashlightInnerAngle", Mathf.Cos(innerAngle * Mathf.Deg2Rad));
-        Shader.SetGlobalFloat ("_FlashlightIntensity",  intensity);
-        Shader.SetGlobalColor ("_FlashlightColor",      lightColor);
-        Shader.SetGlobalFloat ("_FlashlightNearRange",  nearRange);
-    }
+    // 3. 조준 끝점 역시 '화면 2D Viewport 좌표 (0~1)'로 변환
+    Vector3 targetScreenPos = Camera.main.WorldToViewportPoint(targetWorldPos);
+
+    // 4. 화면 좌표계상에서의 무결한 2D 조준 방향 벡터 계산 (Z축 격리)
+    Vector2 flashlightDir2D = (new Vector2(targetScreenPos.x, targetScreenPos.y) - new Vector2(playerScreenPos.x, playerScreenPos.y)).normalized;
+
+    if (Time.frameCount % 90 == 0)
+        Debug.Log($"[Flash] screenPos={playerScreenPos:F2}  dir2D={flashlightDir2D:F2}  range={range}");
+
+    // [최종 데이터 가공 전송] 쉐이더에 철저히 화면용 2D 규격으로 배달합니다.
+    Shader.SetGlobalVector("_FlashlightPos",        new Vector4(playerScreenPos.x, playerScreenPos.y, 0f, 0f));
+    Shader.SetGlobalVector("_FlashlightDir",        new Vector4(flashlightDir2D.x, flashlightDir2D.y, 0f, 0f));
+    Shader.SetGlobalFloat ("_FlashlightRange",      range * 0.05f);
+    Shader.SetGlobalFloat ("_FlashlightOuterAngle", outerAngle);
+    Shader.SetGlobalFloat ("_FlashlightInnerAngle", innerAngle);
+    Shader.SetGlobalFloat ("_FlashlightIntensity",  intensity);
+    Shader.SetGlobalColor ("_FlashlightColor",      lightColor);
+
+    // 바닥/천장 월드 Y → 뷰포트 Y로 변환해서 전송
+    Camera cam = Camera.main;
+    float floorVP   = cam.WorldToViewportPoint(new Vector3(0, floorWorldY,   0)).y;
+    float ceilingVP = cam.WorldToViewportPoint(new Vector3(0, ceilingWorldY, 0)).y;
+    Shader.SetGlobalVector("_FloorCeilingY",   new Vector4(floorVP, ceilingVP, surfaceBlur, 0f));
+}
+
 
     private void SetEnabled(bool on)
     {
