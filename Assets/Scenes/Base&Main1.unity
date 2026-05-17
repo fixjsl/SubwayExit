@@ -6583,7 +6583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3a5c82e484a16f4a9ad8eebba9503ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Flashlight
-  outerAngle: 150
+  outerAngle: 80
   innerAngle: 0
   range: 20
   intensity: 0.05
@@ -6592,8 +6592,8 @@ MonoBehaviour:
   nearRange: 1.8
   lightColor: {r: 1, g: 0.95, b: 0.8, a: 1}
   floorWorldY: 5
-  ceilingWorldY: 59.47
-  surfaceBlur: 0.03
+  ceilingWorldY: 55
+  surfaceBlur: 0.01
   spotLight: {fileID: 1410777428}
 --- !u!108 &1410777428
 Light:
