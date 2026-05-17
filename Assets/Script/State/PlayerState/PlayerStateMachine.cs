@@ -29,11 +29,13 @@ public class PlayerStateMachine : MonoBehaviour
     public Weapon currentWeapon;
     public Transform weaponSlot;
     [SerializeField] private AttackHitbox attackHitbox;
+    [SerializeField] private Flashlight flashlight;
 
     //현재 플레이어의 상태
     public float MoveInput;
     float lastMoveInput;
     public Light currentLight {get; private set; }
+    public event System.Action<bool> OnLightToggle;
     public PlayerState ActiveState { get; private set; }
     public List<PlayerState> PassiveStates { get; private set; } = new List<PlayerState>();
     public bool isGuard { get; private set; }
@@ -112,10 +114,10 @@ public class PlayerStateMachine : MonoBehaviour
         action.PlayerAction.Dodge.performed += _ => SetBuffer(StateType.Dodge);
         action.PlayerAction.Interact.performed += _ => SetBuffer(StateType.interect);
         action.PlayerAction.LightTogle.performed += _ => {
-           if(currentLight != null)
-            {
-                currentLight.enabled = !currentLight.enabled;
-            }
+            bool next = currentLight == null || !currentLight.enabled;
+            if (currentLight != null) currentLight.enabled = next;
+            Debug.Log($"LightToggle{next}");
+            OnLightToggle?.Invoke(next);
         };
         action.PlayerAction.Move.performed += ctx => {
             float value = ctx.ReadValue<float>();
@@ -193,6 +195,7 @@ public class PlayerStateMachine : MonoBehaviour
     }
     void Update()
     {
+        if (flashlight != null) flashlight.UpdateShaderGlobals();
         CheckStateChange();
 
 #if UNITY_EDITOR

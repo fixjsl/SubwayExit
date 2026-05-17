@@ -60,7 +60,6 @@ public class NoiseABright : PassiveState
     private void UpdateBrighten()
     {
         if (light == null) return;
-        light.transform.position = player.transform.position;
         player.status.currentbrighten = light.enabled ? light.intensity : 0f;
     }
 }
