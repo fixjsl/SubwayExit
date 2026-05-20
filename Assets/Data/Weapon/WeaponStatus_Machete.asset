@@ -15,7 +15,7 @@ MonoBehaviour:
   attack: 10
   attackSpeed: 1
   attackRange: 5
-  execution_m: 2
+  execution_m: 1.5
   bloodStrenth: 50
   stunStrength: 1
   GuardStrength: 10

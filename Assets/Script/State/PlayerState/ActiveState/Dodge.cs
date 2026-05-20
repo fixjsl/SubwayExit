@@ -7,6 +7,7 @@ public class Dodge : PlayerState
     private float cooltime;
     private float lastTime;
     
+    private Vector3 DodgeRange = new Vector3 (30,0,0);
 
     public Dodge(PlayerStateMachine stateMachine) : base(stateMachine)
     {
@@ -45,7 +46,7 @@ public class Dodge : PlayerState
 
     public override void LogicUpdate()
     {
-
+        player.Rb.linearVelocity = DodgeRange;
     }
 
     public override void PhysicalUpdate()

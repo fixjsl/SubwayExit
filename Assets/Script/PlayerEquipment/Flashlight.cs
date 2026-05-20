@@ -9,13 +9,12 @@ public class Flashlight : MonoBehaviour
     [SerializeField] private float range        = 8f;
     [SerializeField] private float intensity    = 2f;
     [SerializeField] private float tiltDown     = 30f;
-    [SerializeField] private float heightOffset = 1.5f;
     [SerializeField] private float nearRange    = 1.8f;
     [SerializeField] private Color lightColor   = new Color(1f, 0.95f, 0.8f);
     [Header("바닥/천장 반사")]
-    [SerializeField] private float floorWorldY   = -1f;  // 바닥 월드 Y 좌표
-    [SerializeField] private float ceilingWorldY =  3f;  // 천장 월드 Y 좌표
-    [SerializeField] private float surfaceBlur   =  0.03f; // 반사 하이라이트 두께
+    [SerializeField] private float floorOffsetY   = -1f;  // 플레이어 기준 바닥 오프셋
+    [SerializeField] private float ceilingOffsetY =  3f;  // 플레이어 기준 천장 오프셋
+    [SerializeField] private float surfaceBlur    =  0.03f; // 반사 하이라이트 두께
     [SerializeField] private Light spotLight;
 
     private float facingSign = 1f;
@@ -62,8 +61,6 @@ public void UpdateShaderGlobals()
     // 4. 화면 좌표계상에서의 무결한 2D 조준 방향 벡터 계산 (Z축 격리)
     Vector2 flashlightDir2D = (new Vector2(targetScreenPos.x, targetScreenPos.y) - new Vector2(playerScreenPos.x, playerScreenPos.y)).normalized;
 
-    if (Time.frameCount % 90 == 0)
-        Debug.Log($"[Flash] screenPos={playerScreenPos:F2}  dir2D={flashlightDir2D:F2}  range={range}");
 
     // [최종 데이터 가공 전송] 쉐이더에 철저히 화면용 2D 규격으로 배달합니다.
     Shader.SetGlobalVector("_FlashlightPos",        new Vector4(playerScreenPos.x, playerScreenPos.y, 0f, 0f));
@@ -76,8 +73,9 @@ public void UpdateShaderGlobals()
 
     // 바닥/천장 월드 Y → 뷰포트 Y로 변환해서 전송
     Camera cam = Camera.main;
-    float floorVP   = cam.WorldToViewportPoint(new Vector3(0, floorWorldY,   0)).y;
-    float ceilingVP = cam.WorldToViewportPoint(new Vector3(0, ceilingWorldY, 0)).y;
+    float playerY   = spotLight.transform.position.y;
+    float floorVP   = cam.WorldToViewportPoint(new Vector3(0, playerY + floorOffsetY,   0)).y;
+    float ceilingVP = cam.WorldToViewportPoint(new Vector3(0, playerY + ceilingOffsetY, 0)).y;
     Shader.SetGlobalVector("_FloorCeilingY",   new Vector4(floorVP, ceilingVP, surfaceBlur, 0f));
 }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class StairObject : MonoBehaviour
 {
-    private float stairZ => transform.position.z;
+    [SerializeField] private Transform stairOffset;
 
     private float originalZ;
     private StairTrigger mountedFrom;
@@ -12,9 +12,10 @@ public class StairObject : MonoBehaviour
     {
         if (IsOnStair && trigger != mountedFrom)
         {
-            Dismount(player);
-            player.ClearInteractable(trigger);
+            var prev = mountedFrom;
             mountedFrom = null;
+            Dismount(player);
+            if (prev != null) prev.RefreshPrompt();
         }
     }
 
@@ -27,8 +28,10 @@ public class StairObject : MonoBehaviour
         }
         else
         {
+            var prev = mountedFrom;
             mountedFrom = null;
             Dismount(player);
+            if (prev != null) prev.RefreshPrompt();
         }
     }
 
@@ -37,7 +40,7 @@ public class StairObject : MonoBehaviour
         originalZ = player.Rb.position.z;
         IsOnStair = true;
         var pos = player.Rb.position;
-        pos.z = stairZ;
+        pos.z = stairOffset.position.z;
         player.Rb.position = pos;
     }
 

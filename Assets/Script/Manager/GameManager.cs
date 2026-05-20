@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     public GameSettings settings { get; private set; } = new GameSettings();
 
     [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioSource ambientSource;
 
     public int Day{get; private set;} = 1;  //진행 일
     public int Hour{get; private set;}  = 0; // 시간
@@ -85,6 +88,36 @@ public class GameManager : MonoBehaviour
         SetMixerVolume("BGM",     settings.bgmVolume);
         SetMixerVolume("SE",     settings.sfxVolume);
         SetMixerVolume("Ambient", settings.ambientVolume);
+    }
+
+    public void PlayBGM(AudioClip clip)
+    {
+        if (bgmSource == null || clip == null) return;
+        bgmSource.clip = clip;
+        bgmSource.Play();
+    }
+
+    public void StopBGM()
+    {
+        bgmSource?.Stop();
+    }
+
+    public void PlaySFX(AudioClip clip)
+    {
+        if (sfxSource != null && clip != null)
+            sfxSource.PlayOneShot(clip);
+    }
+
+    public void PlayAmbient(AudioClip clip)
+    {
+        if (ambientSource == null || clip == null) return;
+        ambientSource.clip = clip;
+        ambientSource.Play();
+    }
+
+    public void StopAmbient()
+    {
+        ambientSource?.Stop();
     }
 
     void SetMixerVolume(string param, float value)

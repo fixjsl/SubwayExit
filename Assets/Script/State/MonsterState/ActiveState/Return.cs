@@ -5,7 +5,7 @@ namespace MonsterStates
 {
     public class Return : MonsterState
     {
-        private Vector3 spawnPoint;
+        private Transform spawnPoint;
         private float arrivalThreshold = 0.5f;
 
         private bool isTurning;
@@ -33,7 +33,7 @@ namespace MonsterStates
             
 
             // �÷��̾ ���������� ��������
-            float dirToPlayer = Monster.spawnpoint.x - Monster.transform.position.x;
+            float dirToPlayer = Monster.spawnpoint.transform.position.x - Monster.transform.position.x;
             // ���� �ٶ󺸴� ����
             float myDir = Vector3.Dot(Monster.transform.forward, Vector3.right);
 
@@ -50,7 +50,7 @@ namespace MonsterStates
         }
         public override void LogicUpdate()
         {
-            float distanceToSpawn = Vector3.Distance(Monster.transform.position, spawnPoint);
+            float distanceToSpawn = Vector3.Distance(Monster.transform.position, spawnPoint.transform.position);
 
             // 2. �����ߴٸ� idle ���·� ��ȯ
             if (distanceToSpawn <= arrivalThreshold)
@@ -63,7 +63,7 @@ namespace MonsterStates
             if (!isTurning)
             {
                 //�ڱ� ������������ ���ư�
-                Vector3 direction = (spawnPoint - Monster.transform.position).normalized;
+                Vector3 direction = (spawnPoint.transform.position - Monster.transform.position).normalized;
 
                 // 4. ������ٵ� �ӵ� �ο� (y���� �߷� ������ ���� ���� �� ���)
                 Monster.Rb.linearVelocity = new Vector3(

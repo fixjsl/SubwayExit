@@ -4,7 +4,13 @@
       "Bash(Get-ChildItem -Path \"d:\\\\Popol\\\\SubwayExit\" -Directory)",
       "Bash(Select-Object Name)",
       "Bash(Format-Table -AutoSize)",
-      "Bash(grep \"\\\\.cs$\")"
+      "Bash(grep \"\\\\.cs$\")",
+      "PowerShell(Get-ChildItem -Path \"d:\\\\popol\\\\SubwayExit\\\\Assets\" -Directory -Recurse | Where-Object { $_.Name -match 'Shader|Material|shader|material' } | Select-Object -ExpandProperty FullName)",
+      "Bash(Get-ChildItem -Path \"d:\\\\popol\\\\SubwayExit\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"d:\\\\popol\\\\SubwayExit\\\\Assets\\\\Script\" -Recurse)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(xargs grep -l \"VideoPlayer\\\\|Video\\\\|Movie\")"
     ]
   }
 }

@@ -25,7 +25,7 @@ public class PlayerStatus
         get => stamina; 
         set
         {
-            stamina = Mathf.Clamp(value, 0, MaxStamina);
+            stamina = Mathf.Clamp(value, 0, curMaxStamina);
            ChangeStamina?.Invoke(stamina);
 
             if (stamina <= 0) StaminaEmpty?.Invoke();
@@ -109,6 +109,12 @@ public class PlayerStatus
     }
     [Header("Recovery")]
     public float staminaRecoverey;
+    [Header("Survival")]
+    public float hungerDecreasePerMinute = 0.1f;
+    public float waterDecreasePerMinute  = 0.3f;
+    [HideInInspector] public float baseHungerDecreasePerMinute;
+    [HideInInspector] public float baseWaterDecreasePerMinute;
+    [HideInInspector] public float baseStaminaRecovery;
 
     public float dodgeSpeed;
 

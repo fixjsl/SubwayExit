@@ -10,13 +10,13 @@ public class ItemBase : ScriptableObject
     public int itemcode;
     public ItemType itemType;
     public int maxamount;
-    public int weight;
+    public float weight;
 
     public virtual void OnUse(PlayerStateMachine player) { }
     [System.Serializable]
     public struct CraftMaterial
     {
-        public Item item;
+        public ItemBase item;
         public int amount;
     }
     public List<CraftMaterial> materials;

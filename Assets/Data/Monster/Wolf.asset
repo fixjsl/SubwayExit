@@ -18,8 +18,9 @@ MonoBehaviour:
   atk: 5
   atk_range: 0
   atkdelay: 3
-  detect_range: 200
+  detectHalfExtents: {x: 200, y: 30, z: 20}
   recovery: 3
-  battle_range: 50
+  battleHalfExtents: {x: 100, y: 30, z: 20}
   stunTime: 0
   knockbackForce: 0
+  minSeparation: 20

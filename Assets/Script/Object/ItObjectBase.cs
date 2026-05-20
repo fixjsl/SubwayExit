@@ -11,6 +11,7 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
     [SerializeField] private TextMeshPro promptText;
 
     protected bool isInteracting = false;
+    protected bool hasInteracted = false;
     private PlayerStateMachine currentPlayer;
     private float lastInteractTime = -Mathf.Infinity;
 
@@ -30,6 +31,7 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         isInteracting = true;
         lastInteractTime = Time.time;
         OnInteractInternal(interacterPosition);
+        hasInteracted = true;
 
    
             promptText.text = InteractMessage;
@@ -41,6 +43,12 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         }
     }
     protected abstract void OnInteractInternal(Vector3 interacterPosition);
+
+    public void RefreshPrompt()
+    {
+        if (TextObject != null && TextObject.activeInHierarchy)
+            promptText.text = InteractMessage;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -60,6 +68,17 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         player.ClearInteractable(this);
         if (player == currentPlayer) currentPlayer = null;
         TextObject.SetActive(false);
+    }
+
+    protected void PlaySound(AudioClip clip)
+    {
+        if (clip != null)
+            GameManager.Instance.PlaySFX(clip);
+    }
+
+    protected void PlayInteractSound(AudioClip firstClip, AudioClip repeatClip)
+    {
+        PlaySound(hasInteracted ? repeatClip : firstClip);
     }
 
     private void OnDisable()

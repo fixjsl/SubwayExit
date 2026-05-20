@@ -8,9 +8,6 @@ public enum TutorialTriggerType
     WeaponRoom,// 무기 선택카드 및 문 닫힘
     WeaponSelected,// 무기 선택 완료
     CombatStart,// 적이 문 부수고 나옴 및 전투 튜토리얼 시작
-    AttackTutorial, // 공격 키 튜토리얼
-    DodgeTutorial, // 회피 키 튜토리얼
-    ParryTutorial, // 패링 키 튜토리얼
     GetItem,
     DialogeNShowCrunchKey, //웅크리기 키 튜토리얼
     ApperBear, // 흉포한 곰 등장 

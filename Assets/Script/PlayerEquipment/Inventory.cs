@@ -37,8 +37,6 @@ public class Inventory
         return true;
     }
 
-    public bool AddItem(Item item, int num = 1) => AddItem(item.iteminfo, num);
-
     public bool RemoveItem(ItemBase itemBase, int num = 1)
     {
         int key = itemBase.itemcode;
@@ -57,8 +55,6 @@ public class Inventory
         OnInventoryChanged?.Invoke();
         return true;
     }
-
-    public bool RemoveItem(Item item, int num = 1) => RemoveItem(item.iteminfo, num);
 
     public void UseItem(ItemBase itemBase, PlayerStateMachine player)
     {
@@ -81,7 +77,13 @@ public class Inventory
         if (slotIndex < 0 || slotIndex >= QuickSlots.Length) return;
         int code = QuickSlots[slotIndex];
         if (code == 0 || !slots.ContainsKey(code)) { QuickSlots[slotIndex] = 0; return; }
-        if (!ItemManager.itemDB.TryGetValue(code, out var item)) return;
+        if (!ItemManager.itemDB.TryGetValue(code, out var item))
+        {
+            Debug.LogWarning($"[Inventory] itemcode {code} not found in itemDB");
+            QuickSlots[slotIndex] = 0;
+            OnQuickSlotsChanged?.Invoke();
+            return;
+        }
         UseItem(item, player);
         OnQuickSlotsChanged?.Invoke();
     }

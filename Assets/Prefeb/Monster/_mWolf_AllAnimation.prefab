@@ -1840,6 +1840,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 7948860262858545126, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
+      propertyPath: m_Quality
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7948860262858545126, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5be141e182c7e67479d4d588dacacec5, type: 2}
     - target: {fileID: 7992647784250543642, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -1965,6 +1973,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
       insertIndex: -1
       addedObject: {fileID: 696338981353491152}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7422683690677201704}
   m_SourcePrefab: {fileID: 100100000, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
 --- !u!1 &4988243617428578412 stripped
 GameObject:
@@ -2060,6 +2071,19 @@ MonoBehaviour:
   hitAnimLength: 0.5
   attackCollider: {fileID: 3317776381566185302}
   debugMode: 0
+--- !u!114 &7422683690677201704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4988243617428578412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aedf78d9f6d00841a3777ece58cab51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterFlashlightVisibility
+  fadeSpeed: 8
 --- !u!4 &5652612955464858326 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}

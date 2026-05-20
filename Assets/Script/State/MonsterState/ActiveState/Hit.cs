@@ -42,8 +42,9 @@ namespace MonsterStates
         }
         public override void PhysicalUpdate()
         {
+            float lerpFactor = 5f * Time.fixedDeltaTime / Mathf.Max(hitduration, 0.01f);
             Monster.Rb.linearVelocity = new Vector3(
-                Mathf.Lerp(Monster.Rb.linearVelocity.x, 0f, 10f * Time.fixedDeltaTime),
+                Mathf.Lerp(Monster.Rb.linearVelocity.x, 0f, lerpFactor),
                 Monster.Rb.linearVelocity.y,
                 0f);
         }

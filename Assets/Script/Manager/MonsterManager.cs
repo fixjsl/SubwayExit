@@ -52,7 +52,7 @@ public class MonsterManager : MonoBehaviour
         if(!pool.ContainsKey(type) || pool[type].Count == 0) return null;
         var monster = pool[type].Dequeue();
         monster.transform.position = position;
-        monster.spawnpoint = position; 
+        monster.spawnpoint.transform.position = position; 
         monster.gameObject.SetActive(true);
         Register(monster);
         return monster;

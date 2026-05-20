@@ -22,7 +22,7 @@ public class Weapon : MonoBehaviour, ICreatable
     {
         foreach (var material in iteminfo.materials)
         {
-            if (!inventory.slots.TryGetValue(material.item.iteminfo.itemcode, out int count)) return false;
+            if (!inventory.slots.TryGetValue(material.item.itemcode, out int count)) return false;
             if (count < material.amount) return false;
         }
         return true;

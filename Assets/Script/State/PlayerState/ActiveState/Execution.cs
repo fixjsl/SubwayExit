@@ -13,16 +13,30 @@ public class Execution : PlayerState
     {
         target = monster;
     }
+    private const float ExecutionOffset = 1.5f;
+
     public override void Enter()
     {
         canChanged = false;
         damage = player.currentWeapon.status.attack * player.currentWeapon.status.execution_m;
-        player.gameObject.layer = Layercache.Dodge; // ����
+        player.animator.CrossFade(player.excution,0.15f);
+        player.gameObject.layer = Layercache.Dodge;
         player.Rb.linearVelocity = Vector3.zero;
+
+        if (target != null)
+        {
+            Vector3 execPos = player.transform.position + player.transform.forward * ExecutionOffset;
+            execPos.y = target.Rb.position.y;
+            target.Rb.position = execPos;
+            target.Rb.linearVelocity = Vector3.zero;
+            target.Freeze();
+        }
     }
     public override void Exit()
     {
         player.gameObject.layer = Layercache.Player;
+        if (target != null)
+            target.Unfreeze();
     }
 
     public void OnDamage()

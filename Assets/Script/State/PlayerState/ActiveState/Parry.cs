@@ -31,8 +31,8 @@ public class Parry: PlayerState
 
     private void OnParrySuccess()
     {
-        // TODO: 패링 성공 애니메이션 재생
-        // player.animator.CrossFade(player.parrySuccess, 0.02f);
+        
+        player.animator.CrossFade(player.parrysucess, 0.02f);
     }
 
     public override void HandleDamage(float Damage)

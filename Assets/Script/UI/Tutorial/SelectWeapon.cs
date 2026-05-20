@@ -1,30 +1,24 @@
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SelectWeapon : MonoBehaviour
 {
-
-    [SerializeField] private GameObject WeaponP;
-    [SerializeField] private Transform WeaponSpawnPoint;
-    [SerializeField] private GameObject WeaponCardContainer;
-    private WeaponPickup weaponPickup;
-    [SerializeField] private Button WeaponSelectButton;
+    [SerializeField] private GameObject weaponPrefab;
+    [SerializeField] private Button selectButton;
 
     void Awake()
     {
-        WeaponSelectButton.onClick.AddListener(() => spawnWeapon(WeaponP));
-        weaponPickup = WeaponSpawnPoint.GetComponent<WeaponPickup>();
+        selectButton.onClick.AddListener(OnSelect);
     }
 
-    public void spawnWeapon(GameObject weapon)
+    void OnSelect()
     {
-        GameObject sweapon = Instantiate(weapon, WeaponSpawnPoint.position, WeaponSpawnPoint.rotation, WeaponSpawnPoint);
-        weaponPickup.SetWeapon(sweapon.GetComponent<Weapon>());
-        if (WeaponCardContainer != null)
-            WeaponCardContainer.SetActive(false);
-        Time.timeScale = 1f;
-        TutorialManager.Instance.OnTrigger(TutorialTriggerType.WeaponSelected);
+        var weaponObj = Instantiate(weaponPrefab);
+        if (weaponObj.TryGetComponent<Weapon>(out var weapon))
+            PlayerStateMachine.Instance.EquipWeapon(weapon);
+        else
+            Destroy(weaponObj);
+
+        GameStartFlow.Instance.OnWeaponSelected();
     }
 }

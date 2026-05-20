@@ -88,6 +88,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     [SerializeField] private ItemBase startItem;
     [SerializeField] private int startItemCount = 1;
+    public Coroutine timedEffectCoroutine;
     private List<Iinterectable> nearbyInteractables = new List<Iinterectable>();
     public Iinterectable nearbyInteractable => GetClosest();
     public void SetInteractable(Iinterectable interactable)
@@ -162,6 +163,7 @@ public class PlayerStateMachine : MonoBehaviour
             }
         }
         AddpassiveStat<NoiseABright>();
+        AddpassiveStat<HungerThirst>();
         status.OnDie += () => ChangeState<Die>();
         status.StaminaEmpty += () => { isTired = true; };
         ActiveState = Statecaches[typeof(Idle)];
@@ -189,6 +191,9 @@ public class PlayerStateMachine : MonoBehaviour
         status.Stamina = status.MaxStamina;
         status.Hungry  = status.MaxHungry;
         status.Water   = status.MaxWater;
+        status.baseHungerDecreasePerMinute = status.hungerDecreasePerMinute;
+        status.baseWaterDecreasePerMinute  = status.waterDecreasePerMinute;
+        status.baseStaminaRecovery         = status.staminaRecoverey;
 
         stateInit();
         InputBindings.Init(action);
@@ -330,12 +335,31 @@ public class PlayerStateMachine : MonoBehaviour
             case StateType.Attack:
                 {
                     if (!Statecaches[typeof(Attack)].CanEnter()) break;
-                    Collider[] hits = Physics.OverlapSphere(transform.position,
-                         currentWeapon.status.attackRange, 1 << Layercache.Stun);
-                    if (hits.Length > 0)
+
+                    MonsterStateMachine execTarget = null;
+
+                    // 스턴 처형 (기존)
+                    Collider[] stunHits = Physics.OverlapSphere(transform.position,
+                        currentWeapon.status.attackRange, 1 << Layercache.Stun);
+                    if (stunHits.Length > 0)
+                        execTarget = stunHits[0].GetComponentInParent<MonsterStateMachine>();
+
+                    // detection_gauge 50 이하 처형
+                    if (execTarget == null)
+                    {
+                        Collider[] monsterHits = Physics.OverlapSphere(transform.position,
+                            currentWeapon.status.attackRange, 1 << Layercache.Monster);
+                        foreach (var col in monsterHits)
+                        {
+                            var m = col.GetComponentInParent<MonsterStateMachine>();
+                            if (m != null && m.CanBeExecuted()) { execTarget = m; break; }
+                        }
+                    }
+
+                    if (execTarget != null)
                     {
                         var execution = Statecaches[typeof(Execution)] as Execution;
-                        execution.setTarget(hits[0].GetComponentInParent<MonsterStateMachine>());
+                        execution.setTarget(execTarget);
                         ChangeState<Execution>();
                     }
                     else ChangeState<Attack>();

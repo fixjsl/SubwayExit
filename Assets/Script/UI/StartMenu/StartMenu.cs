@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class StartMenu : MonoBehaviour
 {
@@ -14,17 +15,45 @@ public class StartMenu : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private Button     BackButton;
 
+    [Header("Intro Video")]
+    [SerializeField] private GameObject videoPanel;
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private Button skipButton;
+
     void Awake()
     {
         startButton.onClick.AddListener(OnStart);
         settingsButton.onClick.AddListener(OnSettings);
         quitButton.onClick.AddListener(OnQuit);
         BackButton.onClick.AddListener(OnExitSetting);
+
+        if (skipButton != null)
+        {
+            skipButton.onClick.AddListener(LoadGameScene);
+            skipButton.gameObject.SetActive(false);
+        }
+
+        if (videoPlayer != null)
+            videoPlayer.loopPointReached += _ => LoadGameScene();
     }
 
     void OnStart()
     {
-        SceneManager.LoadScene("TutorialScene");
+        if (videoPlayer == null || videoPlayer.clip == null)
+        {
+            LoadGameScene();
+            return;
+        }
+
+        StartMenuPanel.SetActive(false);
+        videoPanel.SetActive(true);
+        skipButton.gameObject.SetActive(true);
+        videoPlayer.Play();
+    }
+
+    void LoadGameScene()
+    {
+        SceneManager.LoadScene("Base&Main1");
     }
 
     void OnSettings()

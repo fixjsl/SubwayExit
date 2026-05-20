@@ -4,30 +4,51 @@ using UnityEngine;
 public class ContainerObject : ItObjectBase
 {
     [SerializeField] private LootTable lootTable;
-    [SerializeField] private ContainerUI containerUI;
     private bool open = false;
     private List<(ItemBase item, int count)> contents;
 
     [SerializeField] private Transform RotatePivot;
+    [SerializeField] private string openMessage = "열기";
+    [SerializeField] private string closeMessage = "닫기";
+
+    [Header("Sound")]
+    [SerializeField] private AudioClip firstOpenSound;
+    [SerializeField] private AudioClip openSound;
+    [SerializeField] private AudioClip closeSound;
 
     public override bool isStuck => false;
-    public override string InteractMessage => open ? $"닫기 [{InputBindings.Interact}]" : $"상자 열기 [{InputBindings.Interact}]";
+    public override string InteractMessage => open ? $"{closeMessage} [{InputBindings.Interact}]" : $"{openMessage} [{InputBindings.Interact}]";
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
+        isInteracting = false;
+
+        if (open)
+        {
+            open = false;
+            ContainerUI.Instance.Close();
+            RefreshPrompt();
+            PlaySound(closeSound);
+            return;
+        }
 
         if (contents == null)
             contents = lootTable != null ? lootTable.Roll() : new List<(ItemBase, int)>();
 
-        isInteracting = false;
-        containerUI.Open(contents);
+        open = true;
+        ContainerUI.Instance.Open(contents);
+        RefreshPrompt();
+        PlayInteractSound(firstOpenSound, openSound);
     }
 
     protected override void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
         if (other.TryGetComponent<PlayerStateMachine>(out _))
-            containerUI.Close();
+        {
+            open = false;
+            ContainerUI.Instance.Close();
+        }
     }
 
 

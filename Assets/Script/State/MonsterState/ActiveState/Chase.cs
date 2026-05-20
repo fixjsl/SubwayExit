@@ -49,7 +49,7 @@ namespace MonsterStates
                 Monster.ChangeState<Return>();
                 return;
             }
-            if (Vector3.Distance(Monster.Targetplayer.transform.position, Monster.transform.position) < Monster.status.battle_range)
+            if (Monster.IsInBattleRange())
             {
                 Monster.ChangeState<Battle>();
             }

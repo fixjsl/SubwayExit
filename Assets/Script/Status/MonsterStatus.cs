@@ -21,7 +21,7 @@ public class MonsterStatus : ScriptableObject
     public float atk_range;
     public float atkdelay;
 
-    public float detect_range;
+    public Vector3 detectHalfExtents;
     private float _detection_gauge;
     public float detection_gauge
     {
@@ -33,11 +33,14 @@ public class MonsterStatus : ScriptableObject
         }
     }
     public float recovery;
+    public float detectionSpeed = 10f;
+    public float instantDetectRange = 10f;
 
-    public float battle_range;
+    public Vector3 battleHalfExtents;
     public float stunTime;
 
     public float knockbackForce;
+    public float minSeparation = 20f;
     public event Action<float> ChangeHP;
     public event Action<float> ChangeDetectionGauge;
     public event Action OnDie;
