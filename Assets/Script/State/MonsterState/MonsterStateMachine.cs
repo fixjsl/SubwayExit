@@ -34,8 +34,13 @@ public class MonsterStateMachine : MonoBehaviour
 
     [Header("��������Ʈ �����ٶ�")]
     [SerializeField]
+<<<<<<< Updated upstream
     public Transform spawnpoint;
     [SerializeField] private MonsterUI monsterUIPrefab;
+=======
+    public Vector3 spawnpoint;
+    public MonsterUI monsterUIPrefab;
+>>>>>>> Stashed changes
     [SerializeField] private Transform hpUIPoint;
     [SerializeField] private Transform detectionUIPoint;
     public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();

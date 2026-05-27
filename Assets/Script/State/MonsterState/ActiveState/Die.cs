@@ -14,12 +14,17 @@ namespace MonsterStates
             Monster.animator.CrossFade(Monster.die, 0.001f);
             Monster.Rb.linearVelocity = Vector3.zero;
             Monster.enabled = false;
+<<<<<<< Updated upstream
             if (Monster.AttackCollider != null) Monster.AttackCollider.enabled = false;
             var col = Monster.GetComponent<Collider>();
             col.isTrigger = true;
             col.enabled = true;
             Monster.gameObject.layer = Layercache.Die;
             if (Monster.Corpse != null) Monster.Corpse.enabled = true;
+=======
+            Monster.monsterUIPrefab.enabled = false;
+            Monster.GetComponent<Collider>().enabled = true;
+>>>>>>> Stashed changes
         }
         public override void Exit()
         {
