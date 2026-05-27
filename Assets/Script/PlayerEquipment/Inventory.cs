@@ -11,6 +11,8 @@ public class Inventory
 
     public event Action OnInventoryChanged;
     public event Action OnQuickSlotsChanged;
+    public event Action<ItemBase> OnFirstAcquire;
+    private HashSet<int> acquiredCodes = new HashSet<int>();
 
     public Inventory(PlayerStatus status)
     {
@@ -33,6 +35,8 @@ public class Inventory
         if (slots.Count >= (int)status.maxSlots) return false;
         slots[key] = num;
         currentWeight += addWeight;
+        if (acquiredCodes.Add(key) && itemBase.firstAcquireImage != null)
+            OnFirstAcquire?.Invoke(itemBase);
         OnInventoryChanged?.Invoke();
         return true;
     }

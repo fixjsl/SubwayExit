@@ -5,6 +5,9 @@ public class GameStartFlow : MonoBehaviour
 {
     public static GameStartFlow Instance { get; private set; }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
+
     [Header("Tutorial Pages")]
     [SerializeField] private GameObject tutorialPanel;
     [SerializeField] private Image tutorialImage;

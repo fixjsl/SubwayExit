@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34925a5307c197429fd457354d17afa, type: 3}
   m_Name: Wolf
   m_EditorClassIdentifier: Assembly-CSharp::MonsterStatus
+  Name: 
   Maxhp: 20
   speed: 25
   chasespeed: 35
@@ -20,7 +21,13 @@ MonoBehaviour:
   atkdelay: 3
   detectHalfExtents: {x: 200, y: 30, z: 20}
   recovery: 3
+  detectionSpeed: 10
+  instantDetectRange: 10
   battleHalfExtents: {x: 100, y: 30, z: 20}
-  stunTime: 0
+  stunTime: 6
   knockbackForce: 0
-  minSeparation: 20
+  minSeparation: 30
+  attackAnimNames:
+  - attack1
+  - attack2
+  - attack3

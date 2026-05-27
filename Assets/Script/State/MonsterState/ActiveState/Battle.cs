@@ -30,14 +30,6 @@ public class Battle : MonsterState
                 return;
             }
             Monster.Rb.linearVelocity = new Vector3(0f, Monster.Rb.linearVelocity.y, 0f);
-            float pX = Monster.Targetplayer.transform.position.x;
-            float mX = Monster.transform.position.x;
-            float minSnapSep = Mathf.Max(Monster.status.atk_range * 1.3f - 0.3f, Monster.status.minSeparation);
-            if (Mathf.Abs(pX - mX) < minSnapSep)
-            {
-                float safeX = pX + (mX >= pX ? minSnapSep : -minSnapSep);
-                Monster.Rb.position = new Vector3(safeX, Monster.Rb.position.y, Monster.Rb.position.z);
-            }
             Monster.animator.CrossFade(Monster.sprint,0.01f);
             delay = Mathf.Max(0.5f, Monster.status.atkdelay + Random.Range(-1f, 1f));
             Timer.Reset();
@@ -86,14 +78,7 @@ public class Battle : MonsterState
 
             float moveX;
 
-            float minSep = Mathf.Max(preferredDist - distThreshold, Monster.status.minSeparation);
-            if (dist < minSep)
-            {
-                float safeX = playerX + (myX >= playerX ? minSep : -minSep);
-                Monster.Rb.position = new Vector3(safeX, Monster.Rb.position.y, Monster.Rb.position.z);
-                moveX = (myX >= playerX) ? 1f : -1f;
-            }
-            else if (dist > preferredDist + distThreshold)
+            if (dist > preferredDist + distThreshold)
             {
                 // �ʹ� �־��� �� �÷��̾� ������ �ٱ�
                 moveX = (playerX >= myX) ? 1f : -1f;

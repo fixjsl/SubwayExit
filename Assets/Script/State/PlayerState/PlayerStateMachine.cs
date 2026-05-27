@@ -15,6 +15,9 @@ public class PlayerStateMachine : MonoBehaviour
 {
 
     public static PlayerStateMachine Instance { get; private set; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
     //플레이어 키입력
     private InputSystem_Actions action;
     //플레이어 객체 및 상태
@@ -35,6 +38,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float MoveInput;
     float lastMoveInput;
     public Light currentLight {get; private set; }
+    public bool IsLightOn { get; private set; } = true;
     public event System.Action<bool> OnLightToggle;
     public PlayerState ActiveState { get; private set; }
     public List<PlayerState> PassiveStates { get; private set; } = new List<PlayerState>();
@@ -117,6 +121,7 @@ public class PlayerStateMachine : MonoBehaviour
         action.PlayerAction.LightTogle.performed += _ => {
             bool next = currentLight == null || !currentLight.enabled;
             if (currentLight != null) currentLight.enabled = next;
+            IsLightOn = next;
             Debug.Log($"LightToggle{next}");
             OnLightToggle?.Invoke(next);
         };
@@ -175,7 +180,9 @@ public class PlayerStateMachine : MonoBehaviour
     void Awake() {
         if(Instance == null) Instance = this;
         inventory = new Inventory(status);
-        inventory.AddItem(startItem, startItemCount);
+        status.curMaxCarryWeight = status.maxCarryWeight;
+        if (startItem != null)
+            inventory.AddItem(startItem, startItemCount);
         currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
         Col = GetComponent<BoxCollider>();
@@ -340,17 +347,21 @@ public class PlayerStateMachine : MonoBehaviour
 
                     // 스턴 처형 (기존)
                     Collider[] stunHits = Physics.OverlapSphere(transform.position,
-                        currentWeapon.status.attackRange, 1 << Layercache.Stun);
+                        currentWeapon.status.executionRange, 1 << Layercache.Stun);
                     if (stunHits.Length > 0)
+                    {
+                        Debug.Log("WeakAttack");
                         execTarget = stunHits[0].GetComponentInParent<MonsterStateMachine>();
+                    }
 
                     // detection_gauge 50 이하 처형
                     if (execTarget == null)
                     {
                         Collider[] monsterHits = Physics.OverlapSphere(transform.position,
-                            currentWeapon.status.attackRange, 1 << Layercache.Monster);
+                            currentWeapon.status.executionRange, 1 << Layercache.Monster);
                         foreach (var col in monsterHits)
                         {
+                            
                             var m = col.GetComponentInParent<MonsterStateMachine>();
                             if (m != null && m.CanBeExecuted()) { execTarget = m; break; }
                         }
@@ -360,6 +371,7 @@ public class PlayerStateMachine : MonoBehaviour
                     {
                         var execution = Statecaches[typeof(Execution)] as Execution;
                         execution.setTarget(execTarget);
+                        Debug.Log("Assasino");
                         ChangeState<Execution>();
                     }
                     else ChangeState<Attack>();
@@ -600,4 +612,14 @@ public class PlayerStateMachine : MonoBehaviour
     }
     // ========== 애니메이션 이벤트 ==========
 
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        if (currentWeapon == null) return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, currentWeapon.status.executionRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, currentWeapon.status.attackRange);
+    }
+#endif
 }

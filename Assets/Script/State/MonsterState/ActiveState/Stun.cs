@@ -14,12 +14,14 @@ namespace MonsterStates
         {
             Monster.gameObject.layer = Layercache.Stun;
             Monster.Rb.linearVelocity = Vector3.zero;
+            Monster.animator.speed = Monster.StunAnimLength / Mathf.Max(Monster.status.stunTime, 0.01f);
             Monster.animator.CrossFade(Monster.stun, 0.01f);
             stunTimer.Reset();
         }
 
         public override void Exit()
         {
+            Monster.animator.speed = 1f;
             Monster.gameObject.layer = Layercache.Monster;
         }
         public override void LogicUpdate()
@@ -34,9 +36,6 @@ namespace MonsterStates
             }
         }
 
-        public override void HandleDamage(float Damage)
-        {
-            
-        }
+
     }
 }

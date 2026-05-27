@@ -13,8 +13,6 @@ public class Execution : PlayerState
     {
         target = monster;
     }
-    private const float ExecutionOffset = 1.5f;
-
     public override void Enter()
     {
         canChanged = false;
@@ -25,7 +23,8 @@ public class Execution : PlayerState
 
         if (target != null)
         {
-            Vector3 execPos = player.transform.position + player.transform.forward * ExecutionOffset;
+            float offset = target.status.minSeparation;
+            Vector3 execPos = player.transform.position + player.transform.forward * offset;
             execPos.y = target.Rb.position.y;
             target.Rb.position = execPos;
             target.Rb.linearVelocity = Vector3.zero;

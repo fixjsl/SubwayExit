@@ -7,6 +7,9 @@ public class ContainerUI : MonoBehaviour
 {
     public static ContainerUI Instance { get; private set; }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
+
     [SerializeField] private GameObject panel;
     [SerializeField] private Transform slotParent;
     [SerializeField] private ContainerSlotUI slotPrefab;
@@ -66,9 +69,14 @@ public class ContainerUI : MonoBehaviour
         if (currentContents == null || index >= currentContents.Count) return;
         var (item, count) = currentContents[index];
 
-        if (!PlayerStateMachine.Instance.inventory.AddItem(item, count)) return;
+        if (!PlayerStateMachine.Instance.inventory.AddItem(item, count))
+        {
+            Debug.LogWarning($"[Container] AddItem 실패 — {item.name} x{count} | 현재무게: {PlayerStateMachine.Instance.inventory.currentWeight} | 슬롯수: {PlayerStateMachine.Instance.inventory.slots.Count}");
+            return;
+        }
 
         currentContents.RemoveAt(index);
+        InventoryUI.Instance.HideContextMenu();
         Refresh();
     }
 
@@ -87,7 +95,7 @@ public class ContainerUI : MonoBehaviour
                 currentContents[i].item,
                 currentContents[i].count,
                 () => TakeItem(idx),
-                pos => InventoryUI.Instance.ShowContextMenu(capturedItem, pos, () => UseFromContainer(idx))
+                pos => InventoryUI.Instance.ShowContextMenu(capturedItem, pos, () => UseFromContainer(idx), showDrop: false)
             );
             activeSlots.Add(slot);
         }

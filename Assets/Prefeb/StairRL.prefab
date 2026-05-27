@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6650731741856505704}
   - component: {fileID: 4077033232478338709}
   - component: {fileID: 760663387534625716}
-  - component: {fileID: 282930934642133777}
   m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
@@ -91,27 +90,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &282930934642133777
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 40594034585470759}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &239226215384840490
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,13 +510,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StairObject
   stairOffset: {fileID: 6346273365590502118}
-  stairGravityFactor: 4
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  stepHeight: 30
-  stepCheckDist: 10
-  stepClimbSpeed: 50
+  stairBottom: {fileID: 6346273365590502118}
+  stairTop: {fileID: 9040925646312728571}
+  dismountYOffset: 0.5
 --- !u!1 &2546365407164031187
 GameObject:
   m_ObjectHideFlags: 0
@@ -1025,7 +999,6 @@ GameObject:
   - component: {fileID: 1147813163669943482}
   - component: {fileID: 8106327229802944246}
   - component: {fileID: 8410498234010503196}
-  - component: {fileID: 5577417130856907944}
   m_Layer: 3
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -1105,27 +1078,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5577417130856907944
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6242800024334857439}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6685424404018124023
 GameObject:
   m_ObjectHideFlags: 0
@@ -1603,8 +1555,8 @@ Transform:
   m_GameObject: {fileID: 9005246261781498733}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -22.7, y: 1.15, z: 6.91}
-  m_LocalScale: {x: 1.9, y: 1.3, z: 1.5}
+  m_LocalPosition: {x: -22.7, y: -3.2, z: 6.91}
+  m_LocalScale: {x: 1.9, y: 1.1, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1040398640954041490}

@@ -11,8 +11,8 @@ namespace MonsterStates
         {
             Monster.Rb.linearVelocity = Vector3.zero;
             Monster.Rb.AddForce(Monster.transform.forward * 20f, ForceMode.Impulse);
-            int randomIndex = Random.Range(0, Monster.attackHashes.Length);
-            Monster.animator.CrossFade(Monster.attackHashes[randomIndex], 0.01f);
+            int randomIndex = Random.Range(0, Monster.AttackHashes.Length);
+            Monster.animator.CrossFade(Monster.AttackHashes[randomIndex], 0.01f);
         }
         public override void Exit()
         {

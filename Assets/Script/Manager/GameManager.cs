@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
+
     public GameSettings settings { get; private set; } = new GameSettings();
 
     [SerializeField] private AudioMixer audioMixer;
@@ -35,6 +38,7 @@ public class GameManager : MonoBehaviour
 
     public event Action<int, int> ChangeTime; // hour, minute
     public event Action<int, int> ChangeDay; // hour, day
+    public event Action OnGameClear;
     private string savePath => Path.Combine(Application.persistentDataPath, "settings.json");
 
     void Awake()
@@ -123,6 +127,11 @@ public class GameManager : MonoBehaviour
     void SetMixerVolume(string param, float value)
     {
         audioMixer.SetFloat(param, Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f);
+    }
+
+    public void GameClear()
+    {
+        OnGameClear?.Invoke();
     }
 
     public void TutorialStart()

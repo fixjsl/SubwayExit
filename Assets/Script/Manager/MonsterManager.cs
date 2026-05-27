@@ -6,6 +6,9 @@ public enum MonsterType {}
 public class MonsterManager : MonoBehaviour
 {
     public static MonsterManager Instance { get; private set; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
     // Ȱ��ȭ�� ���� ����Ʈ
     private List<MonsterStateMachine> activeMonsters = new List<MonsterStateMachine>();
 

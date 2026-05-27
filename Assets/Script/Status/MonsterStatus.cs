@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewMonsterStatus", menuName = "MonsterStatus")]
 public class MonsterStatus : ScriptableObject
 {
+    public string Name;
     public float Maxhp;
     private float hp;
     public float Hp
@@ -41,6 +42,10 @@ public class MonsterStatus : ScriptableObject
 
     public float knockbackForce;
     public float minSeparation = 20f;
+    public string[] attackAnimNames = { "attack1", "attack2", "attack3" };
+    private int[] _attackHashes;
+    public int[] AttackHashes => _attackHashes ??= System.Array.ConvertAll(attackAnimNames, UnityEngine.Animator.StringToHash);
+
     public event Action<float> ChangeHP;
     public event Action<float> ChangeDetectionGauge;
     public event Action OnDie;

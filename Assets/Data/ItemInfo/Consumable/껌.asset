@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0df129ff60794349ae45b001ce8e4a0, type: 3}
   m_Name: "\uAECC"
   m_EditorClassIdentifier: Assembly-CSharp::TimedEffectItem
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ec002b55de9f8aa4aa5f2ecd7e45e9c6, type: 3}
+  firstAcquireImage: {fileID: 0}
   itemcode: 33
   itemType: 1
+  description: 
   maxamount: 99
   weight: 0.01
   materials: []

@@ -55,7 +55,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.2130274
+      - time: 0.20969404
         functionName: OnAttackCollider
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -256,7 +256,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0.9598719
-        functionName: publicvoidOnAnimationFinished()
+        functionName: OnAnimationFinished
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

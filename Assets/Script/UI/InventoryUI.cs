@@ -8,6 +8,9 @@ public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance { get; private set; }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
+
     [SerializeField] private GameObject panel;
     [SerializeField] private Transform slotParent;
     [SerializeField] private ContainerSlotUI slotPrefab;
@@ -54,6 +57,7 @@ public class InventoryUI : MonoBehaviour
         panel.SetActive(true);
         Refresh();
         contextMenu.Hide();
+        SetCombatInput(false);
     }
 
     [SerializeField] private float inventorySideOffset = 635f;
@@ -75,6 +79,15 @@ public class InventoryUI : MonoBehaviour
         panel.SetActive(false);
         contextMenu.Hide();
         ItemInfoUI.Instance.Hide();
+        SetCombatInput(true);
+    }
+
+    private void SetCombatInput(bool enabled)
+    {
+        System.Action<InputAction> toggle = enabled ? a => a.Enable() : a => a.Disable();
+        toggle(InputBindings.GetAction("Attack"));
+        toggle(InputBindings.GetAction("Dodge"));
+        toggle(InputBindings.GetAction("Guard"));
     }
 
     void Refresh()
@@ -99,11 +112,13 @@ public class InventoryUI : MonoBehaviour
         if (weightText != null) weightText.text = $"{current:F1} / {max:F1}";
     }
 
-    public void ShowContextMenu(ItemBase item, Vector2 screenPos, System.Action onUse = null)
+    public void ShowContextMenu(ItemBase item, Vector2 screenPos, System.Action onUse = null, bool showDrop = true)
     {
         ItemInfoUI.Instance.Hide();
-        contextMenu.Show(item, screenPos, inventory, onUse);
+        contextMenu.Show(item, screenPos, inventory, onUse, showDrop);
     }
+
+    public void HideContextMenu() => contextMenu.Hide();
 
     void OnDestroy()
     {

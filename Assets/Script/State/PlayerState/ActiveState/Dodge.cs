@@ -7,7 +7,7 @@ public class Dodge : PlayerState
     private float cooltime;
     private float lastTime;
     
-    private Vector3 DodgeRange = new Vector3 (30,0,0);
+    private Vector3 dodgeVelocity;
 
     public Dodge(PlayerStateMachine stateMachine) : base(stateMachine)
     {
@@ -23,22 +23,20 @@ public class Dodge : PlayerState
     }
     public override void Enter()
     {
-
         lastTime = Time.time;
         canChanged = false;
-        player.gameObject.layer = LayerMask.NameToLayer("Dodge");
+        player.gameObject.layer = Layercache.Dodge;
+        Physics.IgnoreLayerCollision(Layercache.Dodge, Layercache.Monster, true);
         player.status.UseStamina(player.status.DodgeCost);
-        player.animator.applyRootMotion = true;
-        player.Rb.isKinematic = false;
         player.animator.SetLayerWeight(1, 0f);
         player.animator.CrossFade(player.dodge, 0.15f);
-
+        dodgeVelocity = new Vector3(player.transform.forward.x * 60f, 0f, 0f);
     }
 
     public override void Exit()
     {
-        player.gameObject.layer = LayerMask.NameToLayer("Player");
-        player.animator.applyRootMotion = false;
+        player.gameObject.layer = Layercache.Player;
+        Physics.IgnoreLayerCollision(Layercache.Dodge, Layercache.Monster, false);
         player.animator.SetLayerWeight(1, 1f);
         player.Rb.linearVelocity = new Vector3(0f, player.Rb.linearVelocity.y, 0f);
     }
@@ -46,11 +44,11 @@ public class Dodge : PlayerState
 
     public override void LogicUpdate()
     {
-        player.Rb.linearVelocity = DodgeRange;
     }
 
     public override void PhysicalUpdate()
     {
+        player.Rb.linearVelocity = new Vector3(dodgeVelocity.x, player.Rb.linearVelocity.y, 0f);
     }
     public override void OnAnimationFinished()
     {

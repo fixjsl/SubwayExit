@@ -6,6 +6,9 @@ public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance { get; private set; }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
+
     private TutorialTriggerType? pendingTrigger = null;
     private MonsterStateMachine tutorialWolf;
 

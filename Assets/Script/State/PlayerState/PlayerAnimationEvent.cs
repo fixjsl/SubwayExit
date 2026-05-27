@@ -29,7 +29,7 @@ public class PlayerAnimationEvent : MonoBehaviour
     public void OffAttackCollider() => player.OffAttackColider();
     public void OnEndInvincible()
     {
-        player.gameObject.layer = LayerMask.NameToLayer("Player");
+        player.gameObject.layer = Layercache.Player;
     }
     public void OnDamage()
     {

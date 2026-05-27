@@ -63,10 +63,9 @@ public class Attack : PlayerState
         player.OpenAttackCancelWindow(withCombo: ComboIndex < 2);
     }
 
-    // OnAnimationFinished 기본 구현(canChanged=true)을 막음 - OnAnimationFinishedAt만 사용
     public override void OnAnimationFinished()
     {
-        Debug.LogWarning($"[Attack] OnAnimationFinished 차단됨 (ComboIndex: {ComboIndex}) - 애니메이터 이벤트를 OnAnimationFinishedAt으로 교체하세요");
+        OnAnimationFinishedAt(ComboIndex);
     }
 
     // 애니메이션 이벤트: 현재 공격 애니메이션 종료 (파라미터로 어떤 어택인지 식별)

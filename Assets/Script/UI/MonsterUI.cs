@@ -46,6 +46,7 @@ public class MonsterUI : MonoBehaviour
         _cg.alpha = 0f;
 
         monster.status.ChangeHP += OnHPChanged;
+        monster.status.OnDie += OnMonsterDie;
         monster.status.ChangeDetectionGauge += (gauge) =>
         {
             if (detectionFill != null)
@@ -161,9 +162,17 @@ public class MonsterUI : MonoBehaviour
         hpFill.fillAmount = newFill;
     }
 
+    void OnMonsterDie()
+    {
+        Destroy(gameObject);
+    }
+
     void OnDestroy()
     {
         if (monster != null)
+        {
             monster.status.ChangeHP -= OnHPChanged;
+            monster.status.OnDie -= OnMonsterDie;
+        }
     }
 }

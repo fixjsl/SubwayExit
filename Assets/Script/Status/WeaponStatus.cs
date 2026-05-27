@@ -3,24 +3,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WeaponStatus", menuName = "Scriptable Objects/WeaponStatus")]
 public class WeaponStatus : ScriptableObject
 {
-    [Header("±âº» ½ºÅÈ")]
+    [Header("ï¿½âº» ï¿½ï¿½ï¿½ï¿½")]
     public int attack;
     public float attackSpeed;
     public float attackRange;
+    public float executionRange;
     public float execution_m;
-    [Header("Æ¯¼ö È¿°ú")]
+    [Header("Æ¯ï¿½ï¿½ È¿ï¿½ï¿½")]
     public int bloodStrenth;
     public float stunStrength;
     public float GuardStrength;
 
-    [Header("½ºÅÂ¹Ì³ª ¼Ò¸ð")]
+    [Header("ï¿½ï¿½ï¿½Â¹Ì³ï¿½ ï¿½Ò¸ï¿½")]
     public int attackStamina;
     public int guardStamina;
     public int parryStamina;
 
-    [Header("¾Ö´Ï¸ÞÀÌ¼Ç")]
-    public AnimatorOverrideController WeaponAnimations; // ¹«±âº° ¸ð¼Ç
+    [Header("ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½")]
+    public AnimatorOverrideController WeaponAnimations; // ï¿½ï¿½ï¿½âº° ï¿½ï¿½ï¿½
 
-    public Vector3 holdPosition; // ÀâÈ÷´Â À§Ä¡
-    public Quaternion holdRotation; // È¸Àü°ª
+    public Vector3 holdPosition; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+    public Quaternion holdRotation; // È¸ï¿½ï¿½ï¿½ï¿½
 }

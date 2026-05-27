@@ -10,10 +10,10 @@ using System.Collections;
 public class MonsterStateMachine : MonoBehaviour
 {
     [SerializeField] private LayerMask obstacleMask;
-    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] protected LayerMask playerLayer;
     public Coroutine DetectCorutine { get; private set; }
     public PlayerStateMachine Targetplayer {  get; private set; }
-    public MonsterState ActiveState { get; private set; }
+    public MonsterState ActiveState { get; protected set; }
     public MonsterState PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
     public Animator animator { get; private set; }
@@ -26,13 +26,11 @@ public class MonsterStateMachine : MonoBehaviour
     public readonly int die = Animator.StringToHash("die");
     public readonly int moveTurn = Animator.StringToHash("moveTurn");
     public readonly int stun = Animator.StringToHash("stun");
-    public readonly int[] attackHashes = {
-    Animator.StringToHash("attack1"),
-    Animator.StringToHash("attack2"),
-    Animator.StringToHash("attack3")
-    };
+    public int[] AttackHashes => status.AttackHashes;
     [SerializeField] private LootTable lootTable;
     [SerializeField] private ItemPickup itemPickupPrefab;
+    [SerializeField] private ContainerObject corpse;
+    public ContainerObject Corpse => corpse;
 
     [Header("��������Ʈ �����ٶ�")]
     [SerializeField]
@@ -43,12 +41,14 @@ public class MonsterStateMachine : MonoBehaviour
     public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
     [SerializeField] private float hitAnimLength = 0.5f;
     public float HitAnimLength => hitAnimLength;
+    [SerializeField] private float stunAnimLength = 1f;
+    public float StunAnimLength => stunAnimLength;
     [SerializeField] private Collider attackCollider; // �ν����� �Ҵ��
 
     public Collider AttackCollider => attackCollider; // �ܺο��� �б� ����
-    public void stateInit()
+    public virtual void stateInit()
     {
-        var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(MonsterState)) && !t.IsAbstract);
+        var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(MonsterState)) && !t.IsAbstract && t.Namespace == "MonsterStates");
         Debug.Log($"�߰ߵ� ���� ����: {StateT.Count()}");
         foreach (var type in StateT)
         {
@@ -66,15 +66,16 @@ public class MonsterStateMachine : MonoBehaviour
         ActiveState = Statecaches[typeof(MonsterStates.Idle)];
         ActiveState.Enter();
     }
-    void Awake()
+    protected virtual void Awake()
     {
-        
+
         status = Instantiate(status);
 
         status.Hp = status.Maxhp;
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        status.OnDie += () => ChangeState<MonsterStates.Die>();
+        if (corpse != null) corpse.enabled = false;
+        status.OnDie += OnDieHandler;
         status.OnDie += SpawnLoot;
         stateInit();
 
@@ -101,11 +102,11 @@ public class MonsterStateMachine : MonoBehaviour
         Rb.isKinematic = false;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (!IsFrozen) ActiveState?.LogicUpdate();
     }
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (!IsFrozen) ActiveState?.PhysicalUpdate();
     }
@@ -123,8 +124,11 @@ public class MonsterStateMachine : MonoBehaviour
         ActiveState = Statecaches[typeof(T)];
         ActiveState?.Enter();
     }
-    public void OnHit(float Damage, float stunStrength)
+    public virtual void OnHit(float Damage, float stunStrength)
     {
+        status.detection_gauge = 100f;
+        if (Targetplayer == null) SetTarget(PlayerStateMachine.Instance);
+
         if (ActiveState.isBlock)
         {
             ActiveState?.HandleDamage(Damage);
@@ -134,7 +138,6 @@ public class MonsterStateMachine : MonoBehaviour
         hitState.SetHitduration(stunStrength);
         ChangeState<MonsterStates.Hit>();
         ActiveState?.HandleDamage(Damage);
-
     }
     public void OnExeHit(float Damage)
     {
@@ -145,11 +148,11 @@ public class MonsterStateMachine : MonoBehaviour
             ChangeState<Battle>();
         }
     }
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         StartDetection();
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         StopDetection();
     }
@@ -183,11 +186,10 @@ public class MonsterStateMachine : MonoBehaviour
                 Targetplayer = hitPlayers[0].GetComponent<PlayerStateMachine>();
 
                 // 2. ���⼭ ���� �츮�� ®�� ��/���� ��� �Լ��� �����ϴ�.
-                // 근접 + 빛 → 즉시 감지
+                // 전투범위 안 + 빛 → 즉시 감지 / 탐지범위 안 → 게이지 누적
                 float dist = Vector3.Distance(transform.position, Targetplayer.transform.position);
                 bool instantDetect = Targetplayer.status.currentbrighten > 0f
-                    && dist <= status.instantDetectRange
-                    && !Physics.Linecast(transform.position, Targetplayer.transform.position, obstacleMask);
+                    && dist <= status.battleHalfExtents.x;
 
                 if (instantDetect)
                 {
@@ -205,7 +207,6 @@ public class MonsterStateMachine : MonoBehaviour
                 // 감지 게이지 초과 시 Chase 전환
                 if (status.detection_gauge >= 100f)
                 {
-                    status.detection_gauge = 0f;
                     if (ActiveState is MonsterStates.Idle || ActiveState is MonsterStates.Move || ActiveState is MonsterStates.Return)
                     {
                         ChangeState<Chase>();
@@ -270,16 +271,21 @@ public class MonsterStateMachine : MonoBehaviour
         Targetplayer = target;
     }
 
-    public void LoseTarget()
+    public virtual void LoseTarget()
     {
         Targetplayer = null;
         // � ���¿� �ֵ� Ÿ���� ������ ����
         ChangeState<Return>();
     }
 
-    public void ChangeStun()
+    public virtual void ChangeStun()
     {
         ChangeState<Stun>();
+    }
+
+    protected virtual void OnDieHandler()
+    {
+        ChangeState<MonsterStates.Die>();
     }
 
     private void SpawnLoot()
@@ -307,7 +313,7 @@ public class MonsterStateMachine : MonoBehaviour
         if (debugMode) StartCoroutine(DebugStatusCoroutine());
     }
 
-    private IEnumerator DebugStatusCoroutine()
+    protected virtual IEnumerator DebugStatusCoroutine()
     {
         var wait = new WaitForSeconds(0.5f);
         while (true)
@@ -319,6 +325,8 @@ public class MonsterStateMachine : MonoBehaviour
                 ? Vector3.Distance(transform.position, Targetplayer.transform.position)
                 : -1f;
 
+            float brighten = Targetplayer != null ? Targetplayer.status.currentbrighten : -1f;
+            bool hasLOS = Targetplayer != null && !Physics.Linecast(transform.position, Targetplayer.transform.position, obstacleMask);
             Debug.Log(
                 $"[MONSTER DEBUG] {gameObject.name}\n" +
                 $"  ActiveState     : {ActiveState?.GetType().Name ?? "null"}\n" +
@@ -326,6 +334,8 @@ public class MonsterStateMachine : MonoBehaviour
                 $"  DetectionGauge  : {status.detection_gauge:F1} / 100\n" +
                 $"  Target          : {targetName}\n" +
                 $"  TargetDist      : {(dist >= 0 ? dist.ToString("F1") : "N/A")}\n" +
+                $"  CurBrighten     : {(brighten >= 0 ? brighten.ToString("F3") : "N/A")}\n" +
+                $"  HasLOS          : {(Targetplayer != null ? hasLOS.ToString() : "N/A")}\n" +
                 $"  DetectRange     : {status.detectHalfExtents}\n" +
                 $"  BattleRange     : {status.battleHalfExtents}\n" +
                 $"  --- 물리 ---\n" +

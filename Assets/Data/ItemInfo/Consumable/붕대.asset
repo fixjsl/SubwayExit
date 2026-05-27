@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f813d826002ca6b45bcb1b8a8f3248af, type: 3}
+  m_Name: "\uBD95\uB300"
+  m_EditorClassIdentifier: Assembly-CSharp::HealItem
+  icon: {fileID: 21300000, guid: c6db5c16db4d14448be017802a946877, type: 3}
+  firstAcquireImage: {fileID: 21300000, guid: f0fc77eac9c2e1a40a0270d7ecb273af, type: 3}
+  itemcode: 31
+  itemType: 1
+  description: 
+  maxamount: 5
+  weight: 0.1
+  materials:
+  - item: {fileID: 11400000, guid: 91501aaf3449cad4e9889e4b26927d12, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: 0fd0284b3da48c84f8f5cb33fad6f29a, type: 2}
+    amount: 3
+  - item: {fileID: 11400000, guid: b74e5893af5f28a4aa4964f4aa4750fe, type: 2}
+    amount: 1
+  healAmount: 15

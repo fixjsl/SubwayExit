@@ -5,6 +5,9 @@ public class ItemInfoUI : MonoBehaviour
 {
     public static ItemInfoUI Instance { get; private set; }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
+
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text itemNameText;
     [SerializeField] private TMP_Text itemTypeText;

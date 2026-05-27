@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 668d7ee20705af9408e06f2c707c69a0, type: 3}
   m_Name: "\uC0DD\uC218"
   m_EditorClassIdentifier: Assembly-CSharp::Water
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 81126bc33ef336f488b59d0edfb6a01b, type: 3}
+  firstAcquireImage: {fileID: 0}
   itemcode: 33
   itemType: 1
+  description: 
   maxamount: 99
   weight: 0.5
   materials:

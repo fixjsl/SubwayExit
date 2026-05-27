@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStatus
   attack: 10
   attackSpeed: 1.5
-  attackRange: 2
+  attackRange: 2.9
+  executionRange: 24
   execution_m: 2.5
   bloodStrenth: 3
-  stunStrength: 1
+  stunStrength: 0.7
   GuardStrength: 0.4
   attackStamina: 5
   guardStamina: 5

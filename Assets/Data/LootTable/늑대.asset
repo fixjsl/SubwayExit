@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0c09bd870aaa8049950d05574f5b359, type: 3}
+  m_Name: 늑대
+  m_EditorClassIdentifier: Assembly-CSharp::LootTable
+  guaranteedItems:
+  - item: {fileID: 11400000, guid: 5c597c6f199f37345870c60e860bfcc0, type: 2}
+    chance: 1
+    minCount: 1
+    maxCount: 3
+  randomItems:
+  - item: {fileID: 11400000, guid: 21ad969a45f06434f8f88248daf11b65, type: 2}
+    chance: 0.2
+    minCount: 1
+    maxCount: 2

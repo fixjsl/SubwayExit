@@ -59,7 +59,6 @@ public class NoiseABright : PassiveState
     }
     private void UpdateBrighten()
     {
-        if (light == null) return;
-        player.status.currentbrighten = light.enabled ? light.intensity : 0f;
+        player.status.currentbrighten = player.IsLightOn ? 1f : 0f;
     }
 }

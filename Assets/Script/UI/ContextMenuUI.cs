@@ -22,7 +22,7 @@ public class ContextMenuUI : MonoBehaviour
         dropBtn.onClick.AddListener(Drop);
     }
 
-    public void Show(ItemBase item, Vector2 screenPos, Inventory inv, System.Action onUse = null)
+    public void Show(ItemBase item, Vector2 screenPos, Inventory inv, System.Action onUse = null, bool showDrop = true)
     {
         currentItem = item;
         inventory = inv;
@@ -33,6 +33,7 @@ public class ContextMenuUI : MonoBehaviour
         quickSlot1Btn.gameObject.SetActive(isConsumable);
         quickSlot2Btn.gameObject.SetActive(isConsumable);
         useBtn.gameObject.SetActive(isConsumable);
+        dropBtn.gameObject.SetActive(showDrop);
 
         panel.SetActive(true);
     }

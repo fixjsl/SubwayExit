@@ -22,6 +22,12 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
         TextObject.SetActive(false);
     }
 
+    void LateUpdate()
+    {
+        if (TextObject.activeSelf)
+            TextObject.transform.rotation = Camera.main.transform.rotation;
+    }
+
 
     public void Oninterect(Vector3 interacterPosition)
     {
@@ -52,6 +58,8 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!enabled) return;
+        if(isInteracting) return;
         if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
         currentPlayer = player;
         player.SetInteractable(this);
@@ -79,6 +87,21 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
     protected void PlayInteractSound(AudioClip firstClip, AudioClip repeatClip)
     {
         PlaySound(hasInteracted ? repeatClip : firstClip);
+    }
+
+    private void OnEnable()
+    {
+        var col = GetComponent<Collider>();
+        if (col == null) return;
+        var player = PlayerStateMachine.Instance;
+        if (player == null) return;
+        if (col.bounds.Contains(player.transform.position))
+        {
+            currentPlayer = player;
+            player.SetInteractable(this);
+            promptText.text = InteractMessage;
+            TextObject.SetActive(true);
+        }
     }
 
     private void OnDisable()

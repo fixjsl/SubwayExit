@@ -22,7 +22,7 @@ public class Doorcs : ItObjectBase
 
     private void Awake()
     {
-        closedRot = transform.rotation;
+        closedRot = offset.rotation;
         targetRot = closedRot;
         doorColliders = offset.GetComponentsInChildren<Collider>(true);
     }
@@ -75,9 +75,6 @@ public class Doorcs : ItObjectBase
 
         offset.transform.rotation = Quaternion.RotateTowards(
             offset.transform.rotation, targetRot, 180f * Time.deltaTime);
-
-        if (triggerCollider != null)
-            triggerCollider.transform.localRotation = Quaternion.identity;
 
         if (offset.transform.rotation == targetRot)
         {
