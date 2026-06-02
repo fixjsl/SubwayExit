@@ -15,8 +15,8 @@ public class Die : PlayerState
         player.Rb.isKinematic = true;
         player.gameObject.layer = Layercache.Die;
         player.OnDisable();
-        player.status.Chance--;
-        if (player.status.Chance <=0)
+        player.status.Chance--;     
+        if (player.status.Chance >0)
             player.StartCoroutine(RespawnRoutine());
         else
             GameManager.Instance.GameOver();
