@@ -20,11 +20,22 @@ public class TimedEffectItem : ItemBase
     public bool modifyStaminaRecovery;
     public float staminaRecoveryMultiplier = 1f;
 
-    public override void OnUse(PlayerStateMachine player)
+    public override string GetEffectDescription()
+    {
+        var parts = new System.Collections.Generic.List<string>();
+        parts.Add($"{duration}초 동안");
+        if (modifyHunger) parts.Add($"배고픔 감소 x{hungerDecreaseMultiplier}");
+        if (modifyThirst) parts.Add($"수분 감소 x{thirstDecreaseMultiplier}");
+        if (modifyStaminaRecovery) parts.Add($"스태미나 회복 x{staminaRecoveryMultiplier}");
+        return string.Join("  ", parts);
+    }
+
+    public override bool OnUse(PlayerStateMachine player)
     {
         if (player.timedEffectCoroutine != null)
             player.StopCoroutine(player.timedEffectCoroutine);
         player.timedEffectCoroutine = player.StartCoroutine(ApplyEffect(player));
+        return true;
     }
 
     private IEnumerator ApplyEffect(PlayerStateMachine player)

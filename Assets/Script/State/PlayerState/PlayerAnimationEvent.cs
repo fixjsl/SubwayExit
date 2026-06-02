@@ -25,6 +25,12 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         player.ActiveState?.OnAnimationFinishedAt(attackIndex);
     }
+    public void OnFootstep()
+    {
+        var clip = (player.isSprint && !player.isTired) ? player.footstepSprint : player.footstepWalk;
+        player.PlaySFX(clip);
+    }
+
     public void OnAttackCollider() => player.OnAttackColider();
     public void OffAttackCollider() => player.OffAttackColider();
     public void OnEndInvincible()

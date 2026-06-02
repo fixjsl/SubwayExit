@@ -15,7 +15,6 @@ public class ContainerSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void Setup(ItemBase item, int count, System.Action onLeft, System.Action<Vector2> onRight = null)
     {
-<<<<<<< Updated upstream
         currentItem = item;
         icon.sprite = item.icon;
         countText.text = count.ToString();
@@ -45,13 +44,5 @@ public class ContainerSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
     private Vector2 GetSlotRightScreenPos()
     {
         return RectTransformUtility.WorldToScreenPoint(null, infoAnchor.position);
-=======
-        icon.sprite = item.icon;
-        icon.color = Color.white;
-
-        countText.text =  count.ToString();
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClick?.Invoke());
->>>>>>> Stashed changes
     }
 }

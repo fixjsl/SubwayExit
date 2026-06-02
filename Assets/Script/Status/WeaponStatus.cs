@@ -24,4 +24,8 @@ public class WeaponStatus : ScriptableObject
 
     public Vector3 holdPosition; // ������ ��ġ
     public Quaternion holdRotation; // ȸ����
+
+    [Header("SFX")]
+    public AudioClip attackSound;
+    public AudioClip parrySound;
 }

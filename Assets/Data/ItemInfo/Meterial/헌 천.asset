@@ -16,7 +16,8 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 115
   itemType: 2
-  description: 
+  description: 찢어진 원단.
   maxamount: 99
   weight: 0
+  canBurnAsFuel: 0
   materials: []

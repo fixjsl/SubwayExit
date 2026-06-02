@@ -19,6 +19,7 @@ public class Parry: PlayerState
         IsInParryWindow = true;
         parryTimer.Reset();
         player.animator.CrossFade(player.parrying, 0.02f);
+        player.PlaySFX(player.currentWeapon?.status.parrySound);
         player.status.UseStamina(player.currentWeapon.status.parryStamina);
         player.ParrySuccess += OnParrySuccess;
     }

@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 101
   itemType: 2
-  description: 
+  description: 날카로운 파편.
   maxamount: 99
   weight: 0.08
   materials: []

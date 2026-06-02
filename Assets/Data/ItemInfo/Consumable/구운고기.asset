@@ -18,6 +18,7 @@ MonoBehaviour:
   itemType: 1
   description: 
   maxamount: 99
-  weight: 0
+  weight: 0.5
+  canBurnAsFuel: 0
   materials: []
-  FillingAmount: 50
+  FillingAmount: 15

@@ -7,7 +7,19 @@ class CraftingTable : ItObjectBase
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        CraftingUI.Instance.Open();
+        if (CraftingUI.Instance.IsOpen)
+            CraftingUI.Instance.Close();
+        else
+            CraftingUI.Instance.Open();
         isInteracting = false;
+    }
+        protected override void OnTriggerExit(Collider other)
+    {
+        base.OnTriggerExit(other);
+        if (other.TryGetComponent<PlayerStateMachine>(out _))
+        {
+            if (CraftingUI.Instance.IsOpen)
+                CraftingUI.Instance.Close();
+        }
     }
 }

@@ -7,8 +7,11 @@ public class HealItem : ItemBase
 
     private void Reset() => itemType = ItemType.Consumable;
 
-    public override void OnUse(PlayerStateMachine player)
+    public override bool OnUse(PlayerStateMachine player)
     {
         player.status.Hp += healAmount;
+        return true;
     }
+
+    public override string GetEffectDescription() => $"HP +{healAmount}";
 }

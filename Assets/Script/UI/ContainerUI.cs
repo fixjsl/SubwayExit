@@ -24,6 +24,8 @@ public class ContainerUI : MonoBehaviour
         panel.SetActive(false);
     }
 
+    public bool IsOpen => panel.activeSelf;
+
     public void Open(List<(ItemBase item, int count)> contents)
     {
         currentContents = contents;

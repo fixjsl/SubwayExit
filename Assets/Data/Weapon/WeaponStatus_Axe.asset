@@ -12,17 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f2288420f19d54ea1c77da3bbe37eb, type: 3}
   m_Name: WeaponStatus_Axe
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStatus
-  attack: 10
-  attackSpeed: 1.5
+  attack: 17
+  attackSpeed: 1
   attackRange: 2.9
   executionRange: 24
   execution_m: 2.5
   bloodStrenth: 3
   stunStrength: 0.7
   GuardStrength: 0.4
-  attackStamina: 5
-  guardStamina: 5
-  parryStamina: 5
+  attackStamina: 12
+  guardStamina: 10
+  parryStamina: 10
   WeaponAnimations: {fileID: 22100000, guid: 02028ba6a7faae54387d6d5a657bbc0a, type: 2}
   holdPosition: {x: 0, y: 0, z: 0}
   holdRotation: {x: 0, y: 0, z: 0, w: 0}
+  attackSound: {fileID: 8300000, guid: 41b8af68d0c7653418cef59ff86b8934, type: 3}
+  parrySound: {fileID: 8300000, guid: b175d519289f7e4439db5a0358808582, type: 3}

@@ -5,14 +5,12 @@ using UnityEngine.SceneManagement;
 public class GameClearUI : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
-    [SerializeField] private Button retryButton;
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
     void Awake()
     {
         panel.SetActive(false);
-        retryButton.onClick.AddListener(Retry);
         mainMenuButton.onClick.AddListener(GoMainMenu);
     }
 
@@ -23,18 +21,12 @@ public class GameClearUI : MonoBehaviour
 
     private void Show()
     {
+        Debug.Log("되냐");
         panel.SetActive(true);
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
-
-    private void Retry()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
     private void GoMainMenu()
     {
         Time.timeScale = 1f;

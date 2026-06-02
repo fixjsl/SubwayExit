@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 119
   itemType: 2
-  description: 
+  description: 투명한 합성수지.
   maxamount: 99
   weight: 0
   materials: []

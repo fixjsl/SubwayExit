@@ -12,6 +12,8 @@ public class Inventory
     public event Action OnInventoryChanged;
     public event Action OnQuickSlotsChanged;
     public event Action<ItemBase> OnFirstAcquire;
+    public event Action OnInventoryFull;
+    public event Action OnSlotsFull;
     private HashSet<int> acquiredCodes = new HashSet<int>();
 
     public Inventory(PlayerStatus status)
@@ -19,11 +21,15 @@ public class Inventory
         this.status = status;
     }
 
-    public bool AddItem(ItemBase itemBase, int num = 1)
+    public bool AddItem(ItemBase itemBase, int num = 1, bool suppressFirstAcquire = false)
     {
         int key = itemBase.itemcode;
         float addWeight = itemBase.weight * num;
-        if (currentWeight + addWeight > status.curMaxCarryWeight) return false;
+        if (currentWeight + addWeight > status.curMaxCarryWeight)
+        {
+            OnInventoryFull?.Invoke();
+            return false;
+        }
 
         if (slots.TryGetValue(key, out int count))
         {
@@ -32,11 +38,19 @@ public class Inventory
             OnInventoryChanged?.Invoke();
             return true;
         }
-        if (slots.Count >= (int)status.maxSlots) return false;
+        if (slots.Count >= (int)status.maxSlots)
+        {
+            OnSlotsFull?.Invoke();
+            return false;
+        }
         slots[key] = num;
         currentWeight += addWeight;
-        if (acquiredCodes.Add(key) && itemBase.firstAcquireImage != null)
-            OnFirstAcquire?.Invoke(itemBase);
+        if (!suppressFirstAcquire)
+        {
+            bool isNew = acquiredCodes.Add(key);
+            if (isNew && itemBase.firstAcquireImage != null)
+                OnFirstAcquire?.Invoke(itemBase);
+        }
         OnInventoryChanged?.Invoke();
         return true;
     }
@@ -63,8 +77,8 @@ public class Inventory
     public void UseItem(ItemBase itemBase, PlayerStateMachine player)
     {
         if (!slots.ContainsKey(itemBase.itemcode)) return;
-        itemBase.OnUse(player);
-        RemoveItem(itemBase, 1);
+        bool consume = itemBase.OnUse(player);
+        if (consume) RemoveItem(itemBase, 1);
     }
 
     public void DropItem(ItemBase itemBase, int num = 1) => RemoveItem(itemBase, num);
@@ -73,6 +87,7 @@ public class Inventory
     {
         if (slotIndex < 0 || slotIndex >= QuickSlots.Length) return;
         QuickSlots[slotIndex] = itemCode;
+
         OnQuickSlotsChanged?.Invoke();
     }
 
@@ -80,6 +95,7 @@ public class Inventory
     {
         if (slotIndex < 0 || slotIndex >= QuickSlots.Length) return;
         int code = QuickSlots[slotIndex];
+        Debug.Log($"[QuickSlot] {slotIndex}번 사용 시도 | code={code} | 인벤에 있음={slots.ContainsKey(code)}");
         if (code == 0 || !slots.ContainsKey(code)) { QuickSlots[slotIndex] = 0; return; }
         if (!ItemManager.itemDB.TryGetValue(code, out var item))
         {

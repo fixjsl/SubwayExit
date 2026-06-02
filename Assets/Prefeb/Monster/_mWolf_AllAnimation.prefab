@@ -2289,8 +2289,9 @@ MonoBehaviour:
   promptText: {fileID: 8121085954518007731}
   lootTable: {fileID: 11400000, guid: 191b3b32a023cc34c944d68b80d7e1d4, type: 2}
   RotatePivot: {fileID: 0}
-  openMessage: "\uB4A4\uC9C0\uAE30"
-  closeMessage: "\uB2EB\uAE30"
+  openMessage: "\uC2DC\uCCB4\uD655\uC778"
+  closeMessage: "\uB9C8\uCE58\uAE30"
+  disappearAfterOpen: 1
   firstOpenSound: {fileID: 0}
   openSound: {fileID: 0}
   closeSound: {fileID: 0}

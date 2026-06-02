@@ -24,10 +24,12 @@ public class Move : PlayerState
         }
         if (player.isTired)
         {
-            if(curUpperAni.shortNameHash != player.tired && !player.animator.IsInTransition(0))
-            {
-                player.animator.CrossFade(player.tired,0.15f,1);
-            }
+            if(curUpperAni.shortNameHash != player.tired && !player.animator.IsInTransition(1))
+                player.animator.CrossFade(player.tired, 0.15f, 1);
+        }
+        else if (curUpperAni.shortNameHash != player.idle && !player.animator.IsInTransition(1))
+        {
+            player.animator.CrossFade(player.idle, 0.15f, 1);
         }
     }
 
@@ -64,6 +66,8 @@ public class Move : PlayerState
 
             if (player.isTired && curUpperAni.shortNameHash != player.tired && !player.animator.IsInTransition(1))
                 player.animator.CrossFade(player.tired, 0.15f, 1);
+            else if (!player.isTired && curUpperAni.shortNameHash != player.idle && !player.animator.IsInTransition(1))
+                player.animator.CrossFade(player.idle, 0.15f, 1);
         }
 
         if (!player.isSprint || player.isTired)

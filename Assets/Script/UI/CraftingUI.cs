@@ -53,6 +53,8 @@ public class CraftingUI : MonoBehaviour
         craftButton.onClick.AddListener(OnCraftClicked);
     }
 
+    public bool IsOpen => panel.activeSelf;
+
     public void Open()
     {
         panel.SetActive(true);
@@ -92,7 +94,9 @@ public class CraftingUI : MonoBehaviour
 
         foreach (var (_, item) in ItemManager.itemDB)
         {
-            if (item.itemType != type) continue;
+            bool typeMatch = item.itemType == type ||
+                             (type == ItemType.Consumable && item.itemType == ItemType.InterectObject);
+            if (!typeMatch) continue;
             if (item.materials == null || item.materials.Count == 0) continue;
 
             var slot = Instantiate(craftingSlotPrefab, recipeListParent);

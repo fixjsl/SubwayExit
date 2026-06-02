@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerStatus
 {
     [Header("Default Stat")]
+    public int Chance = 0;
     public string Name;
     public int Maxhp;
     private float hp;

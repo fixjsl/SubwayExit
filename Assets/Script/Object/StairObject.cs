@@ -7,6 +7,7 @@ public class StairObject : MonoBehaviour
     [SerializeField] private Transform stairBottom;
     [SerializeField] private Transform stairTop;
     [SerializeField] private float dismountYOffset = 0f;
+    [SerializeField] private float stairYSpeed = 8f;
 private PlayerStateMachine mountedPlayer;
     private float originalZ;
     private StairTrigger mountedFrom;
@@ -14,12 +15,22 @@ private PlayerStateMachine mountedPlayer;
 
     public void OnPlayerEnterTrigger(StairTrigger trigger, PlayerStateMachine player)
     {
-        if (IsOnStair && trigger != mountedFrom)
+        if (!IsOnStair) return;
+
+        if (trigger != mountedFrom)
         {
+            // 반대편 끝에 도착 → 하차
             var prev = mountedFrom;
             mountedFrom = null;
             Dismount(player);
             if (prev != null) prev.RefreshPrompt();
+        }
+        else
+        {
+            // 탑승 위치로 되돌아옴 → 하차
+            mountedFrom = null;
+            Dismount(player);
+            trigger.RefreshPrompt();
         }
     }
 
@@ -36,7 +47,10 @@ private PlayerStateMachine mountedPlayer;
         : Mathf.Lerp(stairTop.position.y, stairBottom.position.y, t);
 
     var pos = mountedPlayer.Rb.position;
-    pos.y = yTarget;
+    float stairLength = Mathf.Max(0.01f, Mathf.Abs(stairTop.position.x - stairBottom.position.x));
+    float slope = Mathf.Abs(stairTop.position.y - stairBottom.position.y) / stairLength;
+    float ySpeed = Mathf.Max(stairYSpeed, Mathf.Abs(mountedPlayer.Rb.linearVelocity.x) * slope);
+    pos.y = Mathf.MoveTowards(pos.y, yTarget, ySpeed * Time.deltaTime);
     mountedPlayer.Rb.position = pos;
     }
     public void TryInteract(StairTrigger trigger, PlayerStateMachine player)
@@ -71,6 +85,7 @@ private PlayerStateMachine mountedPlayer;
     {
         IsOnStair = false;
         mountedPlayer = null;
+        player.Rb.linearVelocity = Vector3.zero;
 
         var pos = player.Rb.position;
         pos.z = originalZ;

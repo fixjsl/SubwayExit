@@ -38,7 +38,7 @@ public class PlayerUI : MonoBehaviour
         // 초기값 반영
         SetFill(hpFill,      status.Hp,      status.Maxhp);
         hpText.text = $"{(int)status.Hp} / {(int)status.Maxhp}";
-        SetStaminaFill(status.Stamina, status.curMaxStamina);
+        SetStaminaFill(status.Stamina, status.MaxStamina);
         SetFill(hungryFill,  status.Hungry,   status.MaxHungry);
         SetFill(waterFill,   status.Water,    status.MaxWater);
         HourMinute.text = $"{GameManager.Instance.Hour:D2}:{GameManager.Instance.Minute:D2}";
@@ -52,7 +52,7 @@ public class PlayerUI : MonoBehaviour
     }  
         
     
-    void OnStaminaChanged(float val) => SetStaminaFill(val, status.curMaxStamina);
+    void OnStaminaChanged(float val) => SetStaminaFill(val, status.MaxStamina);
     void OnHungryChanged(int val)    => SetFill(hungryFill,  val, status.MaxHungry);
     void OnWaterChanged(int val)     => SetFill(waterFill,   val, status.MaxWater);
 

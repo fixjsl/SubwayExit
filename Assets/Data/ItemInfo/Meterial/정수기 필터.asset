@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 113
   itemType: 2
-  description: 
+  description: 여과 장치. 더러운 물을 깨끗한 물로 정화하는 필수 소모품.
   maxamount: 99
   weight: 0
   materials: []

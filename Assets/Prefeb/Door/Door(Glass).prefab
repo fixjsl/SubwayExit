@@ -72,6 +72,8 @@ MonoBehaviour:
   promptText: {fileID: 6823012988906926264}
   triggerCollider: {fileID: 2723778224340002341}
   offset: {fileID: 8388353757021747644}
+  openSound: {fileID: 8300000, guid: b49cf148477e014448dfa060d05f9fba, type: 3}
+  closeSound: {fileID: 0}
   breakEffect: {fileID: 0}
 --- !u!1 &4769610439771788166
 GameObject:

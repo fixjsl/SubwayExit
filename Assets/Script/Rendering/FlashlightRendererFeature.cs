@@ -33,6 +33,12 @@ public class FlashlightRendererFeature : ScriptableRendererFeature
         private static readonly int FlInnerAngleID  = Shader.PropertyToID("_FlashlightInnerAngle");
         private static readonly int FlIntensityID   = Shader.PropertyToID("_FlashlightIntensity");
         private static readonly int FlColorID       = Shader.PropertyToID("_FlashlightColor");
+        private static readonly int PlCountID       = Shader.PropertyToID("_PointLightCount");
+        private static readonly int PlDataID        = Shader.PropertyToID("_PointLightData");
+        private static readonly int PlColorID       = Shader.PropertyToID("_PointLightColor");
+
+        private static readonly Vector4[] _plDataBuf  = new Vector4[4];
+        private static readonly Vector4[] _plColorBuf = new Vector4[4];
 
         public FlashlightPass(Material mat, RenderPassEvent evt)
         {
@@ -53,6 +59,9 @@ public class FlashlightRendererFeature : ScriptableRendererFeature
             public float           flInnerAngle;
             public float           flIntensity;
             public Color           flColor;
+            public float           plCount;
+            public Vector4[]       plData  = new Vector4[4];
+            public Vector4[]       plColor = new Vector4[4];
         }
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
@@ -84,6 +93,12 @@ public class FlashlightRendererFeature : ScriptableRendererFeature
             passData.flIntensity  = Shader.GetGlobalFloat("_FlashlightIntensity");
             passData.flColor    = Shader.GetGlobalColor("_FlashlightColor");
 
+            passData.plCount = Shader.GetGlobalFloat("_PointLightCount");
+            var srcData  = Shader.GetGlobalVectorArray("_PointLightData");
+            var srcColor = Shader.GetGlobalVectorArray("_PointLightColor");
+            if (srcData  != null) System.Array.Copy(srcData,  passData.plData,  Mathf.Min(srcData.Length,  4));
+            if (srcColor != null) System.Array.Copy(srcColor, passData.plColor, Mathf.Min(srcColor.Length, 4));
+
             builder.SetRenderAttachment(activeColor, 0, AccessFlags.Write);
             builder.UseTexture(passData.source, AccessFlags.Read);
 
@@ -99,6 +114,9 @@ public class FlashlightRendererFeature : ScriptableRendererFeature
                 data.mat.SetFloat(FlInnerAngleID,   data.flInnerAngle);
                 data.mat.SetFloat(FlIntensityID,    data.flIntensity);
                 data.mat.SetColor(FlColorID,        data.flColor);
+                data.mat.SetFloat(PlCountID,        data.plCount);
+                data.mat.SetVectorArray(PlDataID,   data.plData);
+                data.mat.SetVectorArray(PlColorID,  data.plColor);
 
                 ctx.cmd.DrawProcedural(Matrix4x4.identity, data.mat, 0, MeshTopology.Triangles, 3);
             });

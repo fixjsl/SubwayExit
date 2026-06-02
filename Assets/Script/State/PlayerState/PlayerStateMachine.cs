@@ -34,6 +34,13 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private AttackHitbox attackHitbox;
     [SerializeField] private Flashlight flashlight;
 
+    [Header("SFX")]
+    [SerializeField] public AudioClip footstepWalk;
+    [SerializeField] public AudioClip footstepSprint;
+    [SerializeField] public AudioClip dodgeSound;
+    [SerializeField] public AudioClip hitSound;
+    [SerializeField] public AudioClip deathSound;
+
     //현재 플레이어의 상태
     public float MoveInput;
     float lastMoveInput;
@@ -76,6 +83,7 @@ public class PlayerStateMachine : MonoBehaviour
     public readonly int dodge = Animator.StringToHash("dodge");
     public event Action ParrySuccess;
     public void InvokeParrySuccess() => ParrySuccess?.Invoke();
+    public void PlaySFX(AudioClip clip) { if (clip != null) GameManager.Instance.PlaySFX(clip); }
     //플레이어 버퍼입력
     public StateType bufferinput { get; private set; }
     public float buffertime { get; private set; } = 0.2f;
@@ -182,7 +190,7 @@ public class PlayerStateMachine : MonoBehaviour
         inventory = new Inventory(status);
         status.curMaxCarryWeight = status.maxCarryWeight;
         if (startItem != null)
-            inventory.AddItem(startItem, startItemCount);
+            inventory.AddItem(startItem, startItemCount, suppressFirstAcquire: true);
         currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
         Col = GetComponent<BoxCollider>();
@@ -305,7 +313,7 @@ public class PlayerStateMachine : MonoBehaviour
                 return true;
             }
 
-            if((ActiveState is Parry || ActiveState is Guard) && isGuard)
+            if(ActiveState is Parry && isGuard)
             {
                 ChangeState<Guard>();
                 return true ;

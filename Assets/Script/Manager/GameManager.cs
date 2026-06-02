@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioSource ambientSource;
+    [SerializeField] private AudioClip defaultBGM;
 
     public int Day{get; private set;} = 1;  //진행 일
     public int Hour{get; private set;}  = 0; // 시간
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
     public event Action<int, int> ChangeTime; // hour, minute
     public event Action<int, int> ChangeDay; // hour, day
     public event Action OnGameClear;
+    public event Action OnGameOver;
     private string savePath => Path.Combine(Application.persistentDataPath, "settings.json");
 
     void Awake()
@@ -56,6 +58,7 @@ public class GameManager : MonoBehaviour
 
         LoadSettings();
         ApplySettings();
+        PlayBGM(defaultBGM);
     }
 
     public void SaveSettings()
@@ -134,9 +137,18 @@ public class GameManager : MonoBehaviour
         OnGameClear?.Invoke();
     }
 
+    public void GameOver()
+    {
+        OnGameOver?.Invoke();
+    }
+
+    private Coroutine clockCoroutine;
+
     public void TutorialStart()
     {
-        StartCoroutine(Clock());
+        if (clockCoroutine != null) StopCoroutine(clockCoroutine);
+        Day = 1; Hour = 0; Minute = 0;
+        clockCoroutine = StartCoroutine(Clock());
     }
 
     IEnumerator Clock()

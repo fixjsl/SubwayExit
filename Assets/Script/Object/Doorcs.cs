@@ -35,6 +35,8 @@ public class Doorcs : ItObjectBase
             if (!col.isTrigger) Physics.IgnoreCollision(col, playerCollider, ignore);
     }
 
+    [SerializeField] private AudioClip openSound;
+    [SerializeField] private AudioClip closeSound;
     [SerializeField] private GameObject breakEffect; // 나중에 이펙트 연결용
 
     public void ForceClose()
@@ -60,11 +62,13 @@ public class Doorcs : ItObjectBase
             float angle = localPos.x >= 0 ? 90f : -90f;
             targetRot = closedRot * Quaternion.Euler(0f, angle, 0f);
             isOpen = true;
+            GameManager.Instance.PlaySFX(openSound);
         }
         else
         {
             targetRot = closedRot;
             isOpen = false;
+            GameManager.Instance.PlaySFX(closeSound);
         }
         SetIgnorePlayer(true);
     }

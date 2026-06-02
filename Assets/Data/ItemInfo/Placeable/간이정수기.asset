@@ -15,12 +15,14 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: b81d7454cf8ba774aa3293450a3496f4, type: 3}
   firstAcquireImage: {fileID: 0}
   itemcode: 998
-  itemType: 1
+  itemType: 4
   description: "\uAC04\uB2E8\uD558\uAC8C \uB9CC\uB4E0 \uAC04\uC774\uC815\uC218\uAE30,
     \uB354\uB7EC\uC6B4 \uBB3C\uC744 \uC5EC\uACFC\uD574 \uB9C8\uC2E4 \uC218 \uC788\uAC8C
-    \uB9CC\uB4E4\uC5B4 \uC900\uB2E4"
+    \uB9CC\uB4E4\uC5B4 \uC900\uB2E4. \uC124\uCE58\uC2DC \uC2DC\uC791\uC704\uCE58\uC5D0
+    \uC790\uB3D9\uC73C\uB85C \uC124\uCE58\uB41C\uB2E4."
   maxamount: 5
   weight: 6
+  canBurnAsFuel: 0
   materials:
   - item: {fileID: 11400000, guid: 7f8520bf1b2a3fd40be725840ee9931e, type: 2}
     amount: 2

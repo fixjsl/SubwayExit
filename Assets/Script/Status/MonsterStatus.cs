@@ -42,6 +42,8 @@ public class MonsterStatus : ScriptableObject
 
     public float knockbackForce;
     public float minSeparation = 20f;
+    public float maxSeparation = 25f;
+    public float battleWalkSpeed = 2f;
     public string[] attackAnimNames = { "attack1", "attack2", "attack3" };
     private int[] _attackHashes;
     public int[] AttackHashes => _attackHashes ??= System.Array.ConvertAll(attackAnimNames, UnityEngine.Animator.StringToHash);

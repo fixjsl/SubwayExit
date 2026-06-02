@@ -26,3 +26,5 @@ MonoBehaviour:
   WeaponAnimations: {fileID: 22100000, guid: 79a5c40a78d99ae4bba52ccfd392277c, type: 2}
   holdPosition: {x: 0, y: 0, z: 0}
   holdRotation: {x: 0, y: 0, z: 0, w: 0}
+  attackSound: {fileID: 8300000, guid: 41b8af68d0c7653418cef59ff86b8934, type: 3}
+  parrySound: {fileID: 8300000, guid: 12ce1cd777983064cbf677dd03e7a51f, type: 3}

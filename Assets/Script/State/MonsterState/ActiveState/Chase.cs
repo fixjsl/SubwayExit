@@ -11,7 +11,7 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            //�߰� �ִϸ��̼�
+            Monster.IsReturningFromAttack = false;
             Monster.StopDetection();
             Monster.animator.CrossFade(Monster.sprint, 0.01f);
             isTurning = false;

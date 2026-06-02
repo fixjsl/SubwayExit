@@ -289,11 +289,13 @@ MonoBehaviour:
   promptText: {fileID: 542731864452539624}
   lootTable: {fileID: 11400000, guid: a5db9e0ff6431854ab88cece363aee7b, type: 2}
   RotatePivot: {fileID: 0}
-  openMessage: "\uC790\uD310\uAE30 \uB4A4\uC9C0\uAE30"
+  openMessage: "\uC790\uD310\uAE30 \uC5F4\uAE30"
   closeMessage: "\uB2EB\uAE30"
-  firstOpenSound: {fileID: 0}
-  openSound: {fileID: 0}
-  closeSound: {fileID: 0}
+  disappearAfterOpen: 0
+  excludeFromCycle: 0
+  firstOpenSound: {fileID: 8300000, guid: c6b5d9ab35fdf3147a94c8bae973223d, type: 3}
+  openSound: {fileID: 8300000, guid: ed42e676c9e858342bae0edabb8ab44b, type: 3}
+  closeSound: {fileID: 8300000, guid: 200320c12611b754bb0c9dc8e1306272, type: 3}
 --- !u!65 &3462191775173026991
 BoxCollider:
   m_ObjectHideFlags: 0

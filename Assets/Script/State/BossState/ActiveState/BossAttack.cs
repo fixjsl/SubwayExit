@@ -28,6 +28,7 @@ namespace BossStates
 
         public override void OnAnimationFinished()
         {
+            Boss.IsReturningFromAttack = true;
             Boss.ChangeState<BossBattle>();
         }
     }

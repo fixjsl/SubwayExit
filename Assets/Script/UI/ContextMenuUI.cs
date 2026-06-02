@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class ContextMenuUI : MonoBehaviour
     [SerializeField] private Button useBtn;
     [SerializeField] private Button dropBtn;
 
+    private TMP_Text useBtnText;
     private ItemBase currentItem;
     private Inventory inventory;
     private System.Action onUseOverride;
@@ -20,20 +22,28 @@ public class ContextMenuUI : MonoBehaviour
         quickSlot2Btn.onClick.AddListener(() => AssignQuickSlot(1));
         useBtn.onClick.AddListener(Use);
         dropBtn.onClick.AddListener(Drop);
+        useBtnText = useBtn.GetComponentInChildren<TMP_Text>();
     }
 
     public void Show(ItemBase item, Vector2 screenPos, Inventory inv, System.Action onUse = null, bool showDrop = true)
     {
+        if (item.itemType == ItemType.KeyItem) return;
+
         currentItem = item;
         inventory = inv;
         onUseOverride = onUse;
         ((RectTransform)panel.transform).position = screenPos;
 
         bool isConsumable = item.itemType == ItemType.Consumable;
+        bool isInterectObject = item.itemType == ItemType.InterectObject;
+
         quickSlot1Btn.gameObject.SetActive(isConsumable);
         quickSlot2Btn.gameObject.SetActive(isConsumable);
-        useBtn.gameObject.SetActive(isConsumable);
+        useBtn.gameObject.SetActive(isConsumable || isInterectObject);
         dropBtn.gameObject.SetActive(showDrop);
+
+        if (useBtnText != null)
+            useBtnText.text = isInterectObject ? "설치" : "사용";
 
         panel.SetActive(true);
     }

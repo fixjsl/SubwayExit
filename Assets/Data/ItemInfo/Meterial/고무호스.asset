@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 104
   itemType: 2
-  description: 
+  description: 액체 이송용 관.
   maxamount: 99
   weight: 0
   materials:

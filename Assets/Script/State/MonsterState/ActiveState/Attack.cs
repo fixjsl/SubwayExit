@@ -29,6 +29,7 @@ namespace MonsterStates
         }
         public override void OnAnimationFinished()
         {
+            Monster.IsReturningFromAttack = true;
             Monster.ChangeState<Battle>();
         }
 

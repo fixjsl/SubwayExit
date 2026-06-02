@@ -307,8 +307,10 @@ MonoBehaviour:
   RotatePivot: {fileID: 0}
   openMessage: "\uC5F4\uAE30"
   closeMessage: "\uB2EB\uAE30"
-  firstOpenSound: {fileID: 0}
-  openSound: {fileID: 0}
+  disappearAfterOpen: 0
+  excludeFromCycle: 0
+  firstOpenSound: {fileID: 8300000, guid: 84eef99ff65d5234393c086125fcbe44, type: 3}
+  openSound: {fileID: 8300000, guid: 84eef99ff65d5234393c086125fcbe44, type: 3}
   closeSound: {fileID: 0}
 --- !u!4 &3422306679863898164 stripped
 Transform:

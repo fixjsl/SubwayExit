@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 265622715879948179}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -0.43735}
+  m_LocalPosition: {x: 0, y: 0, z: -0.44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0.37627}
+  m_AnchoredPosition: {x: -0.52, y: 0.37627}
   m_SizeDelta: {x: 1.84112, y: 0.51336}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &463487783904076822
@@ -629,8 +629,10 @@ MonoBehaviour:
   promptText: {fileID: 7075277322253850311}
   lootTable: {fileID: 11400000, guid: 73efef648c4ec2a468dcbcb1a00f402c, type: 2}
   RotatePivot: {fileID: 0}
-  openMessage: "\uB4A4\uC9C0\uAE30"
+  openMessage: "\uC2DC\uCCB4\uD655\uC778"
   closeMessage: "\uADF8\uB9CC\uB450\uAE30"
+  disappearAfterOpen: 0
+  excludeFromCycle: 1
   firstOpenSound: {fileID: 0}
   openSound: {fileID: 0}
   closeSound: {fileID: 0}

@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 124
   itemType: 2
-  description: 
+  description: 동물 사체에서 채취한 육류. 조리 후 섭취 가능.
   maxamount: 99
   weight: 0
   materials: []

@@ -16,7 +16,8 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 105
   itemType: 2
-  description: 
+  description: 가치를 잃은 화폐. 불 피우기용 점화재.
   maxamount: 99
   weight: 0
+  canBurnAsFuel: 1
   materials: []

@@ -16,7 +16,8 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 118
   itemType: 2
-  description: 
+  description: 오염된 종이. 불 피우기용 점화재.
   maxamount: 99
   weight: 0
+  canBurnAsFuel: 1
   materials: []

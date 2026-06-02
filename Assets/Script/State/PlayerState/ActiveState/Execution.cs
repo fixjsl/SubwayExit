@@ -17,7 +17,8 @@ public class Execution : PlayerState
     {
         canChanged = false;
         damage = player.currentWeapon.status.attack * player.currentWeapon.status.execution_m;
-        player.animator.CrossFade(player.excution,0.15f);
+        player.animator.CrossFade(player.excution, 0.15f);
+        player.animator.CrossFade(player.idle, 0.15f, 0);
         player.gameObject.layer = Layercache.Dodge;
         player.Rb.linearVelocity = Vector3.zero;
 

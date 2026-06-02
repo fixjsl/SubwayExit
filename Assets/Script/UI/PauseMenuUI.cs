@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using TMPro;
 
 public class PauseMenuUI : MonoBehaviour
 {
@@ -11,12 +13,10 @@ public class PauseMenuUI : MonoBehaviour
     static void ResetStatics() => Instance = null;
 
     [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject settingsPanel;
     [SerializeField] private Button resumeButton;
-    [SerializeField] private Button settingsButton;
     [SerializeField] private Button mainMenuButton;
-    [SerializeField] private Button settingsBackButton;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private TMP_Text hoverDescText;
 
     private bool isPaused = false;
 
@@ -24,20 +24,23 @@ public class PauseMenuUI : MonoBehaviour
     {
         Instance = this;
         pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
 
         resumeButton.onClick.AddListener(Resume);
-        settingsButton.onClick.AddListener(OpenSettings);
         mainMenuButton.onClick.AddListener(GoMainMenu);
-        settingsBackButton.onClick.AddListener(CloseSettings);
+        AddHoverDesc(resumeButton, "계속하기");
+        AddHoverDesc(mainMenuButton, "타이틀로 돌아가기");
     }
 
     void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (settingsPanel.activeSelf)
-                CloseSettings();
+            if (CraftingUI.Instance != null && CraftingUI.Instance.IsOpen)
+                CraftingUI.Instance.Close();
+            else if (ContainerUI.Instance != null && ContainerUI.Instance.IsOpen)
+                ContainerUI.Instance.Close();
+            else if (InventoryUI.Instance != null && InventoryUI.Instance.IsOpen)
+                InventoryUI.Instance.Close();
             else if (isPaused)
                 Resume();
             else
@@ -59,29 +62,25 @@ public class PauseMenuUI : MonoBehaviour
     {
         isPaused = false;
         pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
         Time.timeScale = 1f;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         SetCombatInput(true);
-    }
-
-    private void OpenSettings()
-    {
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(true);
-    }
-
-    private void CloseSettings()
-    {
-        settingsPanel.SetActive(false);
-        pausePanel.SetActive(true);
     }
 
     private void GoMainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    private void AddHoverDesc(Button btn, string desc)
+    {
+        var trigger = btn.gameObject.GetComponent<EventTrigger>() ?? btn.gameObject.AddComponent<EventTrigger>();
+        var enter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        enter.callback.AddListener(_ => { if (hoverDescText != null) hoverDescText.text = desc; });
+        trigger.triggers.Add(enter);
+        var exit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+        exit.callback.AddListener(_ => { if (hoverDescText != null) hoverDescText.text = ""; });
+        trigger.triggers.Add(exit);
     }
 
     private void SetCombatInput(bool enabled)
