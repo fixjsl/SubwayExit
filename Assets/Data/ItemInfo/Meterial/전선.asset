@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 106
   itemType: 2
-  description: 
+  description: 역무실에서 얻은 구리 심선.
   maxamount: 99
   weight: 0
   materials: []

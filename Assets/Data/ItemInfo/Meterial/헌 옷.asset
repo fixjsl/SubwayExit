@@ -16,7 +16,8 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 116
   itemType: 2
-  description: 
+  description: 낡은 의류.
   maxamount: 99
   weight: 0
+  canBurnAsFuel: 0
   materials: []

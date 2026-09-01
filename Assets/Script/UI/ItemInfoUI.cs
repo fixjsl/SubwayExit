@@ -12,6 +12,8 @@ public class ItemInfoUI : MonoBehaviour
     [SerializeField] private TMP_Text itemNameText;
     [SerializeField] private TMP_Text itemTypeText;
     [SerializeField] private TMP_Text itemWeightText;
+    [SerializeField] private TMP_Text fuelText;
+    [SerializeField] private TMP_Text descriptionText;
 
     void Awake()
     {
@@ -24,6 +26,26 @@ public class ItemInfoUI : MonoBehaviour
         itemNameText.text = item.name;
         itemTypeText.text = item.itemType.ToString();
         itemWeightText.text = $"무게: {item.weight}";
+        if (fuelText != null) fuelText.gameObject.SetActive(item.canBurnAsFuel);
+        if (descriptionText != null)
+        {
+            string effect = item.GetEffectDescription();
+            string full = string.IsNullOrEmpty(effect)
+                ? item.description
+                : string.IsNullOrEmpty(item.description) ? effect : effect + "\n" + item.description;
+            descriptionText.text = full;
+            descriptionText.gameObject.SetActive(!string.IsNullOrEmpty(full));
+        }
+        ((RectTransform)panel.transform).position = screenPos + new Vector2(15f, 15f);
+        panel.SetActive(true);
+    }
+
+    public void Show(string label, Vector2 screenPos)
+    {
+        itemNameText.text = label;
+        itemTypeText.text = "";
+        itemWeightText.text = "";
+        if (fuelText != null) fuelText.gameObject.SetActive(false);
         ((RectTransform)panel.transform).position = screenPos + new Vector2(15f, 15f);
         panel.SetActive(true);
     }

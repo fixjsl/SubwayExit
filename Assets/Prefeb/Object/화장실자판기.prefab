@@ -258,6 +258,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8523c1c9fbee0be47a6950192373c020, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4885699649895699349}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8523c1c9fbee0be47a6950192373c020, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 346726455914495424}
   m_SourcePrefab: {fileID: 100100000, guid: 8523c1c9fbee0be47a6950192373c020, type: 3}
 --- !u!1 &1271991713827197928 stripped
@@ -265,6 +268,29 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8523c1c9fbee0be47a6950192373c020, type: 3}
   m_PrefabInstance: {fileID: 2118499871205109433}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4885699649895699349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271991713827197928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f676d36d2808c5449a76cd14d79be53b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContainerObject
+  TextObject: {fileID: 5769371374764065376}
+  promptText: {fileID: 6512611392287269051}
+  lootTable: {fileID: 11400000, guid: d0e72cd25ab19854997cfa518ba0e7ab, type: 2}
+  RotatePivot: {fileID: 0}
+  openMessage: "\uC5F4\uAE30"
+  closeMessage: "\uB2EB\uAE30"
+  disappearAfterOpen: 0
+  excludeFromCycle: 0
+  firstOpenSound: {fileID: 8300000, guid: bea1abc5ed1ea914882f65e179d73274, type: 3}
+  openSound: {fileID: 8300000, guid: 0bddc81fa7c186242ba3c82e827ab475, type: 3}
+  closeSound: {fileID: 0}
 --- !u!65 &346726455914495424
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 103
   itemType: 2
-  description: 
+  description: 탄성이 있는 고무 파편. 고무호스 제작 재료.
   maxamount: 99
   weight: 0
   materials: []

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemType { Weapon, Consumable, Material, Equipment ,InterectObject}
+public enum ItemType { Weapon, Consumable, Material, Equipment, InterectObject, KeyItem }
 
 [CreateAssetMenu(fileName = "ItemBase", menuName = "Scriptable Objects/ItemBase")]
 public class ItemBase : ScriptableObject
@@ -13,8 +13,10 @@ public class ItemBase : ScriptableObject
     [TextArea(2, 4)] public string description;
     public int maxamount;
     public float weight;
+    public bool canBurnAsFuel;
 
-    public virtual void OnUse(PlayerStateMachine player) { }
+    public virtual bool OnUse(PlayerStateMachine player) { return true; }
+    public virtual string GetEffectDescription() { return ""; }
     [System.Serializable]
     public struct CraftMaterial
     {

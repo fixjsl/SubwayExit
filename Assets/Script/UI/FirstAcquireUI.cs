@@ -33,7 +33,15 @@ public class FirstAcquireUI : MonoBehaviour
 
     private void Show(ItemBase item)
     {
+        Debug.Log($"[FirstAcquire] Show 호출됨: {item.name}");
         displayImage.sprite = item.firstAcquireImage;
+        panel.SetActive(true);
+        SetCombatInput(false);
+    }
+
+    public void Show(Sprite sprite)
+    {
+        displayImage.sprite = sprite;
         panel.SetActive(true);
         SetCombatInput(false);
     }
@@ -41,7 +49,10 @@ public class FirstAcquireUI : MonoBehaviour
     private void Close()
     {
         panel.SetActive(false);
-        SetCombatInput(true);
+        bool otherUIOpen = (CraftingUI.Instance != null && CraftingUI.Instance.IsOpen)
+                        || (ContainerUI.Instance != null && ContainerUI.Instance.IsOpen);
+        if (!otherUIOpen)
+            SetCombatInput(true);
     }
 
     private void SetCombatInput(bool enabled)

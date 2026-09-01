@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 120
   itemType: 2
-  description: 
+  description: 일반 돌덩이. 간이정수기 제작 재료.
   maxamount: 99
   weight: 0
   materials: []

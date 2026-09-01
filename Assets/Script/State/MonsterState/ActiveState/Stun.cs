@@ -23,6 +23,7 @@ namespace MonsterStates
         {
             Monster.animator.speed = 1f;
             Monster.gameObject.layer = Layercache.Monster;
+            Monster.status.detection_gauge = 100f;
         }
         public override void LogicUpdate()
         {

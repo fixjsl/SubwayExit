@@ -16,7 +16,9 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 112
   itemType: 2
-  description: 
+  description: "\uC815\uC218\uAE30\uC5D0 \uAF43\uB294 \uCEE4\uB2E4\uB780 \uC0DD\uC218\uD1B5.
+    \uD604\uC7AC\uB294 \uBE44\uC5B4\uC788\uB2E4"
   maxamount: 99
-  weight: 0
+  weight: 0.5
+  canBurnAsFuel: 0
   materials: []

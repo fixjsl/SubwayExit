@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 21300000, guid: 7cb29c1c26c15904eaa77bb1fbc29329, type: 3}
   itemcode: 108
   itemType: 2
-  description: 
+  description: 점화 도구. 불 피우기용 필수 소모품.
   maxamount: 99
   weight: 0
   materials: []

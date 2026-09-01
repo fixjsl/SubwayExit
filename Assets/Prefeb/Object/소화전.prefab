@@ -286,9 +286,11 @@ MonoBehaviour:
   RotatePivot: {fileID: 0}
   openMessage: "\uC5F4\uAE30"
   closeMessage: "\uB2EB\uAE30"
-  firstOpenSound: {fileID: 0}
-  openSound: {fileID: 0}
-  closeSound: {fileID: 0}
+  disappearAfterOpen: 0
+  excludeFromCycle: 0
+  firstOpenSound: {fileID: 8300000, guid: 7497a1ec898174e4c8d1a387823c732d, type: 3}
+  openSound: {fileID: 8300000, guid: 7497a1ec898174e4c8d1a387823c732d, type: 3}
+  closeSound: {fileID: 8300000, guid: 7497a1ec898174e4c8d1a387823c732d, type: 3}
 --- !u!65 &1674097560620955924
 BoxCollider:
   m_ObjectHideFlags: 0

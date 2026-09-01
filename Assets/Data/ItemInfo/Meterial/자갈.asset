@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 121
   itemType: 2
-  description: 
+  description: 작은 돌멩이. 간이정수기 제작 재료.
   maxamount: 99
   weight: 0
   materials: []

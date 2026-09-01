@@ -13,16 +13,18 @@ MonoBehaviour:
   m_Name: WeaponStatus_Machete
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStatus
   attack: 10
-  attackSpeed: 1
+  attackSpeed: 0.5
   attackRange: 2
   executionRange: 17
   execution_m: 1.5
   bloodStrenth: 50
   stunStrength: 0.2
   GuardStrength: 0.9
-  attackStamina: 3
+  attackStamina: 7
   guardStamina: 2
   parryStamina: 3
   WeaponAnimations: {fileID: 22100000, guid: 9315de2875b26334fab73823f73f2553, type: 2}
   holdPosition: {x: 0, y: 0, z: 0}
   holdRotation: {x: 0, y: 0, z: 0, w: 0}
+  attackSound: {fileID: 8300000, guid: 0229df42d71d8e74fbef5bd704eb1f79, type: 3}
+  parrySound: {fileID: 8300000, guid: df9aae765203c1f439ec47ef00fae96a, type: 3}

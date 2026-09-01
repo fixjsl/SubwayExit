@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f813d826002ca6b45bcb1b8a8f3248af, type: 3}
   m_Name: "\uBD95\uB300"
   m_EditorClassIdentifier: Assembly-CSharp::HealItem
-  icon: {fileID: 21300000, guid: c6db5c16db4d14448be017802a946877, type: 3}
+  icon: {fileID: 21300000, guid: 157b87a3fa35ee44280d86e2484e9383, type: 3}
   firstAcquireImage: {fileID: 21300000, guid: f0fc77eac9c2e1a40a0270d7ecb273af, type: 3}
   itemcode: 31
   itemType: 1
   description: 
   maxamount: 5
   weight: 0.1
+  canBurnAsFuel: 0
   materials:
   - item: {fileID: 11400000, guid: 91501aaf3449cad4e9889e4b26927d12, type: 2}
     amount: 1

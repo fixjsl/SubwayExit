@@ -9,14 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dd32e8b3100efa41abb9ca72aaa8f00, type: 3}
+  m_Script: {fileID: 11500000, guid: 865b76aa9989bfe4fbdfebbe91fba5dc, type: 3}
   m_Name: "\uB354\uB7EC\uC6B4 \uBB3C"
-  m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  m_EditorClassIdentifier: Assembly-CSharp::DirtyWater
   icon: {fileID: 21300000, guid: 32b744ae3b9611749a6e61b7b516b990, type: 3}
   firstAcquireImage: {fileID: 21300000, guid: 983ae5c0d16757c418052098801cdba8, type: 3}
   itemcode: 111
-  itemType: 2
-  description: 
+  itemType: 1
+  description: "\uC624\uB798\uB418\uC5B4 \uC0C1\uD55C \uBB3C, \uC774\uB300\uB85C\uB294
+    \uB9C8\uC2E4 \uC218 \uC5C6\uB2E4."
   maxamount: 99
-  weight: 0
+  weight: 0.5
+  canBurnAsFuel: 0
   materials: []
+  waterAmount: 10
+  hpChange: -1
+  hungryChange: -10

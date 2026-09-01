@@ -5,11 +5,14 @@ public class ContainerObject : ItObjectBase
 {
     [SerializeField] private LootTable lootTable;
     private bool open = false;
+    private bool hasBeenOpened = false;
     private List<(ItemBase item, int count)> contents;
 
     [SerializeField] private Transform RotatePivot;
     [SerializeField] private string openMessage = "열기";
     [SerializeField] private string closeMessage = "닫기";
+    [SerializeField] private bool disappearAfterOpen = false;
+    [SerializeField] private bool excludeFromCycle = false;
 
     [Header("Sound")]
     [SerializeField] private AudioClip firstOpenSound;
@@ -27,6 +30,11 @@ public class ContainerObject : ItObjectBase
         {
             open = false;
             ContainerUI.Instance.Close();
+            if (disappearAfterOpen && hasBeenOpened)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
             RefreshPrompt();
             PlaySound(closeSound);
             return;
@@ -36,6 +44,7 @@ public class ContainerObject : ItObjectBase
             contents = lootTable != null ? lootTable.Roll() : new List<(ItemBase, int)>();
 
         open = true;
+        hasBeenOpened = true;
         ContainerUI.Instance.Open(contents);
         RefreshPrompt();
         PlayInteractSound(firstOpenSound, openSound);
@@ -48,8 +57,18 @@ public class ContainerObject : ItObjectBase
         {
             open = false;
             ContainerUI.Instance.Close();
+            if (disappearAfterOpen && hasBeenOpened)
+                gameObject.SetActive(false);
         }
     }
 
-
+    public void CycleReset()
+    {
+        if (excludeFromCycle) return;
+        if (disappearAfterOpen && !gameObject.activeSelf)
+            gameObject.SetActive(true);
+        open = false;
+        hasBeenOpened = false;
+        contents = null;
+    }
 }

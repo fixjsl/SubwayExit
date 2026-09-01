@@ -13,20 +13,22 @@ MonoBehaviour:
   m_Name: Bear
   m_EditorClassIdentifier: Assembly-CSharp::MonsterStatus
   Name: "\uD749\uD3ED\uD55C \uACF0"
-  Maxhp: 400
+  Maxhp: 600
   speed: 40
   chasespeed: 70
-  atk: 13
+  atk: 14
   atk_range: 10
   atkdelay: 6
   detectHalfExtents: {x: 0, y: 0, z: 0}
   recovery: 0
   detectionSpeed: 10
   instantDetectRange: 10
-  battleHalfExtents: {x: 100, y: 50, z: 20}
+  battleHalfExtents: {x: 75, y: 50, z: 20}
   stunTime: 4
   knockbackForce: 0
-  minSeparation: 30
+  minSeparation: 55
+  maxSeparation: 80
+  battleWalkSpeed: 2
   attackAnimNames:
   - attack1
   - attack2

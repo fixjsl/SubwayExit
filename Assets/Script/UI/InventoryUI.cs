@@ -17,6 +17,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Image weightFill;
     [SerializeField] private TMP_Text weightText;
     [SerializeField] private ContextMenuUI contextMenu;
+    [SerializeField] private AudioClip openSound;
+    [SerializeField] private AudioClip closeSound;
 
     private Inventory inventory;
     private readonly List<ContainerSlotUI> activeSlots = new();
@@ -51,8 +53,11 @@ public class InventoryUI : MonoBehaviour
         else Open();
     }
 
+    public bool IsOpen => panel.activeSelf;
+
     public void Open()
     {
+        GameManager.Instance.PlaySFX(openSound);
         PositionByPlayerSide();
         panel.SetActive(true);
         Refresh();
@@ -76,6 +81,7 @@ public class InventoryUI : MonoBehaviour
 
     public void Close()
     {
+        GameManager.Instance.PlaySFX(closeSound);
         panel.SetActive(false);
         contextMenu.Hide();
         ItemInfoUI.Instance.Hide();

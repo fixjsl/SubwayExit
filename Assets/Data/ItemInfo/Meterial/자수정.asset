@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 123
   itemType: 2
-  description: 
+  description: 늑대를 처치하고 얻은 보라색 광물.
   maxamount: 99
   weight: 0
   materials: []

@@ -16,6 +16,7 @@ public class MonsterUI : MonoBehaviour
     private MonsterStateMachine monster;
     private Transform hpAnchor;
     private Transform detectionAnchor;
+    private System.Action<float> onDetectionChanged;
 
     private float ghostTimer;
     private bool ghostWaiting;
@@ -47,15 +48,14 @@ public class MonsterUI : MonoBehaviour
 
         monster.status.ChangeHP += OnHPChanged;
         monster.status.OnDie += OnMonsterDie;
-        monster.status.ChangeDetectionGauge += (gauge) =>
+        onDetectionChanged = (gauge) =>
         {
             if (detectionFill != null)
                 detectionFill.fillAmount = gauge / 100f;
-            if (gauge >= 100f)
-            {
+            if (gauge >= 100f && detect != null)
                 detect.gameObject.SetActive(true);
-            }
         };
+        monster.status.ChangeDetectionGauge += onDetectionChanged;
         OnHPChanged(monster.status.Hp);
         detectionFill.fillAmount = 0f;
     }
@@ -164,7 +164,18 @@ public class MonsterUI : MonoBehaviour
 
     void OnMonsterDie()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+    }
+
+    public void ResetForRespawn()
+    {
+        gameObject.SetActive(true);
+        _cg.alpha = 0f;
+        _revealTimer = 0f;
+        _wasInCone = false;
+        detect.gameObject.SetActive(false);
+        detectionFill.fillAmount = 0f;
+        OnHPChanged(monster.status.Maxhp);
     }
 
     void OnDestroy()
@@ -173,6 +184,7 @@ public class MonsterUI : MonoBehaviour
         {
             monster.status.ChangeHP -= OnHPChanged;
             monster.status.OnDie -= OnMonsterDie;
+            monster.status.ChangeDetectionGauge -= onDetectionChanged;
         }
     }
 }

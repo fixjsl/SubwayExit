@@ -312,6 +312,8 @@ MonoBehaviour:
   RotatePivot: {fileID: 0}
   openMessage: "\uC5F4\uAE30"
   closeMessage: "\uB2EB\uAE30"
-  firstOpenSound: {fileID: 0}
-  openSound: {fileID: 0}
+  disappearAfterOpen: 0
+  excludeFromCycle: 0
+  firstOpenSound: {fileID: 8300000, guid: 66405de37b233a44bb503dcad5dcfdfc, type: 3}
+  openSound: {fileID: 8300000, guid: db683024bc38f22409ed86ea8013ee7d, type: 3}
   closeSound: {fileID: 0}

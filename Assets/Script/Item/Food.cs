@@ -7,8 +7,11 @@ public class Food : ItemBase
 
     private void Reset() => itemType = ItemType.Consumable;
 
-    public override void OnUse(PlayerStateMachine player)
+    public override bool OnUse(PlayerStateMachine player)
     {
         player.status.Hungry += FillingAmount;
+        return true;
     }
+
+    public override string GetEffectDescription() => $"배고픔 +{FillingAmount}";
 }

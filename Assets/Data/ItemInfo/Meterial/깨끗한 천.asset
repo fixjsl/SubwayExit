@@ -16,7 +16,8 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 117
   itemType: 2
-  description: 
+  description: 오염되지 않은 직물. 붕대 제작 재료.
   maxamount: 99
   weight: 0
+  canBurnAsFuel: 0
   materials: []

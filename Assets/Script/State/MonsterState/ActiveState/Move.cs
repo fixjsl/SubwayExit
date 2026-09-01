@@ -47,7 +47,6 @@ namespace MonsterStates
             float targetY = (MoveDir > 0) ? 90f : -90f;
             Monster.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
-            Debug.Log($"Turn Finished - MoveDir:{MoveDir}");
             canChanged = true;
             Monster.animator.CrossFade(Monster.move, 0.0001f);
         }

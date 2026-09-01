@@ -17,6 +17,7 @@ public class MonsterStateMachine : MonoBehaviour
     public MonsterState PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
     public Animator animator { get; private set; }
+    private Collider _col;
     public MonsterStatus status;
     public readonly int idle = Animator.StringToHash("idle");
     public readonly int move = Animator.StringToHash("move");
@@ -38,13 +39,14 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private MonsterUI monsterUIPrefab;
     [SerializeField] private Transform hpUIPoint;
     [SerializeField] private Transform detectionUIPoint;
+    private MonsterUI monsterUI;
     public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
     [SerializeField] private float hitAnimLength = 0.5f;
     public float HitAnimLength => hitAnimLength;
     [SerializeField] private float stunAnimLength = 1f;
     public float StunAnimLength => stunAnimLength;
     [SerializeField] private Collider attackCollider; // �ν����� �Ҵ��
-
+     public bool IsReturningFromAttack { get; set; }
     public Collider AttackCollider => attackCollider; // �ܺο��� �б� ����
     public virtual void stateInit()
     {
@@ -70,10 +72,11 @@ public class MonsterStateMachine : MonoBehaviour
     {
 
         status = Instantiate(status);
-
+        IsReturningFromAttack = false;
         status.Hp = status.Maxhp;
         Rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        _col = GetComponent<Collider>();
         if (corpse != null) corpse.enabled = false;
         status.OnDie += OnDieHandler;
         status.OnDie += SpawnLoot;
@@ -81,8 +84,8 @@ public class MonsterStateMachine : MonoBehaviour
 
         if (monsterUIPrefab != null)
         {
-            var ui = Instantiate(monsterUIPrefab);
-            ui.Init(this, hpUIPoint, detectionUIPoint);
+            monsterUI = Instantiate(monsterUIPrefab);
+            monsterUI.Init(this, hpUIPoint, detectionUIPoint);
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -142,11 +145,10 @@ public class MonsterStateMachine : MonoBehaviour
     public void OnExeHit(float Damage)
     {
         ActiveState?.HandleDamage(Damage);
-        if(Targetplayer == null)
-        {
+        if (status.Hp <= 0) return;
+        if (Targetplayer == null)
             SetTarget(PlayerStateMachine.Instance);
-            ChangeState<Battle>();
-        }
+        ChangeState<Battle>();
     }
     protected virtual void OnEnable()
     {
@@ -256,6 +258,8 @@ public class MonsterStateMachine : MonoBehaviour
         float dist = Vector3.Distance(transform.position, player.transform.position);
         return player.status.currentbrighten / Mathf.Max(dist, 1f);
     }
+   
+
     public bool IsInBattleRange()
     {
         if (Targetplayer == null) return false;
@@ -281,6 +285,40 @@ public class MonsterStateMachine : MonoBehaviour
     public virtual void ChangeStun()
     {
         ChangeState<Stun>();
+    }
+
+    public void CycleRespawn()
+    {
+        gameObject.SetActive(true);
+        enabled = true;
+
+        gameObject.layer = Layercache.Monster;
+        if (_col != null) { _col.isTrigger = false; _col.enabled = true; }
+        if (AttackCollider != null)
+        {
+            AttackCollider.gameObject.layer = Layercache.MonsterHitbox;
+            AttackCollider.enabled = false;
+        }
+
+        if (corpse != null) corpse.enabled = false;
+
+        if (monsterUI != null) monsterUI.ResetForRespawn();
+
+        IsFrozen = false;
+        Rb.isKinematic = false;
+        animator.applyRootMotion = true;
+        animator.speed = 1f;
+
+        status.Hp = status.Maxhp;
+        status.detection_gauge = 0f;
+        IsReturningFromAttack = false;
+        Targetplayer = null;
+
+        if (spawnpoint != null)
+            Rb.position = spawnpoint.position;
+        Rb.linearVelocity = Vector3.zero;
+
+        ChangeState<MonsterStates.Idle>();
     }
 
     protected virtual void OnDieHandler()

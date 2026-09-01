@@ -11,9 +11,10 @@ public class Hit : PlayerState
     }
     public override void Enter()
     {
-        //Idle Animation code
         canChanged = false;
+        player.Rb.linearVelocity = Vector3.zero;
         player.animator.CrossFade(player.hit, 0.02f);
+        player.PlaySFX(player.hitSound);
     }
 
     public override void Exit()

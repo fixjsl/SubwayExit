@@ -16,7 +16,8 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 114
   itemType: 2
-  description: 
+  description: 파손된 목재. 불 피우기용 점화재.
   maxamount: 99
   weight: 0
+  canBurnAsFuel: 1
   materials: []

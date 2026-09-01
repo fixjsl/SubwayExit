@@ -20,11 +20,14 @@ public class Attack : PlayerState
 
     public override void Enter()
     {
+        
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
+        player.OffAttackColider();
         player.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
         player.animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0f);
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
+        player.PlaySFX(player.currentWeapon.status.attackSound);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
         Debug.Log($"[Attack] Enter - ComboIndex: {ComboIndex}");
     }
@@ -41,11 +44,12 @@ public class Attack : PlayerState
     {
         ComboIndex++;
         Debug.Log($"[Attack] DoCombo - ComboIndex: {ComboIndex}");
+        if(ComboIndex >2) return;
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
+        player.PlaySFX(player.currentWeapon.status.attackSound);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
-        
     }
 
     public override void PhysicalUpdate()
@@ -63,9 +67,10 @@ public class Attack : PlayerState
         player.OpenAttackCancelWindow(withCombo: ComboIndex < 2);
     }
 
+    // OnAnimationFinished 기본 구현(canChanged=true)을 막음 - OnAnimationFinishedAt만 사용
     public override void OnAnimationFinished()
     {
-        OnAnimationFinishedAt(ComboIndex);
+        Debug.LogWarning($"[Attack] OnAnimationFinished 차단됨 (ComboIndex: {ComboIndex}) - 애니메이터 이벤트를 OnAnimationFinishedAt으로 교체하세요");
     }
 
     // 애니메이션 이벤트: 현재 공격 애니메이션 종료 (파라미터로 어떤 어택인지 식별)

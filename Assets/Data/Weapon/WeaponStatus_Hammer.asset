@@ -12,17 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f2288420f19d54ea1c77da3bbe37eb, type: 3}
   m_Name: WeaponStatus_Hammer
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStatus
-  attack: 10
-  attackSpeed: 2
+  attack: 25
+  attackSpeed: 1.2
   attackRange: 3.4
   executionRange: 27
   execution_m: 3
   bloodStrenth: 0
-  stunStrength: 1
-  GuardStrength: 0.6
-  attackStamina: 5
-  guardStamina: 5
-  parryStamina: 5
+  stunStrength: 1.5
+  GuardStrength: 0.7
+  attackStamina: 15
+  guardStamina: 10
+  parryStamina: 10
   WeaponAnimations: {fileID: 22100000, guid: 482b07395a7ce584785ea63c261c8147, type: 2}
   holdPosition: {x: 0, y: 0, z: 0}
   holdRotation: {x: 0, y: 0, z: 0, w: 0}
+  attackSound: {fileID: 8300000, guid: 6a35a3cd79128d74888f3c9cd6e8726f, type: 3}
+  parrySound: {fileID: 8300000, guid: df9aae765203c1f439ec47ef00fae96a, type: 3}

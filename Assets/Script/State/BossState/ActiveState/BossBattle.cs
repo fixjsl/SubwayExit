@@ -5,71 +5,75 @@ namespace BossStates
     public class BossBattle : BossState
     {
         private TimeManager attackTimer = new TimeManager();
-        private TimeManager strafeTimer = new TimeManager();
         private float delay;
-        private float strafeDir;
-        private float strafeDuration;
+        private bool readyToAttack;
+        private bool isApproaching;
 
-        private float preferredDist => Boss.status.atk_range * 1.3f;
-        private const float distThreshold = 0.3f;
 
+    
         public BossBattle(BossStateMachine boss) : base(boss) { }
 
         public override void Enter()
         {
-            if (Boss.Targetplayer == null)
-            {
-                Boss.ChangeState<BossReturn>();
-                return;
-            }
+            if (Boss.Targetplayer == null) { Boss.ChangeState<BossReturn>(); return; }
 
             Boss.Rb.linearVelocity = new Vector3(0f, Boss.Rb.linearVelocity.y, 0f);
-            Boss.animator.CrossFade(Boss.sprint, 0.01f);
 
             if (Boss.PreserveBattleTimer)
             {
-                // 피격 복귀: 타이머와 딜레이 유지 (다음 공격까지 남은 시간 그대로)
                 Boss.PreserveBattleTimer = false;
             }
-            else
+            else if (!Boss.IsReturningFromAttack)
             {
-                // 일반 진입: 딜레이 새로 설정
                 delay = Mathf.Max(0.5f, Boss.status.atkdelay + Random.Range(-1f, 1f));
                 attackTimer.Reset();
             }
 
-            strafeDir = (Random.value > 0.5f) ? 1f : -1f;
-            strafeDuration = Random.Range(0.8f, 2.0f);
-            strafeTimer.Reset();
+            if (Boss.IsReturningFromAttack)
+            {
+                Boss.IsReturningFromAttack = false;
+                readyToAttack = false;
+                isApproaching = true;
+                Boss.animator.CrossFade(Boss.move, 0.1f);
+            }
+            else
+            {
+                readyToAttack = true;
+                Boss.animator.CrossFade(Boss.battle, 0.1f);
+            }
         }
 
         public override void Exit() { }
 
         public override void LogicUpdate()
         {
-            if (Boss.Targetplayer == null)
+            if (Boss.Targetplayer == null) { Boss.ChangeState<BossReturn>(); return; }
+            if (!Boss.IsInBattleRange()) { Boss.ChangeState<BossChase>(); return; }
+
+            float dist = Mathf.Abs(Boss.Targetplayer.transform.position.x - Boss.transform.position.x);
+
+            if (readyToAttack)
             {
-                Boss.ChangeState<BossReturn>();
+                if (dist <= Boss.status.minSeparation)
+                {
+                    if (Boss.IsSpecialReady && Random.value < Boss.SpecialTriggerChance)
+                        Boss.ChangeState<BossSpecial>();
+                    else
+                        Boss.ChangeState<BossAttack>();
+                }
                 return;
             }
 
-            if (!Boss.IsInBattleRange())
-            {
-                Boss.ChangeState<BossChase>();
-                return;
-            }
-
-            if (strafeTimer.Timer(strafeDuration))
-                PickNewStrafeDir();
-
-            // 이중 체크: 쿨타임 완료 AND 랜덤 발동
             if (attackTimer.Timer(delay))
             {
-                if (Boss.IsSpecialReady && Random.value < Boss.SpecialTriggerChance)
-                    Boss.ChangeState<BossSpecial>();
-                else
-                    Boss.ChangeState<BossAttack>();
+                readyToAttack = true;
+                Boss.animator.CrossFade(Boss.battle, 0.1f);
             }
+
+            if (isApproaching && dist <= Boss.status.minSeparation)
+                isApproaching = false;
+            else if (!isApproaching && dist > Boss.status.maxSeparation)
+                isApproaching = true;
         }
 
         public override void PhysicalUpdate()
@@ -84,20 +88,13 @@ namespace BossStates
             Boss.Rb.rotation = Quaternion.Euler(0f, targetY, 0f);
 
             float moveX;
-
-            if (dist > preferredDist + distThreshold)
+            if (readyToAttack || isApproaching)
                 moveX = (playerX >= myX) ? 1f : -1f;
             else
-                moveX = strafeDir;
+                moveX = (playerX >= myX) ? -1f : 1f;
 
-            Boss.Rb.linearVelocity = new Vector3(moveX * Boss.status.speed, Boss.Rb.linearVelocity.y, 0f);
-        }
-
-        private void PickNewStrafeDir()
-        {
-            strafeDir = -strafeDir;
-            strafeDuration = Random.Range(0.8f, 2.0f);
-            strafeTimer.Reset();
+            float speed = readyToAttack ? Boss.status.speed : Boss.status.battleWalkSpeed;
+            Boss.Rb.linearVelocity = new Vector3(moveX * speed, Boss.Rb.linearVelocity.y, 0f);
         }
     }
 }

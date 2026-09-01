@@ -5,10 +5,10 @@ public class PlaceableItem : ItemBase
 {
     public GameObject placePrefab;
 
-    private void Reset() => itemType = ItemType.Consumable;
+    private void Reset() => itemType = ItemType.InterectObject;
 
-    public override void OnUse(PlayerStateMachine player)
+    public override bool OnUse(PlayerStateMachine player)
     {
-        ItemPlacementController.Instance.StartPlacement(this);
+        return ItemPlacementController.Instance.TryPlace(this);
     }
 }

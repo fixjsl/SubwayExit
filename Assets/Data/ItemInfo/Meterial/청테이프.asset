@@ -16,7 +16,7 @@ MonoBehaviour:
   firstAcquireImage: {fileID: 0}
   itemcode: 109
   itemType: 2
-  description: 
+  description: 강력 접착 테이프.
   maxamount: 99
   weight: 0
   materials: []

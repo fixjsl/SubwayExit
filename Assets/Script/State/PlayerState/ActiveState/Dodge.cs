@@ -30,6 +30,7 @@ public class Dodge : PlayerState
         player.status.UseStamina(player.status.DodgeCost);
         player.animator.SetLayerWeight(1, 0f);
         player.animator.CrossFade(player.dodge, 0.15f);
+        player.PlaySFX(player.dodgeSound);
         dodgeVelocity = new Vector3(player.transform.forward.x * 60f, 0f, 0f);
     }
 
