@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class Interect : PlayerState
+public class Interact : PlayerState
 {
 
-    private Object interectObject;
-    public Interect(PlayerStateMachine stateMachine) : base(stateMachine) {
+    private Object interactObject;
+    public Interact(PlayerStateMachine stateMachine) : base(stateMachine) {
     }
     public override void Enter()
     {
@@ -14,7 +14,7 @@ public class Interect : PlayerState
             canChanged = true;
             return;
         }
-        player.nearbyInteractable.Oninterect(player.transform.position);
+        player.nearbyInteractable.OnInteract(player.transform.position);
     }
 
     public override void Exit()

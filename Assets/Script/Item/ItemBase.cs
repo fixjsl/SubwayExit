@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemType { Weapon, Consumable, Material, Equipment, InterectObject, KeyItem }
+public enum ItemType { Weapon, Consumable, Material, Equipment, InteractObject, KeyItem }
 
 [CreateAssetMenu(fileName = "ItemBase", menuName = "Scriptable Objects/ItemBase")]
 public class ItemBase : ScriptableObject

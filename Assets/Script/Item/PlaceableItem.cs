@@ -5,7 +5,7 @@ public class PlaceableItem : ItemBase
 {
     public GameObject placePrefab;
 
-    private void Reset() => itemType = ItemType.InterectObject;
+    private void Reset() => itemType = ItemType.InteractObject;
 
     public override bool OnUse(PlayerStateMachine player)
     {
