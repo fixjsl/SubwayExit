@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class ItObjectBase : MonoBehaviour, Iinterectable
+public abstract class ItObjectBase : MonoBehaviour, IInteractable
 {
     public abstract bool isStuck { get; }
     public abstract string InteractMessage { get; }
@@ -29,9 +29,9 @@ public abstract class ItObjectBase : MonoBehaviour, Iinterectable
     }
 
 
-    public void Oninterect(Vector3 interacterPosition)
+    public void OnInteract(Vector3 interacterPosition)
     {
-        Debug.Log("Interect called on " + gameObject.name);
+        Debug.Log("Interact called on " + gameObject.name);
         if (isInteracting || Time.time < lastInteractTime + interactCooldown) return;
 
         isInteracting = true;

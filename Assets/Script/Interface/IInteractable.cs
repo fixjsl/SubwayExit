@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public interface Iinterectable
+public interface IInteractable
 {
     bool isStuck { get; }
     string InteractMessage { get; }
-    void Oninterect(Vector3 interacterPosition);
+    void OnInteract(Vector3 interacterPosition);
 }

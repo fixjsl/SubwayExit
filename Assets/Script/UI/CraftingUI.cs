@@ -95,7 +95,7 @@ public class CraftingUI : MonoBehaviour
         foreach (var (_, item) in ItemManager.itemDB)
         {
             bool typeMatch = item.itemType == type ||
-                             (type == ItemType.Consumable && item.itemType == ItemType.InterectObject);
+                              (type == ItemType.Consumable && item.itemType == ItemType.InteractObject);
             if (!typeMatch) continue;
             if (item.materials == null || item.materials.Count == 0) continue;
 

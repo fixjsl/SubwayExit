@@ -35,15 +35,15 @@ public class ContextMenuUI : MonoBehaviour
         ((RectTransform)panel.transform).position = screenPos;
 
         bool isConsumable = item.itemType == ItemType.Consumable;
-        bool isInterectObject = item.itemType == ItemType.InterectObject;
+        bool isInteractObject = item.itemType == ItemType.InteractObject;
 
         quickSlot1Btn.gameObject.SetActive(isConsumable);
         quickSlot2Btn.gameObject.SetActive(isConsumable);
-        useBtn.gameObject.SetActive(isConsumable || isInterectObject);
+        useBtn.gameObject.SetActive(isConsumable || isInteractObject);
         dropBtn.gameObject.SetActive(showDrop);
 
         if (useBtnText != null)
-            useBtnText.text = isInterectObject ? "설치" : "사용";
+            useBtnText.text = isInteractObject ? "설치" : "사용";
 
         panel.SetActive(true);
     }
