@@ -25,10 +25,10 @@
 
 **폐쇄 공간 근거 검색 결과** — 가장 적합한 것부터:
 
-- **[The Impact of Abnormal Environmental Design on Player Tension in Horror Games](https://scholar.smu.edu/cgi/viewcontent.cgi?article=1038&context=guildhall_leveldesign_etds)** (Zhang, SMU Guildhall 학위논문 2026) — 좁고 낮은 통로·분할된 방 등 "공간 제약 → 시야 축소 → 클로스터포비아적 압박"을 플레이어 긴장도로 실증한 논문. 지하철 폐쇄 공간 설계 근거로 **가장 적합**.
-- **[Horror game design – what instills fear in the player?](https://www.diva-portal.org/smash/get/diva2:1432687/FULLTEXT01.pdf)** (Årnell, Uppsala대 학사논문 2020) — 레벨디자인 패턴(선형/오픈, 추이 AI 등)이 공포 경험에 미치는 영향 연구. 위상도 학사급이라 인용 부담 적음.
+- **[The Impact of Abnormal Environmental Design on Player Tension](https://scholar.smu.edu/cgi/viewcontent.cgi?article=1038&context=guildhall_leveldesign_etds)** (Zhang, SMU Guildhall 학위논문 2026) — 좁고 낮은 통로·분할된 방 등 "공간 제약 → 시야 축소 → 클로스터포비아적 압박"을 플레이어 긴장도로 실증한 논문. 지하철 폐쇄 공간 설계 근거로 **가장 적합**.
+- **[game design – what instills fear in the player?](https://www.diva-portal.org/smash/get/diva2:1432687/FULLTEXT01.pdf)** (Årnell, Uppsala대 학사논문 2020) — 레벨디자인 패턴(선형/오픈, 추이 AI 등)이 긴장 경험에 미치는 영향 연구. 위상도 학사급이라 인용 부담 적음.
 - **[Boxed In: Studies of Claustrophobia in Games](https://residentanna.substack.com/p/boxed-in-studies-of-claustrophobia)** (2023, 블로그) — 클로스터포비아 게임 분석으로 **subway train을 폐쇄 공간 사례에 직접 열거**. 비학술이므로 보조 인용용.
-- **[The key to designing an effectively tense survival horror experience](https://www.gamedeveloper.com/design/the-key-to-designing-an-effectively-tense-survival-horror-experience)** (Game Developer, 2023) — "도움받을 곳을 끊어 플레이어를 가두는 고립 설계" 서술. 실무 기사라 보조용.
+- **[The key to designing an effectively tense survival experience](https://www.gamedeveloper.com/design/the-key-to-designing-an-effectively-tense-survival-horror-experience)** (Game Developer, 2023) — "도움받을 곳을 끊어 플레이어를 가두는 고립 설계" 서술. 실무 기사라 보조용.
 
 **권장**: 1번(SMU)을 1장 연구 배경의 폐쇄 공간 근거로 메인 인용 + 기존 목록에 이미 있는 ITU 생존 논문과 조합하면, "메트로베니아(①②) + 서바이벌 메카닉(ITU) + 폐쇄 공간(SMU)"으로 세 축이 모두 학술 출처를 갖게 됩니다.
 
