@@ -5,7 +5,7 @@ public class BaseReturnExit : ItObjectBase
 {
     [SerializeField] private ItemBase keyItem;
     [SerializeField] private string hasKeyMessage  = "기지로 귀환";
-    [SerializeField] private string noKeyMessage   = "비상구 열쇠가 필요합니다";
+    [SerializeField] private string noKeyMessage   = "비상구 열쇠가 필요";
 
     private bool used = false;
 

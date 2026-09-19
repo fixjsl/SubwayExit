@@ -51,7 +51,7 @@ public class PlayerStatus
            ChangeHungry?.Invoke(hungry);
            if(hungry <= 30)
             {
-                curMaxCarryWeight = curMaxCarryWeight * 0.4f;
+                 curMaxCarryWeight = maxCarryWeight * 0.4f; 
             }
             else
             {
@@ -121,9 +121,9 @@ public class PlayerStatus
 
     [Header("Inventory Status")]
     public float maxCarryWeight;
-
     public float curMaxCarryWeight;
     public float maxSlots;
+    public float curdeathItemLossRate;
     //Event
     //base Stat event
     public event Action<float> ChangeHP;

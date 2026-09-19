@@ -9,14 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dd32e8b3100efa41abb9ca72aaa8f00, type: 3}
+  m_Script: {fileID: 11500000, guid: eb1effebc036eee408bd714bbed84c6e, type: 3}
   m_Name: "\uC0DD\uACE0\uAE30"
-  m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  m_EditorClassIdentifier: Assembly-CSharp::Food
   icon: {fileID: 21300000, guid: 0e472e9d570813b4a9324fc7f8a1becd, type: 3}
   firstAcquireImage: {fileID: 0}
-  itemcode: 124
-  itemType: 2
-  description: 동물 사체에서 채취한 육류. 조리 후 섭취 가능.
-  maxamount: 99
+  itemcode: 36
+  itemType: 1
+  description: 
+  maxamount: 0
   weight: 0
+  canBurnAsFuel: 0
   materials: []
+  FillingAmount: 10
+  HealthAmount: -2

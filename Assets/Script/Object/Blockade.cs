@@ -1,9 +1,9 @@
 using UnityEngine;
-
-public class EmergencyExit : ItObjectBase
+//상호작용가능 장애물 코드
+public class Blockade : ItObjectBase
 {
     [SerializeField] private ItemBase keyItem;
-    [SerializeField] private string noKeyMessage = "비상구 열쇠가 필요합니다";
+    [SerializeField] private string noKeyMessage = "비상구 열쇠 필요";
     [SerializeField] private string hasKeyMessage = "탈출";
 
     public override bool isStuck => false;

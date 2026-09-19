@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+//튜토리얼 코드
 public class GameStartFlow : MonoBehaviour
 {
     public static GameStartFlow Instance { get; private set; }

@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: ae1aa43a3c44c7d4190dd060f2e6b72e
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -7330855189707628533
+    second: ClothesDirty_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -108,7 +111,29 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: ClothesDirty_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 331
+        height: 331
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b00e5a5ab02934a90800000000000000
+      internalID: -7330855189707628533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []

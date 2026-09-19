@@ -10,7 +10,8 @@ public class MonsterManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics() => Instance = null;
     // Ȱ��ȭ�� ���� ����Ʈ
-    private List<MonsterStateMachine> activeMonsters = new List<MonsterStateMachine>();
+    private List<MonsterStateMachine> DiedMonsters = new List<MonsterStateMachine>();
+    private List<BossStateMachine> DiedBosses = new List<BossStateMachine>();
 
     // ��Ȱ��ȭ�� ���� Ǯ (������ Ÿ�Ժ�)
     private Dictionary<MonsterType, Queue<MonsterStateMachine>> pool = new Dictionary<MonsterType, Queue<MonsterStateMachine>>();
@@ -35,14 +36,14 @@ public class MonsterManager : MonoBehaviour
     }
     public void Register(MonsterStateMachine monster)
     {
-        if (!activeMonsters.Contains(monster))
-            activeMonsters.Add(monster);
+        if (!DiedMonsters.Contains(monster))
+            DiedMonsters.Add(monster);
     }
 
     // ���� ��� �� Ǯ�� ��ȯ
     public void ReturnToPool(MonsterStateMachine monster, MonsterType key)
     {
-        activeMonsters.Remove(monster);
+        DiedMonsters.Remove(monster);
         monster.gameObject.SetActive(false);
 
         if (!pool.ContainsKey(key))
@@ -50,42 +51,5 @@ public class MonsterManager : MonoBehaviour
 
         pool[key].Enqueue(monster);
     }
-    public MonsterStateMachine Spawn(MonsterType type, Vector3 position)
-    {
-        if(!pool.ContainsKey(type) || pool[type].Count == 0) return null;
-        var monster = pool[type].Dequeue();
-        monster.transform.position = position;
-        monster.spawnpoint.transform.position = position; 
-        monster.gameObject.SetActive(true);
-        Register(monster);
-        return monster;
-    }
-    // Ȱ     Ž
-    public MonsterStateMachine GetStunnedInRange(Vector3 origin, float range)
-    {
-        float rangeSq = range * range;
-        foreach (var monster in activeMonsters)
-        {
-            if (monster == null) continue;
-            if ((monster.transform.position - origin).sqrMagnitude > rangeSq) continue;
-            if (monster.ActiveState is MonsterStates.Stun)
-                return monster;
-        }
-        return null;
-    }
 
-    // Ȱ�� ���� �� ���� �� ��� ���� ���� Ž��
-    public MonsterStateMachine GetAmbushTargetInRange(Vector3 origin, float range, float gaugeLimit)
-    {
-        float rangeSq = range * range;
-        foreach (var monster in activeMonsters)
-        {
-            if (monster == null) continue;
-            if ((monster.transform.position - origin).sqrMagnitude > rangeSq) continue;
-            if (monster.status.detection_gauge > gaugeLimit) continue;
-            if (monster.ActiveState is MonsterStates.Idle || monster.ActiveState is MonsterStates.Move)
-                return monster;
-        }
-        return null;
-    }
 }

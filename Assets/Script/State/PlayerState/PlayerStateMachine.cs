@@ -208,7 +208,7 @@ public class PlayerStateMachine : MonoBehaviour
         status.Water   = status.MaxWater;
         status.baseHungerDecreasePerMinute = status.hungerDecreasePerMinute;
         status.baseWaterDecreasePerMinute  = status.waterDecreasePerMinute;
-        status.baseStaminaRecovery         = status.staminaRecovery;
+        status.baseStaminaRecovery         = status.staminaRecoverey;
 
         stateInit();
         InputBindings.Init(action);
