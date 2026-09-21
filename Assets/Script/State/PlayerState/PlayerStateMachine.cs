@@ -130,7 +130,6 @@ public class PlayerStateMachine : MonoBehaviour
             bool next = currentLight == null || !currentLight.enabled;
             if (currentLight != null) currentLight.enabled = next;
             IsLightOn = next;
-            Debug.Log($"LightToggle{next}");
             OnLightToggle?.Invoke(next);
         };
         action.PlayerAction.Move.performed += ctx => {
@@ -162,7 +161,6 @@ public class PlayerStateMachine : MonoBehaviour
         action.PlayerAction.Guard.canceled += _ => isGuard = false;
         action.Enable();
         var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract);
-        Debug.Log($"발견된 상태 수: {StateT.Count()}");
         foreach (var type in StateT)
         {
             try
@@ -358,7 +356,6 @@ public class PlayerStateMachine : MonoBehaviour
                         currentWeapon.status.executionRange, 1 << Layercache.Stun);
                     if (stunHits.Length > 0)
                     {
-                        Debug.Log("WeakAttack");
                         execTarget = stunHits[0].GetComponentInParent<MonsterStateMachine>();
                     }
 
@@ -379,7 +376,6 @@ public class PlayerStateMachine : MonoBehaviour
                     {
                         var execution = Statecaches[typeof(Execution)] as Execution;
                         execution.setTarget(execTarget);
-                        Debug.Log("Assasino");
                         ChangeState<Execution>();
                     }
                     else ChangeState<Attack>();

@@ -51,7 +51,6 @@ public class MonsterStateMachine : MonoBehaviour
     public virtual void stateInit()
     {
         var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(MonsterState)) && !t.IsAbstract && t.Namespace == "MonsterStates");
-        Debug.Log($"�߰ߵ� ���� ����: {StateT.Count()}");
         foreach (var type in StateT)
         {
             try

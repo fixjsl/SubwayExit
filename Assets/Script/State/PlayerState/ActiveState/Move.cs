@@ -104,7 +104,6 @@ public class Move : PlayerState
         
         float targetY = (movebuffer > 0) ? 90f : -90f;
         player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
-        Debug.Log("Turn Animation Finished");
         if (canSprint) 
         {
             player.animator.CrossFade(player.sprint, 0.15f);

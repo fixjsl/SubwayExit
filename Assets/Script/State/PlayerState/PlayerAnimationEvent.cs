@@ -41,7 +41,6 @@ public class PlayerAnimationEvent : MonoBehaviour
     {
         if(player.ActiveState is Execution)
         {
-            Debug.Log("ParryingEnd");
             ((Execution)player.ActiveState).OnDamage();
         }
     }

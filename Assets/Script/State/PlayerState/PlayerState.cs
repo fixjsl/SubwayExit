@@ -20,7 +20,6 @@ public abstract class PlayerState : State
     }
     public virtual void OnAnimationFinished()
     {
-        Debug.Log($"[PlayerState] OnAnimationFinished - State: {GetType().Name}");
         canChanged = true;
     }
     public virtual void OnTurnAnimationFinished() { }

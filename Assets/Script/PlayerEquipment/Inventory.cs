@@ -95,7 +95,6 @@ public class Inventory
     {
         if (slotIndex < 0 || slotIndex >= QuickSlots.Length) return;
         int code = QuickSlots[slotIndex];
-        Debug.Log($"[QuickSlot] {slotIndex}번 사용 시도 | code={code} | 인벤에 있음={slots.ContainsKey(code)}");
         if (code == 0 || !slots.ContainsKey(code)) { QuickSlots[slotIndex] = 0; return; }
         if (!ItemManager.itemDB.TryGetValue(code, out var item))
         {

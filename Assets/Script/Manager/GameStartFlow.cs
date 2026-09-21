@@ -49,7 +49,6 @@ public class GameStartFlow : MonoBehaviour
             ShowPage(currentPage);
         else
         {
-            Debug.Log("dnpdksehladnpdksaehal");
             tutorialPanel.SetActive(false);
             weaponCardContainer.SetActive(true);
         }

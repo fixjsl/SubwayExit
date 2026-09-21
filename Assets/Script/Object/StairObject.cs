@@ -77,7 +77,6 @@ private PlayerStateMachine mountedPlayer;
         var pos = player.Rb.position;
         
         pos.z = stairOffset.position.z;
-        Debug.Log($"Mount : {pos}");
         player.Rb.position = pos;
     }
 

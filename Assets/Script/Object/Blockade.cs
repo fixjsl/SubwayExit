@@ -30,6 +30,6 @@ public class Blockade : ItObjectBase
             return;
         }
 
-        GameManager.Instance.GameClear();
+        gameObject.SetActive(false);
     }
 }

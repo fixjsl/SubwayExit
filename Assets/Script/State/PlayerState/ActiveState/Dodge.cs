@@ -53,8 +53,6 @@ public class Dodge : PlayerState
     }
     public override void OnAnimationFinished()
     {
-        Debug.Log("Dodge animation finished");
-        
         canChanged = true;
     }
 }

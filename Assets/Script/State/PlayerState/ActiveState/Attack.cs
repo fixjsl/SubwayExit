@@ -29,12 +29,10 @@ public class Attack : PlayerState
         player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
         player.PlaySFX(player.currentWeapon.status.attackSound);
         player.status.UseStamina(player.currentWeapon.status.attackStamina);
-        Debug.Log($"[Attack] Enter - ComboIndex: {ComboIndex}");
     }
 
     public override void Exit()
     {
-        Debug.Log($"[Attack] Exit - ComboIndex: {ComboIndex}");
         ComboIndex = 0;
         player.CloseAllAttackWindows();
     }
@@ -43,7 +41,6 @@ public class Attack : PlayerState
     public void DoCombo()
     {
         ComboIndex++;
-        Debug.Log($"[Attack] DoCombo - ComboIndex: {ComboIndex}");
         if(ComboIndex >2) return;
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
@@ -63,7 +60,6 @@ public class Attack : PlayerState
     // 애니메이션 이벤트: 캔슬/콤보 허용 구간 시작
     public override void OncanCombo()
     {
-        Debug.Log($"[Attack] OncanCombo - ComboIndex: {ComboIndex}, withCombo: {ComboIndex < 2}");
         player.OpenAttackCancelWindow(withCombo: ComboIndex < 2);
     }
 
@@ -78,11 +74,9 @@ public class Attack : PlayerState
     {
         if (attackIndex != ComboIndex)
         {
-            Debug.Log($"[Attack] OnAnimationFinishedAt 무시 - attackIndex: {attackIndex}, ComboIndex: {ComboIndex}");
             return;
         }
 
-        Debug.Log($"[Attack] OnAnimationFinishedAt 처리 - attackIndex: {attackIndex}");
 
         if (ComboIndex >= 2)
             lastCombo3FinishTime = Time.time;

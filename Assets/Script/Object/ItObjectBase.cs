@@ -31,7 +31,6 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
 
     public void OnInteract(Vector3 interacterPosition)
     {
-        Debug.Log("Interact called on " + gameObject.name);
         if (isInteracting || Time.time < lastInteractTime + interactCooldown) return;
 
         isInteracting = true;
