@@ -18,11 +18,11 @@ MonoBehaviour:
   executionRange: 27
   execution_m: 3
   bloodStrenth: 0
-  stunStrength: 1.5
+  stunStrength: 1.1
   GuardStrength: 0.7
   attackStamina: 15
-  guardStamina: 10
-  parryStamina: 10
+  guardStamina: 15
+  parryStamina: 15
   WeaponAnimations: {fileID: 22100000, guid: 482b07395a7ce584785ea63c261c8147, type: 2}
   holdPosition: {x: 0, y: 0, z: 0}
   holdRotation: {x: 0, y: 0, z: 0, w: 0}

@@ -16,7 +16,8 @@
       "Bash(Sort-Object)",
       "PowerShell(Get-ChildItem -Path \"d:\\\\Popol\\\\SubwayExit\\\\Assets\\\\Script\" -Recurse -File | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"d:\\\\Popol\\\\SubwayExit\\\\Assets\\\\Script\\\\\", \"\"\\) } | Sort-Object)",
       "Bash(grep ^guid: d:/Popol/SubwayExit/Assets/Data/ItemInfo/Meterial/__TRACKED_VAR__.asset.meta)",
-      "Bash(grep ^guid: d:/Popol/SubwayExit/Assets/Data/ItemInfo/Consumable/__TRACKED_VAR__.asset.meta)"
+      "Bash(grep ^guid: d:/Popol/SubwayExit/Assets/Data/ItemInfo/Consumable/__TRACKED_VAR__.asset.meta)",
+      "Bash(sort -t: -k2 -rn)"
     ]
   }
 }

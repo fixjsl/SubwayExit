@@ -203,7 +203,7 @@ public class MonsterStateMachine : MonoBehaviour
                     status.detection_gauge += awareness * status.detectionSpeed * 0.1f;
 
                     if (awareness <= 0)
-                        status.detection_gauge -= status.recovery * 0.1f;
+                        DecayDetectionGauge();
                 }
 
                 // 감지 게이지 초과 시 Chase 전환
@@ -218,6 +218,9 @@ public class MonsterStateMachine : MonoBehaviour
             }
             else
             {
+                // 탐지 범위 밖: 게이지를 서서히 감소시킨다
+                DecayDetectionGauge();
+
                 if (Targetplayer != null)
                 {
                     // 순찰 중이면 멈추고 경계
@@ -237,6 +240,12 @@ public class MonsterStateMachine : MonoBehaviour
            }
 
         }
+    // 탐지 게이지를 진정도만큼 감소시킨다. 하한은 0.
+    void DecayDetectionGauge()
+    {
+        status.detection_gauge = Mathf.Max(0f, status.detection_gauge - status.recovery * 0.1f);
+    }
+
     float CalculateSoundAwareness(PlayerStateMachine player)
     {
         float dist = Vector3.Distance(transform.position, player.transform.position);
