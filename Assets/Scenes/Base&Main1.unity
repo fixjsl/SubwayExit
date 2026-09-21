@@ -26533,6 +26533,10 @@ PrefabInstance:
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
+      propertyPath: status.Chance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: startItemCount
       value: 1
       objectReference: {fileID: 0}

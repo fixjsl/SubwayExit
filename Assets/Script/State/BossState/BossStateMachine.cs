@@ -122,6 +122,12 @@ public class BossStateMachine : MonsterStateMachine
         ChangeState<BossHit>();
         ActiveState?.HandleDamage(Damage);
     }
+    public override void OnExeHit(float Damage)
+{
+    ActiveState?.HandleDamage(Damage);
+    if (status.Hp <= 0) return;
+    OnPlayerEnterZone(PlayerStateMachine.Instance);
+} 
 
     public override void ChangeStun() => ChangeState<BossStun>();
 

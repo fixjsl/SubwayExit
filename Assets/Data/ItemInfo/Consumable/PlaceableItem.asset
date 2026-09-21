@@ -15,7 +15,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   firstAcquireImage: {fileID: 0}
   itemcode: 0
-  itemType: 4
+  itemType: 5
   description: 
   maxamount: 0
   weight: 0

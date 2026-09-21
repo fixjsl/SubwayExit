@@ -141,7 +141,7 @@ public class MonsterStateMachine : MonoBehaviour
         ChangeState<MonsterStates.Hit>();
         ActiveState?.HandleDamage(Damage);
     }
-    public void OnExeHit(float Damage)
+    public virtual void OnExeHit(float Damage)
     {
         ActiveState?.HandleDamage(Damage);
         if (status.Hp <= 0) return;
