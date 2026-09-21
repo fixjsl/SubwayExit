@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using Unity.Profiling;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// 성능 측정용 로거.
@@ -32,7 +33,7 @@ public class PerfLogger : MonoBehaviour
     public float durationSeconds = 30f;
 
     [Tooltip("측정 시작/종료 키.")]
-    public KeyCode toggleKey = KeyCode.F9;
+    public Key toggleKey = Key.F9;
 
     [Tooltip("화면에 현재 상태를 표시한다.")]
     public bool showOverlay = true;
@@ -106,7 +107,7 @@ public class PerfLogger : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(toggleKey))
+        if (Keyboard.current != null && Keyboard.current[toggleKey].wasPressedThisFrame)
         {
             if (recording) Stop();
             else Begin();

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>4장 표 복사용</title>
+<style>
+  body { font-family: "함초롬바탕", "바탕", serif; font-size: 11pt; line-height: 1.6; padding: 24px; max-width: 900px; }
+  h2 { font-size: 12pt; margin-top: 34px; margin-bottom: 10px; }
+  p.cap { font-size: 10pt; font-weight: bold; margin: 0 0 6px 0; }
+  p.note { font-size: 9.5pt; color: #333; margin-top: 6px; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 4px; }
+  th, td { border: 1px solid #000; padding: 5px 7px; font-size: 10pt; vertical-align: middle; }
+  th { background: #efefef; font-weight: bold; text-align: center; }
+  td.c { text-align: center; }
+  td.num { text-align: center; }
+  tr.total td { font-weight: bold; background: #f7f7f7; }
+  code { font-family: "D2Coding", "Consolas", monospace; font-size: 9.5pt; }
+</style>
+</head>
+<body>
+
+<h2>[표 4-X] 3.1절 설계 계층과 실제 구현의 대응</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:16%">설계 계층</th>
+      <th style="width:22%">구현 위치</th>
+      <th style="width:50%">주요 구성 요소</th>
+      <th style="width:12%">스크립트 수</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="c">데이터 계층</td>
+      <td><code>Script/Item</code>, <code>Script/Status</code></td>
+      <td>ItemBase 및 파생 3종(Food, Water, DirtyWater), LootTable, WeaponStatus — 모두 ScriptableObject</td>
+      <td class="num">6</td>
+    </tr>
+    <tr>
+      <td class="c">상태머신 계층</td>
+      <td><code>Script/State</code>, <code>Script/Interface</code>, <code>Script/PlayerEquipment</code></td>
+      <td>공통 추상 클래스 State 및 IState, PlayerStateMachine(액티브 11종 + 패시브 2종), MonsterStateMachine(9종), BossStateMachine(5종), Inventory, PlayerStatus</td>
+      <td class="num">41</td>
+    </tr>
+    <tr>
+      <td class="c">매니저 계층</td>
+      <td><code>Script/Manager</code></td>
+      <td>GameManager, CycleManager, MonsterManager, ItemManager, GameStartFlow, Layercache, YeildCache</td>
+      <td class="num">7</td>
+    </tr>
+    <tr>
+      <td class="c">월드 오브젝트 계층</td>
+      <td><code>Script/Object</code></td>
+      <td>ItObjectBase 및 파생 10종(출발 게이트, 비상구, 블록에이드, 컨테이너, 제작대, 모닥불, 정수기, 계단, 문, 아이템 획득)</td>
+      <td class="num">11</td>
+    </tr>
+    <tr>
+      <td class="c">UI 계층</td>
+      <td><code>Script/UI</code></td>
+      <td>BossUI</td>
+      <td class="num">1</td>
+    </tr>
+    <tr>
+      <td class="c">렌더링 계층</td>
+      <td><code>Script/Rendering</code>, <code>Assets/Shader</code></td>
+      <td>FlashlightRendererFeature, ScreenPointLight, ScreenPointLightManager, Flashlight, MonsterFlashlightVisibility, 전용 셰이더 4종</td>
+      <td class="num">5</td>
+    </tr>
+    <tr class="total">
+      <td class="c">합계</td>
+      <td></td>
+      <td></td>
+      <td class="num">71</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">※ 에디터 전용 도구 2종(BakeMeshExporter, RemoveScaleCurves)은 빌드에 포함되지 않으므로 합계에서 제외하였다. 이를 포함한 전체 스크립트 수는 73이다.</p>
+
+
+<h2>[표 4-Y] 성능 측정 환경</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:28%">항목</th>
+      <th style="width:72%">사양</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="c">CPU</td><td>AMD Ryzen 7 5700X (8-Core)</td></tr>
+    <tr><td class="c">GPU</td><td>NVIDIA GeForce RTX 5070 Ti</td></tr>
+    <tr><td class="c">메모리</td><td>48 GB</td></tr>
+    <tr><td class="c">그래픽 API</td><td>Direct3D12</td></tr>
+    <tr><td class="c">엔진</td><td>Unity 6000.3.23f1 / URP 17.3.0</td></tr>
+    <tr><td class="c">빌드 형태</td><td>Windows PC, 개발 빌드(Development Build)</td></tr>
+    <tr><td class="c">실행 해상도</td><td>1920 × 1080, 수직 동기화 해제, 목표 프레임 제한 없음</td></tr>
+    <tr><td class="c">측정 방식</td><td>예열 5초 후 30초간 매 프레임 기록</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 4.1절의 개발 환경과 측정 환경이 다른 경우, 본 표를 4.3절 성능 측정 도입부에 배치하고 &ldquo;성능 측정은 다음 환경에서 수행하였다&rdquo;로 인용할 것.</p>
+<p class="note">※ 측정은 프로파일러 계측이 활성화된 개발 빌드에서 수행되었으므로, 배포 빌드의 실제 성능은 이보다 높을 것으로 예상된다.</p>
+
+</body>
+</html>

@@ -2500,6 +2500,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9030241075695775855, guid: 6cf7bcfa155ba4140a1f573e11668382, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: b8b0cbe5767bc914a8c4f782d7ff4869, type: 2}
+    - target: {fileID: 9030241075695775855, guid: 6cf7bcfa155ba4140a1f573e11668382, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9094853848920805114, guid: 6cf7bcfa155ba4140a1f573e11668382, type: 3}
       propertyPath: m_Name
       value: SettingMenu
