@@ -3,33 +3,34 @@ using UnityEngine;
 public class Blockade : ItObjectBase
 {
     [SerializeField] private ItemBase keyItem;
-    [SerializeField] private string noKeyMessage = "비상구 열쇠 필요";
-    [SerializeField] private string hasKeyMessage = "탈출";
+    [SerializeField] private string noKeyMessage = "열쇠 필요";
+    [SerializeField] private string hasKeyMessage = "다음 구역 해방";
 
     public override bool isStuck => false;
-
+     protected bool HasKey =>
+        keyItem != null &&
+        PlayerStateMachine.Instance != null &&
+        PlayerStateMachine.Instance.inventory.slots.ContainsKey(keyItem.itemcode);
     public override string InteractMessage
-    {
-        get
-        {
-            bool hasKey = keyItem != null &&
-                          PlayerStateMachine.Instance != null &&
-                          PlayerStateMachine.Instance.inventory.slots.ContainsKey(keyItem.itemcode);
-            string msg = hasKey ? hasKeyMessage : noKeyMessage;
-            return $"{msg} [{InputBindings.Interact}]";
-        }
-    }
+        => $"{(HasKey ? hasKeyMessage : noKeyMessage)} [{InputBindings.Interact}]";
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
         isInteracting = false;
 
-        if (keyItem == null || !PlayerStateMachine.Instance.inventory.slots.ContainsKey(keyItem.itemcode))
+        if (!HasKey)
         {
+            
             RefreshPrompt();
             return;
         }
 
+        BlockadeInteract();
+    }
+
+    protected virtual void BlockadeInteract()
+    {
+        PlayerStateMachine.Instance.inventory.RemoveItem(keyItem, 1);
         gameObject.SetActive(false);
     }
 }
