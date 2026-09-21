@@ -103,5 +103,62 @@
 <p class="note">※ 4.1절의 개발 환경과 측정 환경이 다른 경우, 본 표를 4.3절 성능 측정 도입부에 배치하고 &ldquo;성능 측정은 다음 환경에서 수행하였다&rdquo;로 인용할 것.</p>
 <p class="note">※ 측정은 프로파일러 계측이 활성화된 개발 빌드에서 수행되었으므로, 배포 빌드의 실제 성능은 이보다 높을 것으로 예상된다.</p>
 
+
+<h2>[표 4-Z] 애니메이션 이벤트 구성</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:16%">클립</th>
+      <th style="width:7%">순서</th>
+      <th style="width:13%">시점(정규화)</th>
+      <th style="width:22%">함수</th>
+      <th style="width:10%">인자</th>
+      <th style="width:32%">역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="c" rowspan="4">공격<br>(pSpear_Atk)</td>
+      <td class="c">1</td>
+      <td class="c">약 0.02</td>
+      <td><code>OnAttackCollider</code></td>
+      <td class="c">&mdash;</td>
+      <td>타격 판정 히트박스 활성화</td>
+    </tr>
+    <tr>
+      <td class="c">2</td>
+      <td class="c">약 0.63</td>
+      <td><code>OffAttackCollider</code></td>
+      <td class="c">&mdash;</td>
+      <td>타격 판정 히트박스 비활성화</td>
+    </tr>
+    <tr>
+      <td class="c">3</td>
+      <td class="c">약 0.72</td>
+      <td><code>OncanCombo</code></td>
+      <td class="c">&mdash;</td>
+      <td>캔슬 구간 개방 (콤보 단계가 2 미만인 경우 콤보 구간 동시 개방)</td>
+    </tr>
+    <tr>
+      <td class="c">4</td>
+      <td class="c">약 0.87</td>
+      <td><code>OnAnimationFinishedAt</code></td>
+      <td class="c">Int = 0</td>
+      <td>종료 신호와 함께 공격 인덱스 전달</td>
+    </tr>
+    <tr>
+      <td class="c">회피</td>
+      <td class="c">1</td>
+      <td class="c">&nbsp;</td>
+      <td><code>OnAnimationFinished</code></td>
+      <td class="c">&mdash;</td>
+      <td>전이 허용 플래그 복구</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">※ 시점은 클립 길이를 1로 정규화한 근사값이다.</p>
+
 </body>
 </html>

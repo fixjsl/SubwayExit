@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: ba073b3e462b7fa4a9ed0dc8920900b8
 ModelImporter:
-  serializedVersion: 24200
+  serializedVersion: 24300
   internalIDToNameTable: []
   externalObjects: {}
   materials:
@@ -9,6 +9,7 @@ ModelImporter:
     materialName: 0
     materialSearch: 1
     materialLocation: 1
+    searchTexturesGlobally: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -330,7 +331,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.972516
+      - time: 0.9438627
         functionName: OnAnimationFinished
         data: 
         objectReferenceParameter: {instanceID: 0}
