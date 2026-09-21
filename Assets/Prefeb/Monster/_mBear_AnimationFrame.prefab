@@ -484,9 +484,6 @@ PrefabInstance:
       addedObject: {fileID: 5521886047518427584}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afb91b604059c1845b929beea61641f6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9072588401551078675}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afb91b604059c1845b929beea61641f6, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7122264756082180124}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afb91b604059c1845b929beea61641f6, type: 3}
       insertIndex: -1
@@ -553,18 +550,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterAnimationEvent
   monster: {fileID: 6044352037818608879}
---- !u!114 &9072588401551078675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640497434981822245}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74e01cdcc29e8f24ca2447605490e89d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterWeapon
 --- !u!65 &7122264756082180124
 BoxCollider:
   m_ObjectHideFlags: 0
