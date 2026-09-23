@@ -118,4 +118,51 @@ public class Inventory
             }
         }
     }
+
+    public void LoseOnDeath(float rate)
+{
+    
+    if (rate <= 0f || slots.Count == 0) return;
+
+    var kinds  = new List<ItemBase>();   // 비유니크 종류
+    var counts = new List<int>();
+    var uniques = new List<(ItemBase item, int count)>();
+    int total = 0, uniqueTotal = 0;
+
+    foreach (var pair in slots)
+    {
+        
+        if (!ItemManager.itemDB.TryGetValue(pair.Key, out var item)) continue;
+        if(item.itemType == ItemType.KeyItem) continue; // 키 아이템은 소실되지 않음
+        total += pair.Value;
+        if (LootTable.IsUniqueItem(pair.Key)) { uniques.Add((item, pair.Value)); uniqueTotal += pair.Value; }
+        else { kinds.Add(item); counts.Add(pair.Value); }
+    }
+    if (total == 0) return;
+
+    int target = Mathf.FloorToInt(total * rate);
+
+    // 유니크는 전량 소실
+    foreach (var (item, count) in uniques) RemoveItem(item, count);
+
+    // 남은 몫을 수량 가중으로 뽑되, 결과만 누적한다
+    int pool = total - uniqueTotal;
+    int remain = Mathf.Clamp(target - uniqueTotal, 0, pool);
+    var loss = new int[kinds.Count];
+
+    for (int n = 0; n < remain; n++)
+    {
+        int pick = UnityEngine.Random.Range(0, pool);
+        for (int i = 0; i < kinds.Count; i++)
+        {
+            int avail = counts[i] - loss[i];
+            if (pick < avail) { loss[i]++; pool--; break; }
+            pick -= avail;
+        }
+    }
+
+    // 실제 제거는 종류마다 한 번
+    for (int i = 0; i < kinds.Count; i++)
+        if (loss[i] > 0) RemoveItem(kinds[i], loss[i]);
+}
 }

@@ -15,6 +15,7 @@ public class Die : PlayerState
         player.Rb.isKinematic = true;
         player.gameObject.layer = Layercache.Die;
         player.OnDisable();
+        player.inventory.LoseOnDeath(player.status.curdeathItemLossRate);
         player.status.Chance--;     
         if (player.status.Chance >0)
             player.StartCoroutine(RespawnRoutine());
