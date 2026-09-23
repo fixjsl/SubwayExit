@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>4장 표 복사용</title>
+<style>
+  body { font-family: "함초롬바탕", "바탕", serif; font-size: 11pt; line-height: 1.6; padding: 24px; max-width: 1000px; }
+  h2 { font-size: 12pt; margin-top: 38px; margin-bottom: 10px; }
+  p.note { font-size: 9.5pt; color: #333; margin: 6px 0 0 0; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 4px; }
+  th, td { border: 1px solid #000; padding: 5px 7px; font-size: 10pt; vertical-align: middle; }
+  th { background: #efefef; font-weight: bold; text-align: center; }
+  td.c { text-align: center; }
+  tr.total td, td.b { font-weight: bold; background: #f7f7f7; }
+  code { font-family: "D2Coding", "Consolas", monospace; font-size: 9.5pt; }
+</style>
+</head>
+<body>
+
+<h2>[표 9] 3.1절 설계 계층과 실제 구현의 대응</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:16%">설계 계층</th>
+      <th style="width:22%">구현 위치</th>
+      <th style="width:50%">주요 구성 요소</th>
+      <th style="width:12%">스크립트 수</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="c">데이터 계층</td><td><code>Script/Item</code>, <code>Script/Status</code></td><td>ItemBase 및 파생 3종(Food, Water, DirtyWater), LootTable, WeaponStatus — 모두 ScriptableObject</td><td class="c">6</td></tr>
+    <tr><td class="c">상태머신 계층</td><td><code>Script/State</code>, <code>Script/Interface</code>, <code>Script/PlayerEquipment</code></td><td>공통 추상 클래스 State 및 IState, PlayerStateMachine(액티브 11종 + 패시브 2종), MonsterStateMachine(9종), BossStateMachine(5종), Inventory, PlayerStatus</td><td class="c">41</td></tr>
+    <tr><td class="c">매니저 계층</td><td><code>Script/Manager</code></td><td>GameManager, CycleManager, MonsterManager, ItemManager, GameStartFlow, Layercache, YeildCache</td><td class="c">7</td></tr>
+    <tr><td class="c">월드 오브젝트 계층</td><td><code>Script/Object</code></td><td>ItObjectBase 및 파생 10종(출발 게이트, 비상구, 블록에이드, 컨테이너, 제작대, 모닥불, 정수기, 계단, 문, 아이템 획득)</td><td class="c">11</td></tr>
+    <tr><td class="c">UI 계층</td><td><code>Script/UI</code></td><td>BossUI</td><td class="c">1</td></tr>
+    <tr><td class="c">렌더링 계층</td><td><code>Script/Rendering</code>, <code>Assets/Shader</code></td><td>FlashlightRendererFeature, ScreenPointLight, ScreenPointLightManager, Flashlight, MonsterFlashlightVisibility, 전용 셰이더 4종</td><td class="c">5</td></tr>
+    <tr class="total"><td class="c">합계</td><td></td><td></td><td class="c">71</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 에디터 전용 도구 2종(BakeMeshExporter, RemoveScaleCurves)은 빌드에 포함되지 않으므로 합계에서 제외하였다. 이를 포함한 전체 스크립트 수는 73이다.</p>
+
+
+<h2>[표 10] 애니메이션 이벤트 구성</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:16%">클립</th><th style="width:7%">순서</th><th style="width:13%">시점(정규화)</th>
+      <th style="width:22%">함수</th><th style="width:10%">인자</th><th style="width:32%">역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="c" rowspan="4">공격<br>(pSpear_Atk)</td>
+      <td class="c">1</td><td class="c">약 0.02</td><td><code>OnAttackCollider</code></td><td class="c">&mdash;</td><td>타격 판정 히트박스 활성화</td>
+    </tr>
+    <tr><td class="c">2</td><td class="c">약 0.63</td><td><code>OffAttackCollider</code></td><td class="c">&mdash;</td><td>타격 판정 히트박스 비활성화</td></tr>
+    <tr><td class="c">3</td><td class="c">약 0.72</td><td><code>OncanCombo</code></td><td class="c">&mdash;</td><td>캔슬 구간 개방 (콤보 단계가 2 미만인 경우 콤보 구간 동시 개방)</td></tr>
+    <tr><td class="c">4</td><td class="c">약 0.87</td><td><code>OnAnimationFinishedAt</code></td><td class="c">Int = 0</td><td>종료 신호와 함께 공격 인덱스 전달</td></tr>
+    <tr><td class="c">회피</td><td class="c">1</td><td class="c">&nbsp;</td><td><code>OnAnimationFinished</code></td><td class="c">&mdash;</td><td>전이 허용 플래그 복구</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 시점은 클립 길이를 1로 정규화한 근사값이다.</p>
+
+
+<h2>[표 11] 성능 측정 환경</h2>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th style="width:72%">사양</th></tr></thead>
+  <tbody>
+    <tr><td class="c">CPU</td><td>AMD Ryzen 7 5700X (8-Core)</td></tr>
+    <tr><td class="c">GPU</td><td>NVIDIA GeForce RTX 5070 Ti</td></tr>
+    <tr><td class="c">메모리</td><td>48 GB</td></tr>
+    <tr><td class="c">그래픽 API</td><td>Direct3D12 (Unity 자동 선택)</td></tr>
+    <tr><td class="c">엔진</td><td>Unity 6000.3.23f1 / URP 17.3.0</td></tr>
+    <tr><td class="c">빌드 형태</td><td>Windows PC, 개발 빌드(Development Build)</td></tr>
+    <tr><td class="c">실행 해상도</td><td>1920 × 1080, 수직 동기화 해제, 목표 프레임 제한 없음</td></tr>
+    <tr><td class="c">측정 방식</td><td>예열 5초 후 30초간 매 프레임 기록, 구간당 3회</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 측정은 프로파일러 계측이 활성화된 개발 빌드에서 수행되었으므로, 배포 빌드의 실제 성능은 이보다 높을 것으로 예상된다.</p>
+
+
+<h2>[표 12] 구간별 성능 측정 결과</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:14%">구간</th><th>평균 FPS</th><th>평균 프레임<br>시간</th><th>95퍼센타일</th><th>99퍼센타일</th>
+      <th>드로우콜</th><th>SetPass</th><th>삼각형</th><th>프레임당 GC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="c">기지</td><td class="c">796.7</td><td class="c">1.255 ms</td><td class="c">1.498 ms</td><td class="c">1.704 ms</td><td class="c">65.3</td><td class="c">41.0</td><td class="c">190,435</td><td class="c">1,299 B</td></tr>
+    <tr><td class="c">탐색 구역</td><td class="c">772.7</td><td class="c">1.294 ms</td><td class="c">1.693 ms</td><td class="c">2.095 ms</td><td class="c">66.0</td><td class="c">39.8</td><td class="c">264,913</td><td class="c">1,360 B</td></tr>
+    <tr><td class="c">보스 전투</td><td class="c">820.3</td><td class="c">1.219 ms</td><td class="c">1.476 ms</td><td class="c">1.790 ms</td><td class="c">62.7</td><td class="c">43.2</td><td class="c">159,776</td><td class="c">1,361 B</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 각 구간 3회 측정의 평균이다. 구간별 측정 조건은 다음과 같다. 기지 — 안전 지대에서 정지. 탐색 구역 — 시작 지점이 매 런 무작위로 결정되어 동일 경로를 반복할 수 없으므로, &ldquo;구역 진입 후 30초간 이동하며 조우하는 적과 교전한다&rdquo;라는 동일한 행동 규약 아래 측정하였다. 보스 전투 — 보스와 교전을 유지한 상태.</p>
+<p class="note">※ 탐색 구역 1회차의 17.6초 지점에 85.5 ms의 단발 스파이크가 관측되었다. 9회 측정 전체에서 15 ms를 초과한 유일한 프레임이다.</p>
+
+
+<h2>[표 13] 구간별 성능 측정 결과 (회차별)</h2>
+
+<table>
+  <thead>
+    <tr><th style="width:12%">구간</th><th style="width:8%">회차</th><th>평균 FPS</th><th>평균 프레임<br>시간</th><th>95퍼센타일</th><th>99퍼센타일</th><th>드로우콜</th><th>SetPass</th><th>삼각형</th><th>프레임당 GC</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="c" rowspan="3">기지</td><td class="c">1</td><td class="c">799.5</td><td class="c">1.251</td><td class="c">1.499</td><td class="c">1.754</td><td class="c">65.1</td><td class="c">40.8</td><td class="c">178,555</td><td class="c">1,397</td></tr>
+    <tr><td class="c">2</td><td class="c">799.5</td><td class="c">1.251</td><td class="c">1.485</td><td class="c">1.682</td><td class="c">65.1</td><td class="c">40.8</td><td class="c">191,281</td><td class="c">1,250</td></tr>
+    <tr><td class="c">3</td><td class="c">791.1</td><td class="c">1.264</td><td class="c">1.509</td><td class="c">1.676</td><td class="c">65.8</td><td class="c">41.3</td><td class="c">201,470</td><td class="c">1,251</td></tr>
+    <tr><td class="c" rowspan="3">탐색 구역</td><td class="c">1</td><td class="c">767.9</td><td class="c">1.302</td><td class="c">1.714</td><td class="c">2.132</td><td class="c">64.5</td><td class="c">39.5</td><td class="c">345,337</td><td class="c">1,293</td></tr>
+    <tr><td class="c">2</td><td class="c">762.8</td><td class="c">1.311</td><td class="c">1.754</td><td class="c">2.181</td><td class="c">70.4</td><td class="c">40.8</td><td class="c">155,149</td><td class="c">1,380</td></tr>
+    <tr><td class="c">3</td><td class="c">787.4</td><td class="c">1.270</td><td class="c">1.610</td><td class="c">1.972</td><td class="c">63.2</td><td class="c">39.2</td><td class="c">294,253</td><td class="c">1,407</td></tr>
+    <tr><td class="c" rowspan="3">보스 전투</td><td class="c">1</td><td class="c">811.1</td><td class="c">1.233</td><td class="c">1.496</td><td class="c">1.831</td><td class="c">57.7</td><td class="c">42.2</td><td class="c">150,213</td><td class="c">1,437</td></tr>
+    <tr><td class="c">2</td><td class="c">818.8</td><td class="c">1.221</td><td class="c">1.446</td><td class="c">1.742</td><td class="c">59.1</td><td class="c">42.6</td><td class="c">155,129</td><td class="c">1,382</td></tr>
+    <tr><td class="c">3</td><td class="c">831.2</td><td class="c">1.203</td><td class="c">1.487</td><td class="c">1.798</td><td class="c">71.2</td><td class="c">44.8</td><td class="c">173,985</td><td class="c">1,264</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 프레임 시간 단위는 ms, GC 할당 단위는 B이다. 탐색 구역의 삼각형 수가 회차별로 크게 차이 나는 것은 시작 지점이 무작위로 결정되어 이동 경로가 매 회차 달라지기 때문이다.</p>
+
+
+<h2>[표 14] 국소광원 구성에 따른 렌더링 부하</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:24%">조건</th><th>등록<br>광원 수</th><th>평균 FPS</th><th>평균 프레임<br>시간</th><th>95퍼센타일</th><th>99퍼센타일</th>
+      <th>드로우콜</th><th>배치</th><th>SetPass</th><th>삼각형</th><th>프레임당 GC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>A. 기준 (비상구 표지등만)</td><td class="c">1</td><td class="c">943.9</td><td class="c">1.059 ms</td><td class="c">1.220 ms</td><td class="c">1.407 ms</td><td class="c">61</td><td class="c">61</td><td class="c">39</td><td class="c">214,121</td><td class="c">1,246 B</td></tr>
+    <tr class="total"><td>B. 모닥불 3개 (파티클 제거)</td><td class="c">4</td><td class="c">911.5</td><td class="c">1.097 ms</td><td class="c">1.271 ms</td><td class="c">1.471 ms</td><td class="c">61</td><td class="c">61</td><td class="c">39.3</td><td class="c">205,942</td><td class="c">1,247 B</td></tr>
+    <tr><td>C. 모닥불 3개 (전체)</td><td class="c">4</td><td class="c">892.9</td><td class="c">1.120 ms</td><td class="c">1.300 ms</td><td class="c">1.514 ms</td><td class="c">64</td><td class="c">62</td><td class="c">40</td><td class="c">214,148</td><td class="c">1,204 B</td></tr>
+  </tbody>
+</table>
+
+<table style="margin-top:14px">
+  <thead><tr><th style="width:34%">비교</th><th>평균 프레임 시간</th><th>드로우콜</th><th>배치</th><th>SetPass</th><th>프레임당 GC</th></tr></thead>
+  <tbody>
+    <tr class="total"><td>B − A (광원 3개 추가, 연출 에셋 최소)</td><td class="c">+0.038 ms</td><td class="c">±0</td><td class="c">±0</td><td class="c">+0.3</td><td class="c">+1 B</td></tr>
+    <tr><td>C − A (광원 3개 추가, 연출 에셋 포함)</td><td class="c">+0.061 ms</td><td class="c">+3</td><td class="c">+1</td><td class="c">+1</td><td class="c">−42 B</td></tr>
+    <tr><td>C − B (파티클만 추가)</td><td class="c">+0.023 ms</td><td class="c">+3</td><td class="c">+1</td><td class="c">+0.7</td><td class="c">−43 B</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 등록 광원 수는 Frame Debugger에서 조명 합성 패스의 셰이더 프로퍼티 <code>_PointLightCount</code> 값을 직접 확인한 것이다. 기준 조건에서도 상시 배치된 비상구 표지등 1개가 등록되어 있어, 동시 처리 상한인 4개 가운데 실제로 사용 가능한 광원은 3개이다.</p>
+<p class="note">※ 모든 조건은 3회 측정의 평균이다. 조건 B의 3회차는 측정 위치가 다소 달라 삼각형 수가 189,014개로 나머지 두 회차(214,406 / 214,405)보다 낮고 SetPass 호출이 40회였으나, <strong>드로우콜은 세 회차 모두 61회로 동일</strong>하였다. 조건 A와 C의 평균 삼각형 수는 214,121 / 214,148개로 편차가 0.02% 이내이다.</p>
+<p class="note">※ 조건 B에서 등록 광원이 1개에서 4개로 증가하였음에도 드로우콜과 SetPass 호출이 기준 조건과 동일하다. 조명 합성이 화면을 덮는 단일 삼각형에 대한 한 번의 연산으로 수행되므로, 광원의 등록은 렌더 커맨드를 추가로 발생시키지 않는다. 조건 C에서 관찰된 드로우콜 3회 증가는 광원이 아니라 모닥불 프리팹의 파티클 시스템에 기인하며, 프레임 시간 증가분 0.061 ms 가운데 0.029 ms 역시 파티클의 몫이다.</p>
+<p class="note">※ 프레임당 GC 할당은 세 조건 모두 1,204~1,268 B로 차이가 없다.</p>
+
+
+<h2>[표 15] 등록 광원 수에 따른 조명 합성 패스의 실행 비용</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:24%">등록 광원 수</th><th>중앙값</th><th>평균</th><th>하위 4분위</th><th>최소</th>
+      <th>프레임 기여도</th><th>프레임당 GC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="c">1개 (비상구 표지등만)</td><td class="c">9.0 &micro;s</td><td class="c">10.9 &micro;s</td><td class="c">7.6 &micro;s</td><td class="c">5.9 &micro;s</td><td class="c">0.86 %</td><td class="c">0 B</td></tr>
+    <tr><td class="c">2개</td><td class="c">10.4 &micro;s</td><td class="c">10.6 &micro;s</td><td class="c">8.2 &micro;s</td><td class="c">5.6 &micro;s</td><td class="c">0.84 %</td><td class="c">0 B</td></tr>
+    <tr class="total"><td class="c">4개 (동시 처리 상한)</td><td class="c">9.3 &micro;s</td><td class="c">11.1 &micro;s</td><td class="c">7.8 &micro;s</td><td class="c">6.2 &micro;s</td><td class="c">0.83 %</td><td class="c">0 B</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 프로파일러를 빌드에 연결하여 <strong>렌더 스레드</strong>의 <code>FlashlightPass</code> 마커를 조건당 2,000프레임 수집한 뒤 Profile Analyzer로 산출하였다. 패스는 카메라당 1회 실행되므로 프레임당 2회 기록된다(조건별 표본 3,998회).</p>
+<p class="note">※ 광원 수가 증가함에 따라 중앙값이 9.0 → 10.4 → 9.3 &micro;s로 단조 증가하지 않으며, 프레임 기여도는 오히려 0.86 → 0.84 → 0.83 %로 감소하였다. 이는 조명 합성이 화면을 덮는 단일 삼각형에 대한 한 번의 연산으로 수행되어, 등록된 광원 수가 패스 비용을 결정하지 않음을 보인다.</p>
+<p class="note">※ 각 조건에서 최대값은 중앙값의 20배 내외인 단발 이상치가 포함되어 있어 표에서 제외하였다.</p>
+<p class="note">※ GC 할당은 최대·중앙값·평균·총합이 세 조건 모두 0 B로, 3.9절에서 서술한 프로퍼티 식별자의 정적 캐싱, 배열의 사전 할당, 정적 람다를 통한 클로저 생성 억제가 실제로 프레임당 할당을 발생시키지 않음을 보인다.</p>
+<p class="note">※ 본 측정은 프로파일러 연결 상태에서 수행되었으므로, 이때의 프레임 시간과 FPS는 [표 12]의 값과 직접 비교할 수 없다. 또한 제시한 값은 렌더 스레드의 CPU 시간이며 GPU 실행 시간이 아니다.</p>
+
+
+<h2>[표 16] SSAO 적용 여부에 따른 렌더링 부하</h2>
+
+<table>
+  <thead>
+    <tr><th style="width:26%">항목</th><th>SSAO 미적용</th><th>SSAO 적용</th><th>차이</th><th>증감률</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="c">평균 FPS</td><td class="c">943.9</td><td class="c">865.0</td><td class="c">−78.9</td><td class="c">−8.4 %</td></tr>
+    <tr class="total"><td class="c">평균 프레임 시간</td><td class="c">1.059 ms</td><td class="c">1.156 ms</td><td class="c">+0.097 ms</td><td class="c">+9.2 %</td></tr>
+    <tr><td class="c">95퍼센타일</td><td class="c">1.220 ms</td><td class="c">1.352 ms</td><td class="c">+0.133 ms</td><td class="c">+10.9 %</td></tr>
+    <tr><td class="c">99퍼센타일</td><td class="c">1.407 ms</td><td class="c">1.578 ms</td><td class="c">+0.171 ms</td><td class="c">+12.2 %</td></tr>
+    <tr class="total"><td class="c">드로우콜</td><td class="c">61.0</td><td class="c">88.0</td><td class="c">+27.0</td><td class="c">+44.3 %</td></tr>
+    <tr><td class="c">SetPass 호출</td><td class="c">39.0</td><td class="c">50.0</td><td class="c">+11.0</td><td class="c">+28.2 %</td></tr>
+    <tr class="total"><td class="c">삼각형</td><td class="c">214,121</td><td class="c">428,094</td><td class="c">+213,973</td><td class="c">+99.9 %</td></tr>
+    <tr><td class="c">프레임당 GC 할당</td><td class="c">1,246 B</td><td class="c">1,249 B</td><td class="c">+3 B</td><td class="c">+0.3 %</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 조건당 3회 측정의 평균이다. 동일 위치에서 정지 상태로 측정하였으며, 두 조건의 평균 프레임 시간 범위는 각각 1.052~1.067 ms와 1.153~1.159 ms로 서로 겹치지 않는다.</p>
+<p class="note">※ 삼각형 수가 정확히 2배로 증가한 것은 SSAO가 요구하는 깊이·법선 프리패스에 의해 씬 지오메트리가 한 차례 더 렌더링되기 때문이며, 드로우콜과 SetPass 호출의 증가 또한 이에 기인한다. 3.9절에서 화면 공간 조명을 채택한 근거가 장면의 오브젝트 수에 비례하는 부하를 회피하는 데 있었으므로, SSAO의 적용은 이 설계 의도와 상충한다. 이것이 설계 단계에서 적용하였던 SSAO를 제거한 이유이다.</p>
+<p class="note">※ 프레임당 GC 할당은 두 조건이 동일하였다. SSAO는 렌더링 경로에만 관여하며 관리 메모리 할당에는 영향을 주지 않는다.</p>
+
+</body>
+</html>
