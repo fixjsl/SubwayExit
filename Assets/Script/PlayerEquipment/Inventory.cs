@@ -121,6 +121,7 @@ public class Inventory
 
     public void LoseOnDeath(float rate)
 {
+    
     if (rate <= 0f || slots.Count == 0) return;
 
     var kinds  = new List<ItemBase>();   // 비유니크 종류
@@ -130,7 +131,9 @@ public class Inventory
 
     foreach (var pair in slots)
     {
+        
         if (!ItemManager.itemDB.TryGetValue(pair.Key, out var item)) continue;
+        if(item.itemType == ItemType.KeyItem) continue; // 키 아이템은 소실되지 않음
         total += pair.Value;
         if (LootTable.IsUniqueItem(pair.Key)) { uniques.Add((item, pair.Value)); uniqueTotal += pair.Value; }
         else { kinds.Add(item); counts.Add(pair.Value); }

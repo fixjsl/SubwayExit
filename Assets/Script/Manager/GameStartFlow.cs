@@ -23,7 +23,7 @@ public class GameStartFlow : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
-
+        LootTable.ResetUniquesForNewSession();
         nextButton.onClick.AddListener(OnNext);
     }
 
