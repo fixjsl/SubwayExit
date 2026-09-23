@@ -13,7 +13,7 @@ public class ItemInfoUI : MonoBehaviour
     [SerializeField] private TMP_Text itemTypeText;
     [SerializeField] private TMP_Text itemWeightText;
     [SerializeField] private TMP_Text fuelText;
-    [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text descriptionText; 
 
     void Awake()
     {
