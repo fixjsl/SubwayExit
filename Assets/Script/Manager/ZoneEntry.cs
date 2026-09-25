@@ -8,7 +8,5 @@ public class ZoneEntry
     public Transform[] startPoints;
     public Transform[] exitPoints;
     public BaseReturnExit exitPrefab;
-    public Transform entryPoint;
-
     public bool IsOpen => gateBlockade == null || !gateBlockade.gameObject.activeSelf;
 }
