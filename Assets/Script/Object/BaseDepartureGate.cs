@@ -18,25 +18,29 @@ public class BaseDepartureGate : ItObjectBase
     {
         isInteracting = false;
         if (departed) return;
-        ConfirmUI.Instance.Show(warningMessage, OnConfirmed);
-    }
 
-    private void OnConfirmed()
+        var open = CycleManager.Instance.GetOpenZones();
+        if (open.Count == 0) return;
+
+        if (open.Count == 1) Confirm(open[0]);
+        else ZoneSelectUI.Instance.Show(open, Confirm);
+    }
+    private void Depart(ZoneEntry zone)
     {
         departed = true;
         RefreshPrompt();
 
-        if (explorationStartPoints == null || explorationStartPoints.Length == 0) return;
-        int idx = Random.Range(0, explorationStartPoints.Length);
-        Vector3 raw = explorationStartPoints[idx].position;
-        Vector3 startPos = new Vector3(raw.x, raw.y, spawnZ);
-
+        Vector3 startPos = CycleManager.Instance.PickStartPoint(zone, spawnZ);
         var player = PlayerStateMachine.Instance;
         player.Rb.position = startPos;
         player.Rb.linearVelocity = Vector3.zero;
 
-        // 시작지점에서 가장 먼 위치에 비상구 배치
-        CycleManager.Instance.RelocateExitFarthestFrom(startPos);
+        CycleManager.Instance.PlaceExits(zone, startPos);
+    }
+    private void Confirm(ZoneEntry zone)
+    {
+        string msg = $"{zone.zoneName}(으)로 출발합니다.\n{warningMessage}";
+        ConfirmUI.Instance.Show(msg, () => Depart(zone));
     }
 
     // CycleManager가 기지 귀환 후 호출

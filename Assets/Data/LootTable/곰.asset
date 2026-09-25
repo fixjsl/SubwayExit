@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: "\uACF0"
   m_EditorClassIdentifier: Assembly-CSharp::LootTable
   guaranteedItems:
-  - item: {fileID: 11400000, guid: 5c597c6f199f37345870c60e860bfcc0, type: 2}
+  - item: {fileID: 11400000, guid: 281192a1f5a086c4194ef5e9f869feb9, type: 2}
     chance: 1
     minCount: 6
     maxCount: 6
+    isUnique: 0
   - item: {fileID: 11400000, guid: 15cadbd9dfd95ce4ebc3bb2958a0be86, type: 2}
     chance: 1
     minCount: 1
     maxCount: 1
+    isUnique: 0
   randomItems: []
