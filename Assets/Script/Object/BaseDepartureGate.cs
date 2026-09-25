@@ -23,20 +23,23 @@ public class BaseDepartureGate : ItObjectBase
 
     private void OnConfirmed()
     {
+        var open = CycleManager.Instance.GetOpenZones();
+        if(open.Count == 0) return;
+        
+        if(open.Count == 1) Depart(open[0]);
+        else ZoneSelectUI.Instance.Show(open, Depart);
+    }
+    private void Depart(ZoneEntry zone)
+    {
         departed = true;
         RefreshPrompt();
 
-        if (explorationStartPoints == null || explorationStartPoints.Length == 0) return;
-        int idx = Random.Range(0, explorationStartPoints.Length);
-        Vector3 raw = explorationStartPoints[idx].position;
-        Vector3 startPos = new Vector3(raw.x, raw.y, spawnZ);
-
+        Vector3 startPos = CycleManager.Instance.PickStartPoint(zone, spawnZ);
         var player = PlayerStateMachine.Instance;
         player.Rb.position = startPos;
         player.Rb.linearVelocity = Vector3.zero;
 
-        // 시작지점에서 가장 먼 위치에 비상구 배치
-        CycleManager.Instance.RelocateExitFarthestFrom(startPos);
+        CycleManager.Instance.PlaceExits(zone, startPos);
     }
 
     // CycleManager가 기지 귀환 후 호출

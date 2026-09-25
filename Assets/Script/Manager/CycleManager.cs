@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CycleManager : MonoBehaviour
@@ -8,11 +9,10 @@ public class CycleManager : MonoBehaviour
     static void ResetStatics() => Instance = null;
 
     [SerializeField] private Transform playerBasePosition;
-    [SerializeField] private BaseReturnExit activeExit;
     [SerializeField] private BaseDepartureGate departureGate;
     // 씬에 빈 오브젝트로 배치한 비상구 등장 가능 위치들
-    [SerializeField] private Transform[] exitSpawnPoints;
-
+    [SerializeField] private ZoneEntry[] zones;
+    public IReadOnlyList<ZoneEntry> Zones => zones;
     void Awake()
     {
         Instance = this;
@@ -25,22 +25,57 @@ public class CycleManager : MonoBehaviour
         ResetContainers();
         if (departureGate != null) departureGate.ResetForCycle();
     }
+    public List<ZoneEntry> GetOpenZones()
+    {
+        var result = new List<ZoneEntry>();
+        foreach (var z in zones) if (z.IsOpen) result.Add(z);
+        return result;
+    }   
 
     // BaseDepartureGate에서 시작지점 선택 후 호출 — 가장 먼 위치에 비상구 배치
-    public void RelocateExitFarthestFrom(Vector3 origin)
+    public void PlaceExits(ZoneEntry startzone,Vector3 Startpos)
     {
-        if (activeExit == null || exitSpawnPoints == null || exitSpawnPoints.Length == 0) return;
-
-        int bestIndex = 0;
-        float bestDist = -1f;
-        for (int i = 0; i < exitSpawnPoints.Length; i++)
+        foreach (var z in zones)
         {
-            float dist = Vector3.Distance(origin, exitSpawnPoints[i].position);
-            if (dist > bestDist) { bestDist = dist; bestIndex = i; }
+            if(z.exitPrefab == null) continue;
+            if(!z.IsOpen || z.exitPoints== null || z.exitPoints.Length == 0)
+            {
+                z.exitPrefab.gameObject.SetActive(false);
+                continue;
+            } 
+            Transform chosen;
+            if(z==startzone)
+            {
+                chosen = z.exitPoints[0];
+                float best = -1f;
+                foreach(var p in z.exitPoints)
+                {
+                    float d = Vector3.Distance(Startpos, p.position);
+                    if(d>best) { best = d; chosen = p; }
+                }
+            }
+            else
+            {
+                chosen = z.exitPoints[Random.Range(0,z.exitPoints.Length)];
+            }
+             z.exitPrefab.gameObject.SetActive(true);
+             z.exitPrefab.transform.position = chosen.position;
+             z.exitPrefab.ResetForCycle();
         }
+       
 
-        activeExit.transform.position = exitSpawnPoints[bestIndex].position;
-        activeExit.ResetForCycle();
+    }
+    public Vector3 PickStartPoint(ZoneEntry zone, float spawnZ)
+    {
+        Vector3 raw = zone.startPoints[Random.Range(0, zone.startPoints.Length)].position;
+        return new Vector3(raw.x, raw.y, spawnZ);
+    }
+    public void HideAllExits()
+    {
+        foreach(var z in zones)
+        {
+            if(z.exitPrefab != null) z.exitPrefab.gameObject.SetActive(false);
+        }
     }
 
     private void TeleportPlayerToBase()

@@ -26589,6 +26589,10 @@ PrefabInstance:
       value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
+      propertyPath: status.curdeathItemLossRate
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6821396560673209839, guid: d0974791ee6b25f4380e16c0bdb3a190, type: 3}
       propertyPath: status.waterDecreasePerMinute
       value: 0.3
       objectReference: {fileID: 0}
@@ -29810,7 +29814,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c2851d3b72644f1488f23e371fbf964f, type: 2}
   - {fileID: 11400000, guid: e1711736c6e93354cb50cdf0e9010c0d, type: 2}
   - {fileID: 11400000, guid: 91501aaf3449cad4e9889e4b26927d12, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 281192a1f5a086c4194ef5e9f869feb9, type: 2}
   - {fileID: 11400000, guid: 69ada22290d379c4cb8ce75d9c16a0a8, type: 2}
 --- !u!114 &1746130077
 MonoBehaviour:
