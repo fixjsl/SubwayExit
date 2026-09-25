@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public class ZoneSelectUI : MonoBehaviour
 {
     public static ZoneSelectUI Instance { get; private set; }
@@ -26,6 +26,11 @@ public class ZoneSelectUI : MonoBehaviour
 
     public void Show(IReadOnlyList<ZoneEntry> zones, Action<ZoneEntry> callback)
     {
+        if (buttonPrefab == null)
+        {
+            Debug.LogError("[ZoneSelectUI] buttonPrefab이 비어 있거나 파괴되었습니다.");
+            return;
+        }
         onSelescted = callback;
 
         foreach (Transform child in buttonContainer) Destroy(child.gameObject);
@@ -34,9 +39,13 @@ public class ZoneSelectUI : MonoBehaviour
         {
             var zone = z;                              // 클로저 캡처 주의
             var btn = Instantiate(buttonPrefab, buttonContainer);
-            btn.GetComponentInChildren<Text>().text = zone.zoneName;
-            btn.onClick.AddListener(() => { Hide(); onSelescted?.Invoke(zone); });
-        }
+            var label = btn.GetComponentInChildren<TMP_Text>(true);
+            if (label != null) label.text = zone.zoneName;
+            btn.onClick.AddListener(() => {    
+                 var cb = onSelescted;
+                Hide();
+                cb?.Invoke(zone);});
+            }
 
         panel.SetActive(true);
     }
