@@ -36,6 +36,7 @@ public class BaseReturnExit : ItObjectBase
         }
 
         used = true;
+        MetaProgressManager.Instance?.AddRun(); 
         CycleManager.Instance.ExecuteCycleReset();
     }
 

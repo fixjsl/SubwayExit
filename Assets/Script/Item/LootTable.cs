@@ -16,7 +16,7 @@ public class LootTable : ScriptableObject
 {
     private static readonly HashSet<int> droppedUniqueItemCodes = new();
     public static bool IsUniqueItem(int itemcode) => droppedUniqueItemCodes.Contains(itemcode);
-    public static void ResetUniquesForNewSession() => droppedUniqueItemCodes.Clear();   
+    public static void ResetUniquesForCycle() => droppedUniqueItemCodes.Clear();   
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetUniques() => droppedUniqueItemCodes.Clear();
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bear
   m_EditorClassIdentifier: Assembly-CSharp::MonsterStatus
   Name: "\uD749\uD3ED\uD55C \uACF0"
-  Maxhp: 600
+  Maxhp: 30
   speed: 40
   chasespeed: 70
   atk: 14

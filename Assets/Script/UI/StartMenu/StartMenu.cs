@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using System.Collections.Generic;
 
 public class StartMenu : MonoBehaviour
 {
@@ -39,17 +40,36 @@ public class StartMenu : MonoBehaviour
 
     void OnStart()
     {
-        if (videoPlayer == null || videoPlayer.clip == null)
-        {
-            LoadGameScene();
-            return;
-        }
+        if (PerkSelectUI.Instance == null) { OnPerksSelected(null); return; }
 
         StartMenuPanel.SetActive(false);
-        videoPanel.SetActive(true);
-        skipButton.gameObject.SetActive(true);
-        videoPlayer.Play();
+        PerkSelectUI.Instance.Show(OnPerksSelected, OnPerkSelectCancelled);
     }
+
+    private void OnPerksSelected(IReadOnlyList<PerkBase> perks)
+    {
+        MetaProgressManager.Instance?.SetPending(perks);
+        PlayIntroThenLoad();
+    }
+
+    // 퍽 선택을 취소하면 게임을 시작하지 않고 시작 메뉴로 되돌린다.
+    private void OnPerkSelectCancelled()
+    {
+        StartMenuPanel.SetActive(true);
+    }
+    private void PlayIntroThenLoad()
+{
+    if (videoPlayer == null || videoPlayer.clip == null)
+    {
+        LoadGameScene();
+        return;
+    }
+
+    StartMenuPanel.SetActive(false);
+    videoPanel.SetActive(true);
+    skipButton.gameObject.SetActive(true);
+    videoPlayer.Play();
+}
 
     void LoadGameScene()
     {

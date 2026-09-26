@@ -23,6 +23,8 @@ public class CycleManager : MonoBehaviour
         TeleportPlayerToBase();
         RespawnMonsters();
         ResetContainers();
+        LootTable.ResetUniquesForCycle();
+        HideAllExits();
         if (departureGate != null) departureGate.ResetForCycle();
     }
     public List<ZoneEntry> GetOpenZones()
