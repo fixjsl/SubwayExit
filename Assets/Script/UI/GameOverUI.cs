@@ -25,6 +25,8 @@ public class GameOverUI : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        var newly = MetaProgressManager.Instance?.EvaluateUnlocks();
     }
 
     private void GoMainMenu()

@@ -20,6 +20,7 @@ namespace MonsterStates
             col.isTrigger = true;
             col.enabled = true;
             Monster.gameObject.layer = Layercache.Die;
+            MetaProgressManager.Instance?.AddKill();
             if (Monster.Corpse != null) Monster.Corpse.enabled = true;
         }
         public override void Exit()

@@ -58,6 +58,15 @@ public class GameStartFlow : MonoBehaviour
     {
         weaponCardContainer.SetActive(false);
         PlayerStateMachine.Instance.SetMovementLocked(false);
+
+        var player = PlayerStateMachine.Instance;
+
+        LootTable.ResetUniquesForNewSession();                       // 유니크 드롭 기록 초기화
+        MetaProgressManager.Instance?.ApplyPending(player.status, player.inventory);
+        player.status.Hp = player.status.Maxhp;                      // Maxhp를 올렸으므로 다시 채움
+
+        MetaProgressManager.Instance?.BeginSession();  
+
         Time.timeScale = 1f;
         GameManager.Instance.TutorialStart();
     }

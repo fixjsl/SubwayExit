@@ -1,0 +1,91 @@
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+
+
+public class MetaProgressManager : MonoBehaviour
+{
+    public static MetaProgressManager Instance { get; private set; }
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Instance = null;
+    [SerializeField] private PerkBase[] allPerks;
+
+    public MetaProgress progress { get; private set; } = new MetaProgress();
+    private readonly List<PerkBase> pending = new List<PerkBase>();
+    public int killCount { get; private set; }
+    public int gatherCount {get; private set; }
+    public int runCount {get; private set; }
+
+    private string savePath = Path.Combine(Application.persistentDataPath, "meta_progress.json");
+
+    public IReadOnlyList<PerkBase> AllPerks => allPerks;
+    public bool IsUnlocked(PerkBase p) => p != null && progress.unlockedPerkIds.Contains(p.PerkId);
+
+    void Awake()
+    {
+        if(Instance == null) {Instance = this; DontDestroyOnLoad(gameObject);}
+        else { Destroy(gameObject); return; }
+        Load();
+    }
+    void Load()
+    {
+        if(File.Exists(savePath))
+            JsonUtility.FromJsonOverwrite(File.ReadAllText(savePath), progress);
+    }
+
+    public void Save() => File.WriteAllText(savePath, JsonUtility.ToJson(progress));
+
+    // 퍽 선택 보관 및 적용
+    public void SetPending(IReadOnlyList<PerkBase> perks)
+    {
+        pending.Clear();
+        if (perks != null) pending.AddRange(perks);
+    }
+
+    public void ApplyPending(PlayerStatus status, Inventory inventory)
+    {
+        foreach (var p in pending)
+            if (p != null) p.Apply(status, inventory);
+    }
+    //세션 경계
+
+    public void BeginSession()
+    {
+        killCount = 0;
+        gatherCount = 0;
+        runCount = 0;
+    }
+    // 세션 지표
+    public void AddKill() => killCount++;
+    public void AddGather() => gatherCount++;
+    public void AddRun() => runCount++;
+    //해금
+    //게임 오버시 호출, 새로 해금된 퍽 목록을 돌려준다.
+    public List<PerkBase> EvaluateUnlocks()
+    {
+        var newly = new List<PerkBase>();
+        foreach(var p in allPerks)
+        {
+            if(p== null) continue;
+            if(progress.unlockedPerkIds.Contains(p.PerkId)) continue;
+
+            int value = p.axis switch
+            {
+                PerkAxis.Combat => killCount,
+                PerkAxis.Gather => gatherCount,
+                PerkAxis.Explore => runCount,
+                _ => 0
+            };
+
+            if (value >= p.threshold)
+            {
+                progress.unlockedPerkIds.Add(p.PerkId);
+                newly.Add(p);
+            }
+        }
+        if (newly.Count > 0) Save();
+        return newly;
+    }
+
+}
