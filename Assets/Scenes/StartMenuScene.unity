@@ -850,7 +850,7 @@ MonoBehaviour:
   buttonContainer: {fileID: 218417115}
   buttonPrefab: {fileID: 5798293112452378815, guid: ea96fd94dba87bd4a853cbfba6a346ee, type: 3}
   confirmButton: {fileID: 527243323}
-  cancelButton: {fileID: 0}
+  cancelButton: {fileID: 577161283}
   lockedSprite: {fileID: 6407191705607965664, guid: 024bfe91d0dbf7345919d9e9d7951dc2, type: 3}
   selectedColor: {r: 0.015686274, g: 1, b: 0.023633666, a: 1}
   hideLockedName: 1
