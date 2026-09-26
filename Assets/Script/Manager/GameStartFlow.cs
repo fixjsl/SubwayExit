@@ -23,7 +23,6 @@ public class GameStartFlow : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
-        LootTable.ResetUniquesForCycle();
         nextButton.onClick.AddListener(OnNext);
     }
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Food
   icon: {fileID: 21300000, guid: 0e472e9d570813b4a9324fc7f8a1becd, type: 3}
   firstAcquireImage: {fileID: 0}
-  itemcode: 36
+  itemcode: 34
   itemType: 1
   description: 
   maxamount: 0
