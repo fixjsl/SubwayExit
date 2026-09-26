@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Battle 2
   m_EditorClassIdentifier: Assembly-CSharp::PerkBase
   PerkId: 1
-  PerkName: "(\uC804\uD22C1)"
-  icon: {fileID: 0}
-  description: 
+  PerkName: "(\uC804\uD22C2)"
+  icon: {fileID: -977175060096403730, guid: 4d3a1810815f37f4aaf144ecd5832357, type: 3}
+  description: "\uCD5C\uB300 \uC2A4\uD0DC\uBBF8\uB108\uAC00 30 \uC99D\uAC00\uD55C\uB2E4."
   axis: 0
-  threshold: 0
+  threshold: 6
   targetItem: {fileID: 0}
   maxHpBonus: 0
-  maxStaminaBonus: 0
+  maxStaminaBonus: 30
   carryWeightBonus: 0
   startingItem: {fileID: 0}

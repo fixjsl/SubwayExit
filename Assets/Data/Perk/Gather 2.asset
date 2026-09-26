@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Gather 2
   m_EditorClassIdentifier: Assembly-CSharp::PerkBase
   PerkId: 1
-  PerkName: "(\uC804\uD22C1)"
-  icon: {fileID: 0}
-  description: 
-  axis: 0
-  threshold: 0
-  targetItem: {fileID: 0}
-  maxHpBonus: 0
+  PerkName: "(\uC218\uC9D1 2)"
+  icon: {fileID: -320577568486120336, guid: 2c3136e4022d91e47b92e8e0ebbea6d5, type: 3}
+  description: "\uCD5C\uB300 HP\uAC00 10 \uC99D\uAC00\uD55C\uB2E4."
+  axis: 1
+  threshold: 1
+  targetItem: {fileID: 11400000, guid: 21ad969a45f06434f8f88248daf11b65, type: 2}
+  maxHpBonus: 10
   maxStaminaBonus: 0
   carryWeightBonus: 0
   startingItem: {fileID: 0}

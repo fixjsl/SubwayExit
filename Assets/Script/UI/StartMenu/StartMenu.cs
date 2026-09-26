@@ -43,13 +43,19 @@ public class StartMenu : MonoBehaviour
         if (PerkSelectUI.Instance == null) { OnPerksSelected(null); return; }
 
         StartMenuPanel.SetActive(false);
-        PerkSelectUI.Instance.Show(OnPerksSelected);
+        PerkSelectUI.Instance.Show(OnPerksSelected, OnPerkSelectCancelled);
     }
 
     private void OnPerksSelected(IReadOnlyList<PerkBase> perks)
     {
         MetaProgressManager.Instance?.SetPending(perks);
         PlayIntroThenLoad();
+    }
+
+    // 퍽 선택을 취소하면 게임을 시작하지 않고 시작 메뉴로 되돌린다.
+    private void OnPerkSelectCancelled()
+    {
+        StartMenuPanel.SetActive(true);
     }
     private void PlayIntroThenLoad()
 {

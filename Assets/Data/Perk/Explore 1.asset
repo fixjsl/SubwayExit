@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Explore 1
   m_EditorClassIdentifier: Assembly-CSharp::PerkBase
   PerkId: 1
-  PerkName: "(\uC804\uD22C1)"
-  icon: {fileID: 0}
-  description: 
-  axis: 0
-  threshold: 0
+  PerkName: "(\uD0D0\uC0C9 1)"
+  icon: {fileID: -8539932502485358420, guid: f58bb6f1ef1037a459d938ca6acbcdbc, type: 3}
+  description: "\uBD95\uB300\uB97C \uC5BB\uB294\uB2E4."
+  axis: 2
+  threshold: 2
   targetItem: {fileID: 0}
   maxHpBonus: 0
   maxStaminaBonus: 0
   carryWeightBonus: 0
-  startingItem: {fileID: 0}
+  startingItem: {fileID: 11400000, guid: 9600646672be4d84c863ea6673ada15f, type: 2}

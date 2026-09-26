@@ -20,7 +20,8 @@ public class MetaProgressManager : MonoBehaviour
     public int GatherKinds => gathered.Count;
     public int GatherCountOf(int itemcode) => gathered.TryGetValue(itemcode, out int n) ? n : 0;
 
-    private string savePath => Path.Combine(Application.persistentDataPath, "meta_progress.json");
+    public const string SaveFileName = "meta_progress.json";
+    public static string SavePath => Path.Combine(Application.persistentDataPath, SaveFileName);
 
     public IReadOnlyList<PerkBase> AllPerks => allPerks;
     public bool IsUnlocked(PerkBase p) => p != null && progress.unlockedPerkIds.Contains(p.PerkId);
@@ -33,11 +34,11 @@ public class MetaProgressManager : MonoBehaviour
     }
     void Load()
     {
-        if(File.Exists(savePath))
-            JsonUtility.FromJsonOverwrite(File.ReadAllText(savePath), progress);
+        if(File.Exists(SavePath))
+            JsonUtility.FromJsonOverwrite(File.ReadAllText(SavePath), progress);
     }
 
-    public void Save() => File.WriteAllText(savePath, JsonUtility.ToJson(progress));
+    public void Save() => File.WriteAllText(SavePath, JsonUtility.ToJson(progress));
 
     
 
@@ -72,6 +73,13 @@ public class MetaProgressManager : MonoBehaviour
         gathered.TryGetValue(item.itemcode, out int cur);
         gathered[item.itemcode] = cur + n;
     }    
+    // 해금 기록을 지우고 저장 파일도 삭제한다. 에디터 메뉴와 디버그용.
+    public void ResetProgress()
+    {
+        progress.unlockedPerkIds.Clear();
+        if (File.Exists(SavePath)) File.Delete(SavePath);
+    }
+
     //해금
     //게임 오버시 호출, 새로 해금된 퍽 목록을 돌려준다.
     public List<PerkBase> EvaluateUnlocks()

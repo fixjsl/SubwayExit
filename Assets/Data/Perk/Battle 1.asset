@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PerkBase
   PerkId: 1
   PerkName: "(\uC804\uD22C1)"
-  icon: {fileID: 0}
-  description: 
+  icon: {fileID: -9111261687454137603, guid: 223be8b33ca270a4e9c91b50a36209ee, type: 3}
+  description: "\uCD5C\uB300 HP\uAC00 5 \uC99D\uAC00\uD55C\uB2E4."
   axis: 0
-  threshold: 0
+  threshold: 3
   targetItem: {fileID: 0}
-  maxHpBonus: 0
+  maxHpBonus: 5
   maxStaminaBonus: 0
   carryWeightBonus: 0
   startingItem: {fileID: 0}
