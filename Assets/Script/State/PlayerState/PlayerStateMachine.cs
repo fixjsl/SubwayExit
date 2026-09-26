@@ -188,7 +188,7 @@ public class PlayerStateMachine : MonoBehaviour
         inventory = new Inventory(status);
         status.curMaxCarryWeight = status.maxCarryWeight;
         if (startItem != null)
-            inventory.AddItem(startItem, startItemCount, suppressFirstAcquire: true);
+            inventory.AddItem(startItem, startItemCount, suppressFirstAcquire: true, countAsGathered: false);
         currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
         Col = GetComponent<BoxCollider>();

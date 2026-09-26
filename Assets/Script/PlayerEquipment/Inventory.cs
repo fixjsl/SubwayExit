@@ -21,7 +21,7 @@ public class Inventory
         this.status = status;
     }
 
-    public bool AddItem(ItemBase itemBase, int num = 1, bool suppressFirstAcquire = false)
+    public bool AddItem(ItemBase itemBase, int num = 1, bool suppressFirstAcquire = false, bool countAsGathered = true)
     {
         int key = itemBase.itemcode;
         float addWeight = itemBase.weight * num;
@@ -35,6 +35,8 @@ public class Inventory
         {
             slots[key] = count + num;
             currentWeight += addWeight;
+            if (countAsGathered)
+                MetaProgressManager.Instance?.AddGather(itemBase, num);   // ← 추가
             OnInventoryChanged?.Invoke();
             return true;
         }
@@ -45,6 +47,8 @@ public class Inventory
         }
         slots[key] = num;
         currentWeight += addWeight;
+        if (countAsGathered)
+            MetaProgressManager.Instance?.AddGather(itemBase, num);       // ← 추가
         if (!suppressFirstAcquire)
         {
             bool isNew = acquiredCodes.Add(key);

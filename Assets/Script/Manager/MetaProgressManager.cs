@@ -14,10 +14,13 @@ public class MetaProgressManager : MonoBehaviour
     public MetaProgress progress { get; private set; } = new MetaProgress();
     private readonly List<PerkBase> pending = new List<PerkBase>();
     public int killCount { get; private set; }
-    public int gatherCount {get; private set; }
     public int runCount {get; private set; }
+    private readonly Dictionary<int, int> gathered = new Dictionary<int, int>();
 
-    private string savePath = Path.Combine(Application.persistentDataPath, "meta_progress.json");
+    public int GatherKinds => gathered.Count;
+    public int GatherCountOf(int itemcode) => gathered.TryGetValue(itemcode, out int n) ? n : 0;
+
+    private string savePath => Path.Combine(Application.persistentDataPath, "meta_progress.json");
 
     public IReadOnlyList<PerkBase> AllPerks => allPerks;
     public bool IsUnlocked(PerkBase p) => p != null && progress.unlockedPerkIds.Contains(p.PerkId);
@@ -36,6 +39,8 @@ public class MetaProgressManager : MonoBehaviour
 
     public void Save() => File.WriteAllText(savePath, JsonUtility.ToJson(progress));
 
+    
+
     // 퍽 선택 보관 및 적용
     public void SetPending(IReadOnlyList<PerkBase> perks)
     {
@@ -53,13 +58,20 @@ public class MetaProgressManager : MonoBehaviour
     public void BeginSession()
     {
         killCount = 0;
-        gatherCount = 0;
+        gathered.Clear();
         runCount = 0;
     }
     // 세션 지표
     public void AddKill() => killCount++;
-    public void AddGather() => gatherCount++;
+
     public void AddRun() => runCount++;
+
+    public void AddGather(ItemBase item, int n)
+    {
+        if (item == null || n <= 0) return;
+        gathered.TryGetValue(item.itemcode, out int cur);
+        gathered[item.itemcode] = cur + n;
+    }    
     //해금
     //게임 오버시 호출, 새로 해금된 퍽 목록을 돌려준다.
     public List<PerkBase> EvaluateUnlocks()
@@ -73,7 +85,9 @@ public class MetaProgressManager : MonoBehaviour
             int value = p.axis switch
             {
                 PerkAxis.Combat => killCount,
-                PerkAxis.Gather => gatherCount,
+                PerkAxis.Gather  => p.targetItem != null
+                                    ? GatherCountOf(p.targetItem.itemcode)
+                                    : GatherKinds,  
                 PerkAxis.Explore => runCount,
                 _ => 0
             };

@@ -23,7 +23,7 @@ public class GameStartFlow : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
-        LootTable.ResetUniquesForNewSession();
+        LootTable.ResetUniquesForCycle();
         nextButton.onClick.AddListener(OnNext);
     }
 
@@ -61,7 +61,7 @@ public class GameStartFlow : MonoBehaviour
 
         var player = PlayerStateMachine.Instance;
 
-        LootTable.ResetUniquesForNewSession();                       // 유니크 드롭 기록 초기화
+        LootTable.ResetUniquesForCycle();                       // 유니크 드롭 기록 초기화
         MetaProgressManager.Instance?.ApplyPending(player.status, player.inventory);
         player.status.Hp = player.status.Maxhp;                      // Maxhp를 올렸으므로 다시 채움
 
